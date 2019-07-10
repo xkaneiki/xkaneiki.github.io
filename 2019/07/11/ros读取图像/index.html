@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="ROS+OpenCV读取图像新建一个freenect.launch文件，填入一下内容123456789101112131415&amp;lt;launch&amp;gt;	&amp;lt;!-- 启动freenect驱动 --&amp;gt;	&amp;lt;include file=&amp;quot;$(find freenect_launch)/launch/freenect.launch&amp;quot;&amp;gt;		&amp;lt;arg name=">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROS+OpenCV读取图像">
+<meta property="og:url" content="http://yoursite.com/2019/07/11/ros读取图像/index.html">
+<meta property="og:site_name" content="xkaneiki&#39;s blog">
+<meta property="og:description" content="ROS+OpenCV读取图像新建一个freenect.launch文件，填入一下内容123456789101112131415&amp;lt;launch&amp;gt;	&amp;lt;!-- 启动freenect驱动 --&amp;gt;	&amp;lt;include file=&amp;quot;$(find freenect_launch)/launch/freenect.launch&amp;quot;&amp;gt;		&amp;lt;arg name=">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-10T17:22:52.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ROS+OpenCV读取图像">
+<meta name="twitter:description" content="ROS+OpenCV读取图像新建一个freenect.launch文件，填入一下内容123456789101112131415&amp;lt;launch&amp;gt;	&amp;lt;!-- 启动freenect驱动 --&amp;gt;	&amp;lt;include file=&amp;quot;$(find freenect_launch)/launch/freenect.launch&amp;quot;&amp;gt;		&amp;lt;arg name=">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/07/11/ros读取图像/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ROS+OpenCV读取图像 | xkaneiki's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xkaneiki's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/11/ros读取图像/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kaneiki wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ROS+OpenCV读取图像
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-07-11 00:34:48 / Modified: 01:22:52" itemprop="dateCreated datePublished" datetime="2019-07-11T00:34:48+08:00">2019-07-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="ROS-OpenCV读取图像"><a href="#ROS-OpenCV读取图像" class="headerlink" title="ROS+OpenCV读取图像"></a>ROS+OpenCV读取图像</h1><h2 id="新建一个freenect-launch文件，填入一下内容"><a href="#新建一个freenect-launch文件，填入一下内容" class="headerlink" title="新建一个freenect.launch文件，填入一下内容"></a>新建一个freenect.launch文件，填入一下内容</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;launch&gt;</span><br><span class="line">	&lt;!-- 启动freenect驱动 --&gt;</span><br><span class="line">	&lt;include file=&quot;$(find freenect_launch)/launch/freenect.launch&quot;&gt;</span><br><span class="line">		&lt;arg name=&quot;publish_tf&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;depth_registration&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;rgb_processing&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;ir_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;depth_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;depth_registered_processing&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;disparity_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;disparity_registered_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;sw_registered_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;hw_registered_processing&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">	&lt;/include&gt;</span><br><span class="line">&lt;/launch&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="在ros下创建工作空间"><a href="#在ros下创建工作空间" class="headerlink" title="在ros下创建工作空间"></a>在ros下创建工作空间</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p cv_ws/src</span><br><span class="line">cd cv_ws/src</span><br><span class="line">catkin_init_workspace</span><br><span class="line">cd ..</span><br><span class="line">catkin_make</span><br></pre></td></tr></table></figure>
+<h2 id="在工作空间下创建程序包"><a href="#在工作空间下创建程序包" class="headerlink" title="在工作空间下创建程序包"></a>在工作空间下创建程序包</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd src</span><br><span class="line">catkin_create_pkg robot_vision roscpp std_msgs cv_bridge image_transport sensor_msgs</span><br><span class="line">cd ..</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">创建程序包的一般格式是catkin_create_pkg &lt;name&gt; &lt;dependencies package&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="在src-robot-vision-src-目录下创建getImage-cpp"><a href="#在src-robot-vision-src-目录下创建getImage-cpp" class="headerlink" title="在src/robot_vision/src/目录下创建getImage.cpp"></a>在src/robot_vision/src/目录下创建getImage.cpp</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ros/ros.h&gt; //ros标准库头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt; //C++标准输入输出库</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  cv_bridge中包含CvBridge库</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cv_bridge/cv_bridge.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  ROS图象类型的编码函数</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sensor_msgs/image_encodings.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">   image_transport 头文件用来在ROS系统中的话题上发布和订阅图象消息</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;image_transport/image_transport.h&gt; </span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//OpenCV2标准头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/core/core.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/highgui/highgui.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/imgproc/imgproc.hpp&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> INPUT = <span class="string">"Input"</span>; <span class="comment">//定义输入窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> OUTPUT = <span class="string">"Output"</span>; <span class="comment">//定义输出窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> DEPTH = <span class="string">"DEPTH"</span>; <span class="comment">//定义depth窗口名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//定义一个转换的类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    ros::NodeHandle nh_; <span class="comment">//定义ROS句柄</span></span><br><span class="line">    image_transport::ImageTransport it_; <span class="comment">//定义一个image_transport实例</span></span><br><span class="line">    image_transport::Subscriber image_sub_0,image_sub_1; <span class="comment">//定义ROS图象接收器</span></span><br><span class="line">    <span class="comment">//image_transport::Publisher image_pub_; //定义ROS图象发布器</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Main()</span><br><span class="line">      :it_(nh_) <span class="comment">//构造函数</span></span><br><span class="line">    &#123;</span><br><span class="line">        image_sub_0 = it_.subscribe(<span class="string">"/camera/rgb/image_raw"</span>, <span class="number">1</span>, &amp;Main::convert_callback, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“camera/rgb/image_raw”</span></span><br><span class="line">        image_sub_1 = it_.subscribe(<span class="string">"/camera/depth_registered/image_raw"</span>, <span class="number">1</span>, &amp;</span><br><span class="line">        Main::convert_callback_depth, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“/camera/depth_registered/image_raw”</span></span><br><span class="line">       </span><br><span class="line">       <span class="comment">// image_pub_ = it_.publishe("", 1); //定义图象发布器</span></span><br><span class="line">        <span class="comment">//初始化输入输出窗口</span></span><br><span class="line">        cv::namedWindow(INPUT);</span><br><span class="line">        cv::namedWindow(OUTPUT);</span><br><span class="line">        cv::namedWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    ~Main() <span class="comment">//析构函数</span></span><br><span class="line">    &#123;</span><br><span class="line">         cv::destroyWindow(INPUT);</span><br><span class="line">         cv::destroyWindow(OUTPUT);</span><br><span class="line">         cv::destroyWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      rgb图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, <span class="string">"bgr8"</span>); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        image_process(cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      depth图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback_depth</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, <span class="string">"mono16"</span>); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        imshow(DEPTH,cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">       这是图象处理的主要函数，一般会把图像处理的主要程序写在这个函数中。这里的例子只是一个彩色图象到灰度图象的转化</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">image_process</span><span class="params">(cv::Mat img)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">       cv::Mat img_out;</span><br><span class="line">       cv::cvtColor(img, img_out, CV_RGB2GRAY);  <span class="comment">//转换成灰度图象</span></span><br><span class="line">       cv::imshow(INPUT, img);</span><br><span class="line">       cv::imshow(OUTPUT, img_out);</span><br><span class="line">       cv::waitKey(<span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//主函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::init(argc, argv, <span class="string">"RGB"</span>);</span><br><span class="line">    Main obj;</span><br><span class="line">    ros::spin();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针<ul>
+<li>cv_ptr =  cv_bridge::toCvCopy(msg, “mono16”);</li>
+<li>第二个参数表示转换的类型（深度图是CV_16UC1）<ul>
+<li>mono8: CV_8UC1, grayscale image</li>
+<li>mono16: CV_16UC1, 16-bit grayscale image</li>
+<li>bgr8: CV_8UC3, color image with blue-green-red color order</li>
+<li>rgb8: CV_8UC3, color image with red-green-blue color order</li>
+<li>bgra8: CV_8UC4, BGR color image with an alpha channel</li>
+<li>rgba8: CV_8UC4, RGB color image with an alpha channel</li>
+</ul>
+</li>
+<li>cv_ptr-&gt;image转化成cv::Mat类型</li>
+</ul>
+</li>
+<li>ros图片路径<ul>
+<li>rgb图片：/camera/rgb/image_raw</li>
+<li>深度图片：/camera/depth_registered/image_raw</li>
+</ul>
+</li>
+</ul>
+<h2 id="向src-robot-vision-CMakeLists-txt添加如下内容"><a href="#向src-robot-vision-CMakeLists-txt添加如下内容" class="headerlink" title="向src/robot_vision/CMakeLists.txt添加如下内容"></a>向src/robot_vision/CMakeLists.txt添加如下内容</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FIND_PACKAGE(OpenCV REQUIRED)</span><br><span class="line">include_directories($&#123;OpenCV_INCLUDE_DIRS&#125;)</span><br><span class="line">add_executable(getImage src/getImage.cpp)</span><br><span class="line">target_link_libraries(getImage $&#123;catkin_LIBRARIES&#125; $&#123;OpenCV_LIBS&#125;)</span><br><span class="line">add_dependencies(getImage robot_vision_generate_messages_cpp)</span><br></pre></td></tr></table></figure>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><ul>
+<li>返回根目录</li>
+<li>终端输入<blockquote>
+<p>catkin_make</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><ul>
+<li>将节点导入bash，在终端输入<blockquote>
+<p>source ./devel/setup.bash</p>
+</blockquote>
+</li>
+<li>打开另一个终端进入之前创建的freenect.launch目录，输入<blockquote>
+<p>roslaunch freenect.launch</p>
+</blockquote>
+</li>
+<li>在终端输入运行(rosrun 包名 节点名)<blockquote>
+<p>rosrun robot_vision getImage</p>
+</blockquote>
+</li>
+</ul>
+<p>参考博客</p>
+<ul>
+<li><a href="https://blog.csdn.net/qq_31918961/article/details/93092640" target="_blank" rel="noopener">https://blog.csdn.net/qq_31918961/article/details/93092640</a></li>
+<li><a href="https://blog.csdn.net/u010925447/article/details/80033288" target="_blank" rel="noopener">https://blog.csdn.net/u010925447/article/details/80033288</a></li>
+<li><a href="https://blog.csdn.net/danwuxie/article/details/86708805" target="_blank" rel="noopener">https://blog.csdn.net/danwuxie/article/details/86708805</a></li>
+<li><a href="https://blog.csdn.net/u013794793/article/details/79925491" target="_blank" rel="noopener">https://blog.csdn.net/u013794793/article/details/79925491</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/08/cmake/" rel="next" title="cmake">
+                <i class="fa fa-chevron-left"></i> cmake
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">kaneiki wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ROS-OpenCV读取图像"><span class="nav-number">1.</span> <span class="nav-text">ROS+OpenCV读取图像</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建一个freenect-launch文件，填入一下内容"><span class="nav-number">1.1.</span> <span class="nav-text">新建一个freenect.launch文件，填入一下内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在ros下创建工作空间"><span class="nav-number">1.2.</span> <span class="nav-text">在ros下创建工作空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在工作空间下创建程序包"><span class="nav-number">1.3.</span> <span class="nav-text">在工作空间下创建程序包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在src-robot-vision-src-目录下创建getImage-cpp"><span class="nav-number">1.4.</span> <span class="nav-text">在src/robot_vision/src/目录下创建getImage.cpp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#向src-robot-vision-CMakeLists-txt添加如下内容"><span class="nav-number">1.5.</span> <span class="nav-text">向src/robot_vision/CMakeLists.txt添加如下内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译"><span class="nav-number">1.6.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行"><span class="nav-number">1.7.</span> <span class="nav-text">运行</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kaneiki wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
