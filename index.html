@@ -286,6 +286,210 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/28/Booth算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kaneiki wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/08/28/Booth算法/" class="post-title-link" itemprop="url">Booth算法</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-08-28 00:43:38 / Modified: 01:18:11" itemprop="dateCreated datePublished" datetime="2019-08-28T00:43:38+08:00">2019-08-28</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Booth-算法"><a href="#Booth-算法" class="headerlink" title="Booth 算法"></a>Booth 算法</h1><p> <strong><em>用于补码一位乘法</em></strong></p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><ul>
+<li>这是一种有符号数的乘法，采用相加和相剪的操作计算补码的数据乘积，考虑$x*y$</li>
+<li>设$[x]_补=x_sx_1x_2x_3…x_n,[y]_补=y_sy_1y_2y_3…y_n$</li>
+<li>运算规则<ol>
+<li>符号位参与运算切都以补码的形式表示</li>
+<li>被乘数一般取双符号位参与运算，部分积取双符号位，初值为0，乘数采取单符号位</li>
+<li>乘数末尾附加$y_{n+1}$，初值为0</li>
+<li>根据$(y_n,y_{n+1})$确定操作</li>
+<li>移位按照补码右移规则进行（算数右移）</li>
+<li>按照上述步骤进行n+1步，第n+1步不进行移位</li>
+</ol>
+</li>
+</ul>
+<h2 id="算法的原理"><a href="#算法的原理" class="headerlink" title="算法的原理"></a>算法的原理</h2><ul>
+<li>基本思路:考虑一个一个数和一个连续的1的情况，如<ul>
+<li>$M*(0011100)$</li>
+<li>$=M*(2^4+2^3+2^2)$</li>
+<li>$=M*(2^5-2^2)$</li>
+</ul>
+</li>
+<li>从而<ul>
+<li>10表示连续1的开始，对应$M*2^5$</li>
+<li>01表示连续1的结束，对应$-M*2^2$</li>
+</ul>
+</li>
+<li>于是有移位的规则</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>$y_n$</th>
+<th style="text-align:left">$y_{n+1}$</th>
+<th style="text-align:left">operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">部分积右移一位</td>
+</tr>
+<tr>
+<td>0</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">部分积$+[-x]_补$,部分积右移一位</td>
+</tr>
+<tr>
+<td>1</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">部分积$+[x]_补$,部分积右移一位</td>
+</tr>
+<tr>
+<td>1</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">部分积右移一位</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p><img src="/.com//example.jpg" alt="实例"></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/11/ros读取图像/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -331,12 +535,24 @@
                 
               
 
-              <time title="Created: 2019-07-11 00:34:48 / Modified: 01:22:52" itemprop="dateCreated datePublished" datetime="2019-07-11T00:34:48+08:00">2019-07-11</time>
+              <time title="Created: 2019-07-11 00:34:48" itemprop="dateCreated datePublished" datetime="2019-07-11T00:34:48+08:00">2019-07-11</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-07-23 23:46:23" itemprop="dateModified" datetime="2019-07-23T23:46:23+08:00">2019-07-23</time>
               
             
           </span>
@@ -376,11 +592,12 @@
 <h2 id="在ros下创建工作空间"><a href="#在ros下创建工作空间" class="headerlink" title="在ros下创建工作空间"></a>在ros下创建工作空间</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p cv_ws/src</span><br><span class="line">cd cv_ws/src</span><br><span class="line">catkin_init_workspace</span><br><span class="line">cd ..</span><br><span class="line">catkin_make</span><br></pre></td></tr></table></figure>
 <h2 id="在工作空间下创建程序包"><a href="#在工作空间下创建程序包" class="headerlink" title="在工作空间下创建程序包"></a>在工作空间下创建程序包</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd src</span><br><span class="line">catkin_create_pkg robot_vision roscpp std_msgs cv_bridge image_transport sensor_msgs</span><br><span class="line">cd ..</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">创建程序包的一般格式是catkin_create_pkg &lt;name&gt; &lt;dependencies package&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="在src-robot-vision-src-目录下创建getImage-cpp"><a href="#在src-robot-vision-src-目录下创建getImage-cpp" class="headerlink" title="在src/robot_vision/src/目录下创建getImage.cpp"></a>在src/robot_vision/src/目录下创建getImage.cpp</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ros/ros.h&gt; //ros标准库头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt; //C++标准输入输出库</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  cv_bridge中包含CvBridge库</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cv_bridge/cv_bridge.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  ROS图象类型的编码函数</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sensor_msgs/image_encodings.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">   image_transport 头文件用来在ROS系统中的话题上发布和订阅图象消息</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;image_transport/image_transport.h&gt; </span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//OpenCV2标准头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/core/core.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/highgui/highgui.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/imgproc/imgproc.hpp&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> INPUT = <span class="string">"Input"</span>; <span class="comment">//定义输入窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> OUTPUT = <span class="string">"Output"</span>; <span class="comment">//定义输出窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> DEPTH = <span class="string">"DEPTH"</span>; <span class="comment">//定义depth窗口名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//定义一个转换的类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    ros::NodeHandle nh_; <span class="comment">//定义ROS句柄</span></span><br><span class="line">    image_transport::ImageTransport it_; <span class="comment">//定义一个image_transport实例</span></span><br><span class="line">    image_transport::Subscriber image_sub_0,image_sub_1; <span class="comment">//定义ROS图象接收器</span></span><br><span class="line">    <span class="comment">//image_transport::Publisher image_pub_; //定义ROS图象发布器</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Main()</span><br><span class="line">      :it_(nh_) <span class="comment">//构造函数</span></span><br><span class="line">    &#123;</span><br><span class="line">        image_sub_0 = it_.subscribe(<span class="string">"/camera/rgb/image_raw"</span>, <span class="number">1</span>, &amp;Main::convert_callback, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“camera/rgb/image_raw”</span></span><br><span class="line">        image_sub_1 = it_.subscribe(<span class="string">"/camera/depth_registered/image_raw"</span>, <span class="number">1</span>, &amp;</span><br><span class="line">        Main::convert_callback_depth, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“/camera/depth_registered/image_raw”</span></span><br><span class="line">       </span><br><span class="line">       <span class="comment">// image_pub_ = it_.publishe("", 1); //定义图象发布器</span></span><br><span class="line">        <span class="comment">//初始化输入输出窗口</span></span><br><span class="line">        cv::namedWindow(INPUT);</span><br><span class="line">        cv::namedWindow(OUTPUT);</span><br><span class="line">        cv::namedWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    ~Main() <span class="comment">//析构函数</span></span><br><span class="line">    &#123;</span><br><span class="line">         cv::destroyWindow(INPUT);</span><br><span class="line">         cv::destroyWindow(OUTPUT);</span><br><span class="line">         cv::destroyWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      rgb图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, <span class="string">"bgr8"</span>); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        image_process(cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      depth图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback_depth</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, <span class="string">"mono16"</span>); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        imshow(DEPTH,cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">       这是图象处理的主要函数，一般会把图像处理的主要程序写在这个函数中。这里的例子只是一个彩色图象到灰度图象的转化</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">image_process</span><span class="params">(cv::Mat img)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">       cv::Mat img_out;</span><br><span class="line">       cv::cvtColor(img, img_out, CV_RGB2GRAY);  <span class="comment">//转换成灰度图象</span></span><br><span class="line">       cv::imshow(INPUT, img);</span><br><span class="line">       cv::imshow(OUTPUT, img_out);</span><br><span class="line">       cv::waitKey(<span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//主函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::init(argc, argv, <span class="string">"RGB"</span>);</span><br><span class="line">    Main obj;</span><br><span class="line">    ros::spin();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="在src-robot-vision-src-目录下创建getImage-cpp"><a href="#在src-robot-vision-src-目录下创建getImage-cpp" class="headerlink" title="在src/robot_vision/src/目录下创建getImage.cpp"></a>在src/robot_vision/src/目录下创建getImage.cpp</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ros/ros.h&gt; //ros标准库头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt; //C++标准输入输出库</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  cv_bridge中包含CvBridge库</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cv_bridge/cv_bridge.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  ROS图象类型的编码函数</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sensor_msgs/image_encodings.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">   image_transport 头文件用来在ROS系统中的话题上发布和订阅图象消息</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;image_transport/image_transport.h&gt; </span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//OpenCV2标准头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/core/core.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/highgui/highgui.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/imgproc/imgproc.hpp&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> INPUT = <span class="string">"Input"</span>; <span class="comment">//定义输入窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> OUTPUT = <span class="string">"Output"</span>; <span class="comment">//定义输出窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> DEPTH = <span class="string">"DEPTH"</span>; <span class="comment">//定义depth窗口名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//定义一个转换的类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    ros::NodeHandle nh_; <span class="comment">//定义ROS句柄</span></span><br><span class="line">    image_transport::ImageTransport it_; <span class="comment">//定义一个image_transport实例</span></span><br><span class="line">    image_transport::Subscriber image_sub_0,image_sub_1; <span class="comment">//定义ROS图象接收器</span></span><br><span class="line">    <span class="comment">//image_transport::Publisher image_pub_; //定义ROS图象发布器</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Main()</span><br><span class="line">      :it_(nh_) <span class="comment">//构造函数</span></span><br><span class="line">    &#123;</span><br><span class="line">        image_sub_0 = it_.subscribe(<span class="string">"/camera/rgb/image_raw"</span>, <span class="number">1</span>, &amp;Main::convert_callback, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“camera/rgb/image_raw”</span></span><br><span class="line">        image_sub_1 = it_.subscribe(<span class="string">"/camera/depth_registered/image_raw"</span>, <span class="number">1</span>, &amp;</span><br><span class="line">        Main::convert_callback_depth, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“/camera/depth_registered/image_raw”</span></span><br><span class="line">       </span><br><span class="line">       <span class="comment">// image_pub_ = it_.publishe("", 1); //定义图象发布器</span></span><br><span class="line">        <span class="comment">//初始化输入输出窗口</span></span><br><span class="line">        cv::namedWindow(INPUT);</span><br><span class="line">        cv::namedWindow(OUTPUT);</span><br><span class="line">        cv::namedWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    ~Main() <span class="comment">//析构函数</span></span><br><span class="line">    &#123;</span><br><span class="line">         cv::destroyWindow(INPUT);</span><br><span class="line">         cv::destroyWindow(OUTPUT);</span><br><span class="line">         cv::destroyWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      rgb图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, <span class="string">"bgr8"</span>); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        image_process(cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      depth图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback_depth</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        imshow(DEPTH,cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">       这是图象处理的主要函数，一般会把图像处理的主要程序写在这个函数中。这里的例子只是一个彩色图象到灰度图象的转化</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">image_process</span><span class="params">(cv::Mat img)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">       cv::Mat img_out;</span><br><span class="line">       cv::cvtColor(img, img_out, CV_RGB2GRAY);  <span class="comment">//转换成灰度图象</span></span><br><span class="line">       cv::imshow(INPUT, img);</span><br><span class="line">       cv::imshow(OUTPUT, img_out);</span><br><span class="line">       cv::waitKey(<span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//主函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::init(argc, argv, <span class="string">"RGB"</span>);</span><br><span class="line">    Main obj;</span><br><span class="line">    ros::spin();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针<ul>
-<li>cv_ptr =  cv_bridge::toCvCopy(msg, “mono16”);</li>
-<li>第二个参数表示转换的类型（深度图是CV_16UC1）<ul>
+<li>cv_ptr =  cv_bridge::toCvCopy(msg, “bgr8”);</li>
+<li>cv_ptr =  cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);</li>
+<li>第二个参数表示转换的类型<ul>
 <li>mono8: CV_8UC1, grayscale image</li>
 <li>mono16: CV_16UC1, 16-bit grayscale image</li>
 <li>bgr8: CV_8UC3, color image with blue-green-red color order</li>
@@ -590,27 +807,21 @@
 </blockquote>
 <h2 id="安装Pangolin"><a href="#安装Pangolin" class="headerlink" title="安装Pangolin"></a>安装Pangolin</h2><h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><h4 id="OpenGL"><a href="#OpenGL" class="headerlink" title="OpenGL"></a>OpenGL</h4><blockquote>
 <p>sudo apt install libgl1-mesa-dev</p>
-</blockquote>
-<h4 id="Glew"><a href="#Glew" class="headerlink" title="Glew"></a>Glew</h4><blockquote>
-<p>sudo apt install libglew-dev</p>
-</blockquote>
-<h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><blockquote>
-<p>git clone <a href="https://github.com/stevenlovegrove/Pangolin.git" target="_blank" rel="noopener">https://github.com/stevenlovegrove/Pangolin.git</a> </p>
-</blockquote>
-<h3 id="修改源码"><a href="#修改源码" class="headerlink" title="修改源码"></a>修改源码</h3><p><strong><em>注意这里是必要操作确保Pangolin之后可用</em></strong></p>
+<h4 id="Glew"><a href="#Glew" class="headerlink" title="Glew"></a>Glew</h4><p>sudo apt install libglew-dev</p>
+<h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><p>git clone <a href="https://github.com/stevenlovegrove/Pangolin.git" target="_blank" rel="noopener">https://github.com/stevenlovegrove/Pangolin.git</a> </p>
+<h3 id="修改源码"><a href="#修改源码" class="headerlink" title="修改源码"></a>修改源码</h3></blockquote>
+<p><strong><em>注意这里是必要操作确保Pangolin之后可用</em></strong></p>
 <h4 id="打开相应的源码文件"><a href="#打开相应的源码文件" class="headerlink" title="打开相应的源码文件"></a>打开相应的源码文件</h4><blockquote>
 <p>gedit Path_To_Pangolin/Pangolin/src/display/device/display_x11.cpp</p>
-</blockquote>
 <h4 id="将文件中对应代码修改成如下形式"><a href="#将文件中对应代码修改成如下形式" class="headerlink" title="将文件中对应代码修改成如下形式"></a>将文件中对应代码修改成如下形式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// Desired attributes</span><br><span class="line">    static int visual_attribs[] =</span><br><span class="line">    &#123;</span><br><span class="line">        GLX_X_RENDERABLE    , True,</span><br><span class="line">        GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,</span><br><span class="line">        GLX_RENDER_TYPE     , GLX_RGBA_BIT,</span><br><span class="line">        GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,</span><br><span class="line">        GLX_RED_SIZE        , 8,</span><br><span class="line">        GLX_GREEN_SIZE      , 8,</span><br><span class="line">        GLX_BLUE_SIZE       , 8,</span><br><span class="line">        GLX_ALPHA_SIZE      , 8,</span><br><span class="line">        GLX_DEPTH_SIZE      , 24,</span><br><span class="line">        GLX_STENCIL_SIZE    , 8,</span><br><span class="line">        GLX_DOUBLEBUFFER    , glx_doublebuffer ? False : False,</span><br><span class="line">        //GLX_SAMPLE_BUFFERS  , glx_sample_buffers,</span><br><span class="line">        //GLX_SAMPLES         , glx_sample_buffers &gt; 0 ? glx_samples : 0,</span><br><span class="line">        None</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+</blockquote>
 <h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><blockquote>
 <p>cd Pangolin</p>
 <p>mkdir build </p>
 <p>cd build </p>
 <p>cmake .. </p>
 <p>make -j2</p>
-</blockquote>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><blockquote>
-<p>sudo make install</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>sudo make install</p>
 </blockquote>
 <h2 id="安装OpenCV3-2-0"><a href="#安装OpenCV3-2-0" class="headerlink" title="安装OpenCV3.2.0"></a>安装OpenCV3.2.0</h2><h3 id="安装依赖-1"><a href="#安装依赖-1" class="headerlink" title="安装依赖"></a>安装依赖</h3><blockquote>
 <p>sudo apt-get install build-essential</p>
@@ -619,17 +830,13 @@
 </blockquote>
 <h3 id="下载OpenCV3-2-0的文件包"><a href="#下载OpenCV3-2-0的文件包" class="headerlink" title="下载OpenCV3.2.0的文件包"></a>下载OpenCV3.2.0的文件包</h3><blockquote>
 <p>去官网下载（考验网速的时候）</p>
-</blockquote>
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><blockquote>
-<p>cd OpenCV3.2.0</p>
+<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><p>cd OpenCV3.2.0</p>
 <p>mkdir build</p>
 <p>cd build</p>
 <p>cmake ..</p>
 <p>make -j</p>
 <p>sudo make install</p>
-</blockquote>
-<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><h4 id="终端输入"><a href="#终端输入" class="headerlink" title="终端输入"></a>终端输入</h4><blockquote>
-<p>pkg-config –cflags –libs opencv</p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><h4 id="终端输入"><a href="#终端输入" class="headerlink" title="终端输入"></a>终端输入</h4><p>pkg-config —cflags —libs opencv</p>
 </blockquote>
 <h4 id="显示如下信息表示安装成功"><a href="#显示如下信息表示安装成功" class="headerlink" title="显示如下信息表示安装成功"></a>显示如下信息表示安装成功</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-I/usr/local/include/opencv -I/usr/local/include -L/usr/local/lib -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_viz -lopencv_core</span><br></pre></td></tr></table></figure>
 <h2 id="安装Eigen3"><a href="#安装Eigen3" class="headerlink" title="安装Eigen3"></a>安装Eigen3</h2><blockquote>
@@ -639,9 +846,7 @@
 <h2 id="kinectv1驱动安装"><a href="#kinectv1驱动安装" class="headerlink" title="kinectv1驱动安装"></a>kinectv1驱动安装</h2><h3 id="OpenNI"><a href="#OpenNI" class="headerlink" title="OpenNI"></a>OpenNI</h3><h4 id="安装依赖-2"><a href="#安装依赖-2" class="headerlink" title="安装依赖"></a>安装依赖</h4><blockquote>
 <p>sudo apt-get install git build-essential python libusb-1.0-0-dev freeglut3-dev openjdk-8-jdk</p>
 <p>sudo apt-get install doxygen graphviz mono-complete</p>
-</blockquote>
-<h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><blockquote>
-<p>git clone <a href="https://github.com/OpenNI/OpenNI.git" target="_blank" rel="noopener">https://github.com/OpenNI/OpenNI.git</a></p>
+<h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><p>git clone <a href="https://github.com/OpenNI/OpenNI.git" target="_blank" rel="noopener">https://github.com/OpenNI/OpenNI.git</a></p>
 <p>cd OpenNI</p>
 <p>git checkout Unstable-1.5.4.0</p>
 <p>cd Platform/Linux/CreateRedist</p>
@@ -649,9 +854,7 @@
 <p>./RedistMaker</p>
 <p>cd ../Redist/OpenNI-Bin-Dev-Linux-[xxx]  (where [xxx] is your architecture and this particular OpenNI release)</p>
 <p>sudo ./install.sh</p>
-</blockquote>
-<h3 id="Kinect-Sensor"><a href="#Kinect-Sensor" class="headerlink" title="Kinect Sensor"></a>Kinect Sensor</h3><blockquote>
-<p>git clone <a href="https://github.com/avin2/SensorKinect" target="_blank" rel="noopener">https://github.com/avin2/SensorKinect</a></p>
+<h3 id="Kinect-Sensor"><a href="#Kinect-Sensor" class="headerlink" title="Kinect Sensor"></a>Kinect Sensor</h3><p>git clone <a href="https://github.com/avin2/SensorKinect" target="_blank" rel="noopener">https://github.com/avin2/SensorKinect</a></p>
 <p>cd SensorKinect</p>
 <p>cd Platform/Linux/CreateRedist</p>
 <p>chmod +x RedistMaker</p>
@@ -659,54 +862,38 @@
 <p>cd ../Redist/Sensor-Bin-Linux-[xxx] (where [xxx] is your architecture and this particular OpenNI release)  </p>
 <p>chmod +x install.sh</p>
 <p>sudo ./install.sh</p>
-</blockquote>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><blockquote>
-<p>cd OpenNI/Platform/Linux/Bin/x64-Release/NiViewer</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>cd OpenNI/Platform/Linux/Bin/x64-Release/NiViewer</p>
 <p>./NiViewer</p>
 <p>运行结果为深黄色图像</p>
 </blockquote>
 <h2 id="安装ROS"><a href="#安装ROS" class="headerlink" title="安装ROS"></a>安装ROS</h2><h3 id="按照官网步骤如下命令逐条运行"><a href="#按照官网步骤如下命令逐条运行" class="headerlink" title="按照官网步骤如下命令逐条运行"></a>按照官网步骤如下命令逐条运行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo sh -c &apos;echo &quot;deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main&quot; &gt; /etc/apt/sources.list.d/ros-latest.list&apos;</span><br><span class="line">sudo apt-key adv --keyserver &apos;hkp://keyserver.ubuntu.com:80&apos; --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install ros-kinetic-desktop-full</span><br><span class="line">apt-cache search ros-kinetic(查看可用的安装包)</span><br><span class="line">sudo rosdep init</span><br><span class="line">rosdep update</span><br><span class="line">echo &quot;source /opt/ros/kinetic/setup.bash&quot; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br><span class="line">sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential</span><br></pre></td></tr></table></figure>
 <h3 id="安装及测试驱动"><a href="#安装及测试驱动" class="headerlink" title="安装及测试驱动"></a>安装及测试驱动</h3><blockquote>
 <p>sudo apt-get install libfreenect-dev</p>
-</blockquote>
-<h4 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h4><blockquote>
-<p>sudo apt-get install ros-kinetic-openni-camera</p>
+<h4 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h4><p>sudo apt-get install ros-kinetic-openni-camera</p>
 <p>sudo apt-get install ros-kinetic-openni-launch</p>
 <p>rosstack profile</p>
 <p>rospack profile</p>
 <p>roslaunch openni_launch openni.launch</p>
 <p>rosrun rqt_image_view rqt_image_view</p>
-</blockquote>
-<h4 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h4><blockquote>
-<p>sudo apt-get install ros-kinetic-freenect-camera </p>
+<h4 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h4><p>sudo apt-get install ros-kinetic-freenect-camera </p>
 <p>ros-kinetic-freenect-stack ros-kinetic-freenect-launch</p>
 <p>roslaunch freenect_launch freenect-registered-xyzrgb.launch</p>
 <p>rosrun rqt_image_view rqt_image_view</p>
 </blockquote>
 <h2 id="安装ORB-SLAM2"><a href="#安装ORB-SLAM2" class="headerlink" title="安装ORB-SLAM2"></a>安装ORB-SLAM2</h2><h3 id="下载源码-1"><a href="#下载源码-1" class="headerlink" title="下载源码"></a>下载源码</h3><blockquote>
 <p>git clone <a href="https://github.com/raulmur/ORB_SLAM.git" target="_blank" rel="noopener">https://github.com/raulmur/ORB_SLAM.git</a></p>
-</blockquote>
-<h3 id="修改bash"><a href="#修改bash" class="headerlink" title="修改bash"></a>修改bash</h3><blockquote>
-<p>gedit ~/.bashrc</p>
+<h3 id="修改bash"><a href="#修改bash" class="headerlink" title="修改bash"></a>修改bash</h3><p>gedit ~/.bashrc</p>
 <p>export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:PATH_TO_PARENT_OF_ORB_SLAM<br>(在后面添加)<br>source ~/.bashrc</p>
-</blockquote>
-<h3 id="编译build-sh"><a href="#编译build-sh" class="headerlink" title="编译build.sh"></a>编译build.sh</h3><blockquote>
-<p>修改build.sh为如下内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;Configuring and building Thirdparty/DBoW2 ...&quot;</span><br><span class="line"></span><br><span class="line">cd Thirdparty/DBoW2</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j</span><br><span class="line"></span><br><span class="line">cd ../../g2o</span><br><span class="line"></span><br><span class="line">echo &quot;Configuring and building Thirdparty/g2o ...&quot;</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j</span><br><span class="line"></span><br><span class="line">cd ../../../</span><br><span class="line"></span><br><span class="line">echo &quot;Uncompress vocabulary ...&quot;</span><br><span class="line"></span><br><span class="line">cd Vocabulary</span><br><span class="line">tar -xf ORBvoc.txt.tar.gz</span><br><span class="line">cd ..</span><br><span class="line"></span><br><span class="line">echo &quot;Configuring and building ORB_SLAM2 ...&quot;</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j2</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
+<h3 id="编译build-sh"><a href="#编译build-sh" class="headerlink" title="编译build.sh"></a>编译build.sh</h3><p>修改build.sh为如下内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;Configuring and building Thirdparty/DBoW2 ...&quot;</span><br><span class="line"></span><br><span class="line">cd Thirdparty/DBoW2</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j</span><br><span class="line"></span><br><span class="line">cd ../../g2o</span><br><span class="line"></span><br><span class="line">echo &quot;Configuring and building Thirdparty/g2o ...&quot;</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j</span><br><span class="line"></span><br><span class="line">cd ../../../</span><br><span class="line"></span><br><span class="line">echo &quot;Uncompress vocabulary ...&quot;</span><br><span class="line"></span><br><span class="line">cd Vocabulary</span><br><span class="line">tar -xf ORBvoc.txt.tar.gz</span><br><span class="line">cd ..</span><br><span class="line"></span><br><span class="line">echo &quot;Configuring and building ORB_SLAM2 ...&quot;</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j2</span><br></pre></td></tr></table></figure></p>
 <p>chmod +x build.sh<br>./build.sh</p>
-</blockquote>
-<h3 id="如果出错则需要增加交换空间"><a href="#如果出错则需要增加交换空间" class="headerlink" title="如果出错则需要增加交换空间"></a>如果出错则需要增加交换空间</h3><blockquote>
-<p>sudo dd if=/dev/zero of=/var/swapfile1 bs=1024 count=2097152(2G可根据情况调整)</p>
+<h3 id="如果出错则需要增加交换空间"><a href="#如果出错则需要增加交换空间" class="headerlink" title="如果出错则需要增加交换空间"></a>如果出错则需要增加交换空间</h3><p>sudo dd if=/dev/zero of=/var/swapfile1 bs=1024 count=2097152(2G可根据情况调整)</p>
 <p>sudo mkswap /var/swapfile1</p>
 <p>sudo swapon /var/swapfile1（每次重启终端需要重新挂载）</p>
 <p>free -m 用于产看swap大小</p>
-</blockquote>
-<h3 id="编译build-ros-sh"><a href="#编译build-ros-sh" class="headerlink" title="编译build_ros.sh"></a>编译build_ros.sh</h3><blockquote>
-<p>chmod +x build_ros.sh</p>
+<h3 id="编译build-ros-sh"><a href="#编译build-ros-sh" class="headerlink" title="编译build_ros.sh"></a>编译build_ros.sh</h3><p>chmod +x build_ros.sh</p>
 <p>./build_ros.sh</p>
 </blockquote>
-<h2 id="运行ORB-SLAM2"><a href="#运行ORB-SLAM2" class="headerlink" title="运行ORB-SLAM2"></a>运行ORB-SLAM2</h2><p>###在ORB-SLAM2根目录下建立文件kinect_orbslam2.launch内容如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;launch&gt; </span><br><span class="line">  &lt;node pkg=&quot;ORB_SLAM2&quot; type=&quot;RGBD&quot; name=&quot;ORB_SLAM2&quot; output=&quot;screen&quot;  </span><br><span class="line">        args=&quot;/home/kaneiki/Desktop/SLAM/ORB_SLAM2/Vocabulary/ORBvoc.txt </span><br><span class="line">         /home/kaneiki/Desktop/SLAM/ORB_SLAM2/Examples/RGB-D/TUM2.yaml&quot;/&gt; </span><br><span class="line"></span><br><span class="line">  &lt;include file=&quot;$(find openni_launch)/launch/openni.launch&quot;&gt; </span><br><span class="line">    &lt;!-- use device registration --&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_registration&quot; value=&quot;true&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;rgb_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;ir_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;disparity_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;disparity_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;hw_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;sw_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">  &lt;/include&gt; </span><br><span class="line">&lt;/launch&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="运行ORB-SLAM2"><a href="#运行ORB-SLAM2" class="headerlink" title="运行ORB-SLAM2"></a>运行ORB-SLAM2</h2><h3 id="在ORB-SLAM2根目录下建立文件kinect-orbslam2-launch内容如下"><a href="#在ORB-SLAM2根目录下建立文件kinect-orbslam2-launch内容如下" class="headerlink" title="在ORB-SLAM2根目录下建立文件kinect_orbslam2.launch内容如下"></a>在ORB-SLAM2根目录下建立文件kinect_orbslam2.launch内容如下</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;launch&gt; </span><br><span class="line">  &lt;node pkg=&quot;ORB_SLAM2&quot; type=&quot;RGBD&quot; name=&quot;ORB_SLAM2&quot; output=&quot;screen&quot;  </span><br><span class="line">        args=&quot;/home/kaneiki/Desktop/SLAM/ORB_SLAM2/Vocabulary/ORBvoc.txt </span><br><span class="line">         /home/kaneiki/Desktop/SLAM/ORB_SLAM2/Examples/RGB-D/TUM2.yaml&quot;/&gt; </span><br><span class="line"></span><br><span class="line">  &lt;include file=&quot;$(find openni_launch)/launch/openni.launch&quot;&gt; </span><br><span class="line">    &lt;!-- use device registration --&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_registration&quot; value=&quot;true&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;rgb_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;ir_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;disparity_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;disparity_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;hw_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;sw_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">  &lt;/include&gt; </span><br><span class="line">&lt;/launch&gt;</span><br></pre></td></tr></table></figure>
 <p><strong><em>args下两条路径根据实际情况修改</em></strong></p>
 <h3 id="运行项目"><a href="#运行项目" class="headerlink" title="运行项目"></a>运行项目</h3><blockquote>
 <p>roslaunch kinect_orbslam2.launch</p>
@@ -1247,7 +1434,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -1448,6 +1635,69 @@
   
 
   
+  
+
+  
+  
+    
+      
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
 
   
 
