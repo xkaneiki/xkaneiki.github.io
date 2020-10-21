@@ -96,22 +96,22 @@
 
 
 
-  <meta name="description" content="rand_heap程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个">
+  <meta name="description" content="程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个数组中（bss段上">
 <meta property="og:type" content="article">
 <meta property="og:title" content="rand_heap">
 <meta property="og:url" content="http://yoursite.com/2020/10/21/rand-heap/index.html">
 <meta property="og:site_name" content="xkaneiki&#39;s blog">
-<meta property="og:description" content="rand_heap程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个">
+<meta property="og:description" content="程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个数组中（bss段上">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.04.21.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.04.39.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.14.51.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.29.44.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.41.41.png">
-<meta property="og:updated_time" content="2020-10-21T11:59:20.661Z">
+<meta property="og:updated_time" content="2020-10-21T16:39:09.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rand_heap">
-<meta name="twitter:description" content="rand_heap程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个">
+<meta name="twitter:description" content="程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个数组中（bss段上">
 <meta name="twitter:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.04.21.png">
 
 
@@ -338,12 +338,24 @@
                 
               
 
-              <time title="Created: 2020-10-21 14:51:48 / Modified: 19:59:20" itemprop="dateCreated datePublished" datetime="2020-10-21T14:51:48+08:00">2020-10-21</time>
+              <time title="Created: 2020-10-21 14:51:48" itemprop="dateCreated datePublished" datetime="2020-10-21T14:51:48+08:00">2020-10-21</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-10-22 00:39:09" itemprop="dateModified" datetime="2020-10-22T00:39:09+08:00">2020-10-22</time>
               
             
           </span>
@@ -377,7 +389,7 @@
       
 
       
-        <h1 id="rand-heap"><a href="#rand-heap" class="headerlink" title="rand_heap"></a>rand_heap</h1><h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h2><p>程序主要有三个函数：</p>
+        <h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h2><p>程序主要有三个函数：</p>
 <ol>
 <li><p>S函数可以用malloc申请小于0x1000的空间</p>
 </li>
@@ -585,7 +597,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rand-heap"><span class="nav-number">1.</span> <span class="nav-text">rand_heap</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#程序分析"><span class="nav-number">1.1.</span> <span class="nav-text">程序分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用思路"><span class="nav-number">1.2.</span> <span class="nav-text">利用思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#泄漏libc、heap和程序的基址"><span class="nav-number">1.2.1.</span> <span class="nav-text">泄漏libc、heap和程序的基址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获得shell"><span class="nav-number">1.2.2.</span> <span class="nav-text">获得shell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp-py"><span class="nav-number">1.3.</span> <span class="nav-text">exp.py</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#程序分析"><span class="nav-number">1.</span> <span class="nav-text">程序分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用思路"><span class="nav-number">2.</span> <span class="nav-text">利用思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#泄漏libc、heap和程序的基址"><span class="nav-number">2.1.</span> <span class="nav-text">泄漏libc、heap和程序的基址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获得shell"><span class="nav-number">2.2.</span> <span class="nav-text">获得shell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp-py"><span class="nav-number">3.</span> <span class="nav-text">exp.py</span></a></li></ol></div>
             
 
           </div>
