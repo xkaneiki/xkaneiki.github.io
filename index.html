@@ -460,148 +460,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/21/start-my-pwn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/10/21/start-my-pwn/" class="post-title-link" itemprop="url">start my pwn</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-10-21 01:10:16 / Modified: 01:10:50" itemprop="dateCreated datePublished" datetime="2020-10-21T01:10:16+08:00">2020-10-21</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/08/joseph-ping/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -647,12 +505,24 @@
                 
               
 
-              <time title="Created: 2020-02-08 10:02:44 / Modified: 10:34:15" itemprop="dateCreated datePublished" datetime="2020-02-08T10:02:44+08:00">2020-02-08</time>
+              <time title="Created: 2020-02-08 10:02:44" itemprop="dateCreated datePublished" datetime="2020-02-08T10:02:44+08:00">2020-02-08</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-10-22 00:37:41" itemprop="dateModified" datetime="2020-10-22T00:37:41+08:00">2020-10-22</time>
               
             
           </span>
@@ -694,9 +564,12 @@
 <li>找规律</li>
 </ol>
 <h2 id="找规律"><a href="#找规律" class="headerlink" title="找规律"></a>找规律</h2><ol>
-<li>考虑N个人，最后一个出列的人的编号是p（从1开始编号）<img src="/2020/02/08/joseph-ping/02/08/joseph-ping/2.jpeg" title="[2]"></li>
-<li>当有N+1个人时，第一个出列的人的编号是(K-1)%(N+1)+1<img src="/2020/02/08/joseph-ping/02/08/joseph-ping/1.jpeg" title="[1]"></li>
-<li>从第(K-1+1)%(N+1)+1个人开始重新编号（红色的部分）<img src="/2020/02/08/joseph-ping/02/08/joseph-ping/3.jpeg" title="[3]"></li>
+<li>考虑N个人，最后一个出列的人的编号是p（从1开始编号）<!-- <img src="/2020/02/08/joseph-ping/2.jpeg" title="[2]"> -->
+<img src="/2020/02/08/joseph-ping/2.jpeg" alt></li>
+<li>当有N+1个人时，第一个出列的人的编号是(K-1)%(N+1)+1<!-- <img src="/2020/02/08/joseph-ping/1.jpeg" title="[1]"> -->
+<img src="/2020/02/08/joseph-ping/1.jpeg" alt></li>
+<li>从第(K-1+1)%(N+1)+1个人开始重新编号（红色的部分）<!-- <img src="/2020/02/08/joseph-ping/3.jpeg" title="[3]"> -->
+<img src="/2020/02/08/joseph-ping/3.jpeg" alt></li>
 <li>红色的编号和黑色的编号具有这样的关系：令红色编号i对应的黑色编号为j，则j=(i-1+K)%(N+1)+1</li>
 <li>当第一个人走了以后，经过重新的编排（红色的编号）剩下的N个人满足1.的情况，根据4.的对应关系，则N+1个人时最后出列的人的编号是(p-1+K)%(N+1)+1</li>
 <li>时间复杂度为O(n)</li>
@@ -1169,7 +1042,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-01-24 22:31:47" itemprop="dateModified" datetime="2020-01-24T22:31:47+08:00">2020-01-24</time>
+                <time title="Modified: 2020-10-22 00:35:26" itemprop="dateModified" datetime="2020-10-22T00:35:26+08:00">2020-10-22</time>
               
             
           </span>
@@ -1266,8 +1139,8 @@
 </tbody>
 </table>
 </div>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><!-- ![实例](Booth算法/example.jpg) -->
-<img src="/2019/08/28/Booth算法/08/28/Booth算法/example.jpg" title="[example]">
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p><img src="/2019/08/28/Booth算法/example.jpg" alt="实例"><br><!-- <img src="/2019/08/28/Booth算法/example.jpg" title="[example]"> —&gt;</p>
+--></p>
           
         
       
@@ -2086,13 +1959,172 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/15/how to post the blog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kaneiki wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/04/15/how to post the blog/" class="post-title-link" itemprop="url">Hello World</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-15 19:52:26" itemprop="dateCreated datePublished" datetime="2019-04-15T19:52:26+08:00">2019-04-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-01-24 21:21:25" itemprop="dateModified" datetime="2020-01-24T21:21:25+08:00">2020-01-24</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
-
 
 
           </div>
@@ -2132,7 +2164,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2359,9 +2391,9 @@
       
     
       
-    
-      
         
+      
+    
       
     
       
