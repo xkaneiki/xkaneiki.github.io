@@ -97,7 +97,7 @@
 
 
   <meta name="description" content="程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个数组中（bss段上">
-<meta name="keywords" content="CTF,pwn">
+<meta name="keywords" content="CTF,pwn,tsctf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="rand_heap">
 <meta property="og:url" content="http://yoursite.com/2020/10/21/rand-heap/index.html">
@@ -109,7 +109,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.14.51.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.29.44.png">
 <meta property="og:image" content="http://yoursite.com/2020/10/21/rand-heap/截屏2020-10-21%20下午3.41.41.png">
-<meta property="og:updated_time" content="2020-10-21T16:55:11.470Z">
+<meta property="og:updated_time" content="2020-10-23T07:45:07.794Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rand_heap">
 <meta name="twitter:description" content="程序分析程序主要有三个函数：  S函数可以用malloc申请小于0x1000的空间  L函数可以用mmap来申请大于0x1000的空间，如果申请成功返回版本号，如果申请失败则返回一个失败信息  E函数可以用来修改申请的chunk里的信息，另外有一个以当前时间为种子的获得的随机数，当输入相同的随机数时可以额写入0x20的数据   此外程序将申请的chunk的地址和长度分别存放在两个数组中（bss段上">
@@ -390,7 +390,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-10-22 00:55:11" itemprop="dateModified" datetime="2020-10-22T00:55:11+08:00">2020-10-22</time>
+                <time title="Modified: 2020-10-23 15:45:07" itemprop="dateModified" datetime="2020-10-23T15:45:07+08:00">2020-10-23</time>
               
             
           </span>
@@ -501,6 +501,8 @@
           
             <a href="/tags/pwn/" rel="tag"># pwn</a>
           
+            <a href="/tags/tsctf/" rel="tag"># tsctf</a>
+          
         </div>
       
 
@@ -521,6 +523,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/10/23/unexploitable/" rel="prev" title="unexploitable">
+                unexploitable <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -589,7 +595,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -637,7 +643,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>

