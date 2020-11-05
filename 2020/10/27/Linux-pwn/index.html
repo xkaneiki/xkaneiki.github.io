@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="内核init.sh中的一些命令cpio命令：用于备份Linux文件 1234# cpio - copy files to and from archivescpio  &amp;#123;-o|--create&amp;#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[user@]host:">
+<meta name="keywords" content="CTF,kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux_pwn">
+<meta property="og:url" content="http://yoursite.com/2020/10/27/Linux-pwn/index.html">
+<meta property="og:site_name" content="xkaneiki&#39;s blog">
+<meta property="og:description" content="内核init.sh中的一些命令cpio命令：用于备份Linux文件 1234# cpio - copy files to and from archivescpio  &amp;#123;-o|--create&amp;#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[user@]host:">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-11-05T09:54:48.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux_pwn">
+<meta name="twitter:description" content="内核init.sh中的一些命令cpio命令：用于备份Linux文件 1234# cpio - copy files to and from archivescpio  &amp;#123;-o|--create&amp;#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[user@]host:">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2020/10/27/Linux-pwn/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Linux_pwn | xkaneiki's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xkaneiki's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/27/Linux-pwn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xkaneiki">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux_pwn
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-10-27 19:42:04" itemprop="dateCreated datePublished" datetime="2020-10-27T19:42:04+08:00">2020-10-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-11-05 17:54:48" itemprop="dateModified" datetime="2020-11-05T17:54:48+08:00">2020-11-05</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h2><h2 id="init-sh中的一些命令"><a href="#init-sh中的一些命令" class="headerlink" title="init.sh中的一些命令"></a>init.sh中的一些命令</h2><p>cpio命令：用于备份Linux文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cpio - copy files to and from archives</span></span><br><span class="line">cpio  &#123;-o|--create&#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[user@]host:]archive] [--file=[[user@]host:]archive] [--format=format] [--message=mes‐</span><br><span class="line">       sage] [--null] [--reset-access-time] [--verbose] [--dot] [--append] [--block-size=blocks] [--dereference] [--io-size=bytes]  [--quiet]  [--force-local]  [--rsh-command=<span class="built_in">command</span>]  [--<span class="built_in">help</span>]</span><br><span class="line">       [--version] &lt; name-list [&gt; archive]</span><br></pre></td></tr></table></figure>
+<p>mount    </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mount - mount a filesystem</span></span><br><span class="line">mount -t <span class="built_in">type</span> device dir</span><br></pre></td></tr></table></figure>
+<p>chrown</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chown - change file owner and group</span></span><br><span class="line"><span class="comment"># chown changes the user and/or group ownership of each given file.</span></span><br><span class="line">chown [OPTION]... [OWNER][:[GROUP]] FILE...</span><br><span class="line">chown [OPTION]... --reference=RFILE FILE...</span><br></pre></td></tr></table></figure>
+<p>setsid, setuidgid</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># setsid [options] program [arguments]</span></span><br><span class="line"><span class="comment"># setsid runs a program in a new session.</span></span><br><span class="line">setsid [options] program [arguments]</span><br><span class="line"></span><br><span class="line"><span class="comment"># setgid() sets the effective group ID of the calling process.</span></span><br><span class="line"><span class="comment"># setuid()  sets  the  effective user ID of the calling process.</span></span><br></pre></td></tr></table></figure>
+<h2 id="调试的链接过程"><a href="#调试的链接过程" class="headerlink" title="调试的链接过程"></a>调试的链接过程</h2><p>bzImage是</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../linux-4.9/scripts/extract-vmlinux bzImage &gt; vmlinux</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker容器中貌似不支持虚拟化不能用kvm，将-enable-kvm选项去掉</span></span><br><span class="line"><span class="comment"># 这个命令一般在题目中会被给出来</span></span><br><span class="line">qemu-system-x86_64 -initrd rootfs.cpio -kernel bzImage -append <span class="string">'console=ttyS0 root=/dev/ram oops=panic panic=1'</span> \</span><br><span class="line">-monitor /dev/null \</span><br><span class="line">-m 64M \</span><br><span class="line">--nographic  -smp cores=1,threads=1 -cpu kvm64,+smep \</span><br><span class="line">-gdb tcp::1234</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gdb </span><br><span class="line">-&gt;<span class="built_in">set</span> architecture ...</span><br><span class="line">-&gt;target remote :1234</span><br><span class="line">-&gt;add-symbol-file ./fs/lib/modules/4.4.72/babydriver.ko 0xffffffffc00000</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/module/babydriver/sections/.text</span><br><span class="line"><span class="comment"># 得到0xffffffffc00000 这个就是babydriver驱动的.txt的起始地址</span></span><br></pre></td></tr></table></figure>
+<p>也可以通过以下命令输出所有的字符以及对应的地址</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/kallsyms </span><br><span class="line"><span class="comment"># /proc/kallsyms 给出内核中所有 symbol 的地址</span></span><br><span class="line"><span class="comment"># 我们需要这个信息来写可靠的 exploit，否则需要自己去泄露这个信息。</span></span><br><span class="line"><span class="comment"># 在低版本的内核中所有用户都可读取其中的内容，高版本的内核中缺少权限的用户读取时会返回 0。</span></span><br></pre></td></tr></table></figure>
+<h2 id="kernel-pwn-的目标"><a href="#kernel-pwn-的目标" class="headerlink" title="kernel pwn 的目标"></a>kernel pwn 的目标</h2><p>Kernel Pwn 就是找出内核模块中的漏洞，然后写一个 C 语言程序，放入文件系统中打包，重新运行取来，此时用户一般都是普通用户，运行程序调用此模块的功能利用漏洞，从而提升权限到 root 用户，读取 flag。</p>
+<h2 id="LKM"><a href="#LKM" class="headerlink" title="LKM"></a>LKM</h2><p>动态可加载模块Loadable Kernel Module</p>
+<p>可以往 Kernel 中接入各种 LKM，也可以卸载，常见的外设驱动就是一个 LKM</p>
+<p>LKM 文件与用户态的可执行文件一样，在 Linux 中就是 ELF 文件，可以利用 IDA 进行分析</p>
+<p>LKM 是单独编译的，但是不能单独运行，他只能作为 OS Kernel 的一部分</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">insmod <span class="comment"># 接入指定模块</span></span><br><span class="line">rmmod <span class="comment"># 删除置顶模块</span></span><br><span class="line">lsmod <span class="comment"># 列出指定模块</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># insmod - Simple program to insert a module into the Linux Kernel</span></span><br><span class="line"><span class="comment"># insmod is a trivial program to insert a module into the kernel.</span></span><br><span class="line">insmod [filename] [module options...]</span><br></pre></td></tr></table></figure>
+<h2 id="ioctl"><a href="#ioctl" class="headerlink" title="ioctl"></a>ioctl</h2><p>ioctl 是设备驱动程序中对设备的 I/O 通道进行管理的函数</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">fd 是文件标示符</span></span><br><span class="line"><span class="comment">cmd 用户对于设备的控制命令</span></span><br><span class="line"><span class="comment">... 和cmd的意义有关</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">int ioctl(int fd, ind cmd, …)；</span><br></pre></td></tr></table></figure>
+<p><strong>如果一个 LKM 中提供了 iotcl 功能，并且实现了对应指令的操作，那么在用户态中，通过这个驱动程序，我们可以调用 ioctl 来直接调用模块中的操作。</strong></p>
+<h2 id="内核态的保护模式"><a href="#内核态的保护模式" class="headerlink" title="内核态的保护模式"></a>内核态的保护模式</h2><h3 id="MMAP-MIN-ADDR"><a href="#MMAP-MIN-ADDR" class="headerlink" title="MMAP_MIN_ADDR"></a>MMAP_MIN_ADDR</h3><p>保护机制不允许程序分配低内存地址</p>
+<h3 id="SMEP"><a href="#SMEP" class="headerlink" title="SMEP"></a>SMEP</h3><p>管理模式执行保护，保护内核是其不允许执行用户空间代码。</p>
+<p>操作系统是通过 CR4 寄存器的第 20 位的值来判断 SMEP 是否开启，1 开启，0 关闭，检查 SMEP 是否开启，可通过 mov 指令给 CR4 寄存器赋值从而达到关闭 SMEP 的目的，相关的 mov 指令可以通过 ropper，ROPgadget 等工具查找。</p>
+<h3 id="SMAP"><a href="#SMAP" class="headerlink" title="SMAP"></a>SMAP</h3><p>管理模式访问保护，禁止内核访问用户空间的数据</p>
+<h3 id="KASLR"><a href="#KASLR" class="headerlink" title="KASLR"></a>KASLR</h3><p>内核地址空间布局随机化，并不默认开启，需要在内核命令行中添加指定指令。</p>
+<p>qemu 增加启动参数 -append “kaslr” 即可开启</p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><ol>
+<li><p>内核态调用commit_creds(prepare_kernel_cred(0))，返回用户态执行shell</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commit_creds(prepare_kernel_cred(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>修改cred结构体</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cred</span> &#123;</span></span><br><span class="line">    <span class="keyword">atomic_t</span>    usage;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_DEBUG_CREDENTIALS</span></span><br><span class="line">    <span class="keyword">atomic_t</span>    subscribers;    <span class="comment">/* number of processes subscribed */</span></span><br><span class="line">    <span class="keyword">void</span>        *put_addr;</span><br><span class="line">    <span class="keyword">unsigned</span>    magic;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CRED_MAGIC  0x43736564</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CRED_MAGIC_DEAD 0x44656144</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">kuid_t</span>      uid;        <span class="comment">/* real UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      gid;        <span class="comment">/* real GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      suid;       <span class="comment">/* saved UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      sgid;       <span class="comment">/* saved GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      euid;       <span class="comment">/* effective UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      egid;       <span class="comment">/* effective GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      fsuid;      <span class="comment">/* UID for VFS ops */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      fsgid;      <span class="comment">/* GID for VFS ops */</span></span><br><span class="line">    <span class="keyword">unsigned</span>    securebits; <span class="comment">/* SUID-less security management */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_inheritable; <span class="comment">/* caps our children can inherit */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_permitted;  <span class="comment">/* caps we're permitted */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_effective;  <span class="comment">/* caps we can actually use */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_bset;   <span class="comment">/* capability bounding set */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_ambient;    <span class="comment">/* Ambient capability set */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_KEYS</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span>   jit_keyring;    <span class="comment">/* default keyring to attach requested</span></span><br><span class="line"><span class="comment">                     * keys to */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span> __<span class="title">rcu</span> *<span class="title">session_keyring</span>;</span> <span class="comment">/* keyring inherited over fork */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">process_keyring</span>;</span> <span class="comment">/* keyring private to this process */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">thread_keyring</span>;</span> <span class="comment">/* keyring private to this thread */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">request_key_auth</span>;</span> <span class="comment">/* assumed request_key authority */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SECURITY</span></span><br><span class="line">    <span class="keyword">void</span>        *security;  <span class="comment">/* subjective LSM security */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">user_struct</span> *<span class="title">user</span>;</span>   <span class="comment">/* real user ID subscription */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">user_namespace</span> *<span class="title">user_ns</span>;</span> <span class="comment">/* user_ns the caps and keyrings are relative to. */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">group_info</span> *<span class="title">group_info</span>;</span>  <span class="comment">/* supplementary groups for euid/fsgid */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rcu_head</span> <span class="title">rcu</span>;</span>        <span class="comment">/* RCU deletion hook */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag"># CTF</a>
+          
+            <a href="/tags/kernel/" rel="tag"># kernel</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/26/bytectf-gun/" rel="next" title="bytectf-gun">
+                <i class="fa fa-chevron-left"></i> bytectf-gun
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/05/hxb-pwn-printf/" rel="prev" title="hxb_pwn_printf">
+                hxb_pwn_printf <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xkaneiki</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内核"><span class="nav-number">1.</span> <span class="nav-text">内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#init-sh中的一些命令"><span class="nav-number">2.</span> <span class="nav-text">init.sh中的一些命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调试的链接过程"><span class="nav-number">3.</span> <span class="nav-text">调试的链接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kernel-pwn-的目标"><span class="nav-number">4.</span> <span class="nav-text">kernel pwn 的目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LKM"><span class="nav-number">5.</span> <span class="nav-text">LKM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ioctl"><span class="nav-number">6.</span> <span class="nav-text">ioctl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内核态的保护模式"><span class="nav-number">7.</span> <span class="nav-text">内核态的保护模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MMAP-MIN-ADDR"><span class="nav-number">7.1.</span> <span class="nav-text">MMAP_MIN_ADDR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMEP"><span class="nav-number">7.2.</span> <span class="nav-text">SMEP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMAP"><span class="nav-number">7.3.</span> <span class="nav-text">SMAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KASLR"><span class="nav-number">7.4.</span> <span class="nav-text">KASLR</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提权"><span class="nav-number">8.</span> <span class="nav-text">提权</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xkaneiki</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
