@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://xkaneiki.github.io/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/categories/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/archives/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/11/05/hxb-only-add/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/11/05/hxb-blend-pwn/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/11/05/hxb-pwn-printf/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/10/27/Linux-pwn/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/10/26/bytectf-gun/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/10/23/unexploitable/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/10/21/rand-heap/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/02/08/joseph-ping/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/categories/%E7%AE%97%E6%B3%95/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/01/27/dns-collect/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2020/01/26/vps-build/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/page/2/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/CTF/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/ORB-SLAM2/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/hxb/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/kernel/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/pawnable-tw/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/pwn/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/tsctf/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/vps-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/archives/page/2/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2019/08/28/Booth%E7%AE%97%E6%B3%95/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2019/07/11/ros%E8%AF%BB%E5%8F%96%E5%9B%BE%E5%83%8F/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2019/07/06/Ubuntu1604-SLAM-kinectv1/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2019/04/16/SeamCarving/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2019/04/15/dehaze/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://xkaneiki.github.io/2019/04/15/how%20to%20post%20the%20blog/</loc>
+  <lastmod>2020-11-05T14:05:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
