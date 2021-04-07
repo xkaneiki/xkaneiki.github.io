@@ -327,6 +327,234 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/24/linux-kernel-heap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xkaneiki">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2021/03/24/linux-kernel-heap/" class="post-title-link" itemprop="url">linux_kernel_heap</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-03-24 21:19:42" itemprop="dateCreated datePublished" datetime="2021-03-24T21:19:42+08:00">2021-03-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2021-04-03 23:18:42" itemprop="dateModified" datetime="2021-04-03T23:18:42+08:00">2021-04-03</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="linux-kernel-heap"><a href="#linux-kernel-heap" class="headerlink" title="linux kernel heap"></a>linux kernel heap</h1><h2 id="Buddy-System"><a href="#Buddy-System" class="headerlink" title="Buddy System"></a>Buddy System</h2><p>伙伴系统</p>
+<p>采用二分法分配内存</p>
+<p>分配的内存大小必须是2的整数次幂，2的指数（幂）就称为一个块的order。</p>
+<p>块的大小单位为一个页的大小，比如一个页为4k的系统，order为0的堆块的大小就是(2^0)*4K。</p>
+<p>分配连续的物理空间</p>
+<p>memory zone </p>
+<p>DMA and DMA32 zones, highmem zone and a Normal zone and other zones</p>
+<p>vmalloc 的分配的空间在虚拟内存下时连续的，但是不一定要在物理内存下时连续的。</p>
+<p>通过/proc/buddyinfo和/proc/pagetypeinfo查看分配的情况</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/ <span class="comment"># cat /proc/buddyinfo</span></span><br><span class="line">Node 0, zone      DMA      0      0      0      1      2      1      1      0      1      1      3</span><br><span class="line">Node 0, zone    DMA32      0      5      3      6      7      8      8     10      7      3     14</span><br></pre></td></tr></table></figure>
+<h3 id="分配"><a href="#分配" class="headerlink" title="分配"></a>分配</h3><p>首先有个大堆块</p>
+<p>当分配时首先确定需要的块大小（确定需要那个oder的块）</p>
+<p>如果当前的order有剩余的块则分配值，否则将order更大的块进行切分</p>
+<p>Linux中通过get_free_pages实现</p>
+<h3 id="释放"><a href="#释放" class="headerlink" title="释放"></a>释放</h3><p>当有块释放时，检查相邻的块（从同一个块中切分出来的），就将其合并成更大的order的块。</p>
+<p>Linux中通过alloc_pages实现</p>
+<h3 id="buddy-allocator"><a href="#buddy-allocator" class="headerlink" title="buddy allocator"></a>buddy allocator</h3><p>分配页的函数在”linux/gfp.h”中（gfp是get free page的意思），其中 gfp_mask是alloc_pages用来表示谁来请求这次的内存分配。比如GFP_KERNEL用来表示这个页框是在内核中使用的，GFP_USER表示在用户空间使用。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> alloc_pages(gfp_mask, order) \</span></span><br><span class="line">		alloc_pages_node(numa_node_id(), gfp_mask, order)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Allocate pages, preferring the node given as nid. When nid == NUMA_NO_NODE,</span></span><br><span class="line"><span class="comment"> * prefer the current CPU's closest node. Otherwise node must be valid and</span></span><br><span class="line"><span class="comment"> * online.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> struct page *<span class="title">alloc_pages_node</span><span class="params">(<span class="keyword">int</span> nid, <span class="keyword">gfp_t</span> gfp_mask,</span></span></span><br><span class="line"><span class="function"><span class="params">						<span class="keyword">unsigned</span> <span class="keyword">int</span> order)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">/*</span></span></span><br><span class="line"><span class="function"><span class="comment"> * Allocate pages, preferring the node given as nid. The node must be valid and</span></span></span><br><span class="line"><span class="function"><span class="comment"> * online. For more general interface, see alloc_pages_node().</span></span></span><br><span class="line"><span class="function"><span class="comment"> */</span></span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> struct page *</span></span><br><span class="line"><span class="function">__<span class="title">alloc_pages_node</span><span class="params">(<span class="keyword">int</span> nid, <span class="keyword">gfp_t</span> gfp_mask, <span class="keyword">unsigned</span> <span class="keyword">int</span> order)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">/*</span></span></span><br><span class="line"><span class="function"><span class="comment"> * This is the 'heart' of the zoned buddy allocator.</span></span></span><br><span class="line"><span class="function"><span class="comment"> */</span></span></span><br><span class="line"><span class="function">struct page *</span></span><br><span class="line"><span class="function">__<span class="title">alloc_pages_nodemask</span><span class="params">(<span class="keyword">gfp_t</span> gfp_mask, <span class="keyword">unsigned</span> <span class="keyword">int</span> order, <span class="keyword">int</span> preferred_nid,</span></span></span><br><span class="line"><span class="function"><span class="params">							<span class="keyword">nodemask_t</span> *nodemask)</span></span></span><br></pre></td></tr></table></figure>
+<p>释放页</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">free_pages</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> addr, <span class="keyword">unsigned</span> <span class="keyword">int</span> order)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (addr != <span class="number">0</span>) &#123;</span><br><span class="line">		VM_BUG_ON(!virt_addr_valid((<span class="keyword">void</span> *)addr));</span><br><span class="line">		__free_pages(virt_to_page((<span class="keyword">void</span> *)addr), order);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//---&gt;....</span></span><br></pre></td></tr></table></figure>
+<h2 id="slab"><a href="#slab" class="headerlink" title="slab"></a>slab</h2><p><img src="/2021/03/24/linux-kernel-heap/slab.png" alt="img"></p>
+<p>slabs_full    完全分配的slab</p>
+<p>slabs_partital    部分分配的slab</p>
+<p>slabs_empty    空空的slab</p>
+<p>SLAB: 从伙伴系统分配的 2^order 个物理页就组成了一个 SLAB ，而后续的操作就是在这个 SLAB 上在进行细分的，具体的结构体是 struct slab 。</p>
+<p>每个kmem_cache里面包含的很多slab结构，同一个kmem_cache中包含的obj的大小都是相同的，每个slab只针对一种数据类型</p>
+<p>每个slab结构中可以包含很多的obj</p>
+<p>每个slab是有一个或者多个连续的页组成</p>
+<p>kmalloc是基于slab分配器的</p>
+<p>利用cat /porc/slabinfo来打印出相关的结构</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Boot took 0.99 seconds</span><br><span class="line">/ <span class="comment"># cat /proc/slabinfo</span></span><br><span class="line">slabinfo - version: 2.1</span><br><span class="line"><span class="comment"># name            &lt;active_objs&gt; &lt;num_objs&gt; &lt;objsize&gt; &lt;objperslab&gt; &lt;pagesperslab&gt; : tunables &lt;limit&gt; &lt;batchcount&gt; &lt;sharedfactor&gt; : slabdata &lt;active_slabs&gt; &lt;num_slabs&gt; &lt;sharedavail&gt;</span></span><br><span class="line">kcopyd_job             0      0   3312    9    8 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">scsi_sense_cache      32     32    128   32    1 : tunables    0    0    0 : slabdata      1      1      0</span><br><span class="line">i915_vma               0      0    576   14    2 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">execute_cb             0      0    128   32    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">i915_request           0      0    640   12    2 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">sgpool-16              8      8    512    8    1 : tunables    0    0    0 : slabdata      1      1      0</span><br><span class="line">isofs_inode_cache      0      0    624   13    2 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">fat_inode_cache        0      0    712   11    2 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">fat_cache              0      0     40  102    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">jbd2_journal_handle      0      0     48   85    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">jbd2_journal_head      0      0    120   34    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">jbd2_revoke_table_s      0      0     16  256    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">ext4_inode_cache       0      0   1064   15    4 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">ext4_allocation_context      0      0    128   32    1 : tunables    0    0    0 : slabdata      0      0      0</span><br></pre></td></tr></table></figure>
+<p>active_objs 正在被使用的obj的数量</p>
+<p>num_objs obj的总量</p>
+<p>objsize obj的大小</p>
+<p> objperslab 每个slab中可以有多少个obj</p>
+<p> pagesperslab 每个slab对应几个页·</p>
+<h3 id="slab-allocator"><a href="#slab-allocator" class="headerlink" title="slab allocator"></a>slab allocator</h3><p>buddy系统会产生大量的内碎片，比如（伙伴系统只能分配连续的物理内存页）一个33page的请求就伙伴系统就会分配2^6=64pages，相当于浪费了31pages。引入slab allocator就是为了把页分成更小的块来进行分配。</p>
+<p><strong>slab 核心思想是在保存那些常用堆块的缓存，以便能够在内核中进行分配。</strong>这是非常有意义的，通过缓存被释放obj，有一些常用的结构就能够在复制新的同样的结构时进行快速分配。通过重新利用被释放的obj，在某些情况下，内核就不必再重新申请内存了。Linux的slab allocator经过长期的发展，已经发生了很大的变化。现在slab allocator有三种不同的实现</p>
+<ol>
+<li>SLOB Allocator 是在solaris os被实现的最原始的slab allocator，现在大多被用在内存很小的嵌入式系统里，分配小内存非常高效，首次适应分配算法</li>
+<li>SLAB Allocator SLAB的升级，旨在变得更加的“cache friendly”</li>
+<li>SLUB Allocator 通过减少使用的队列/链来回获得比SLAB更好的执行时间</li>
+</ol>
+<p><strong>今天大多数系统中使用的SLUB</strong></p>
+<p>一个slab cache包含许多slab，一个slab中包含很多obj</p>
+<p>？分别对应什么结构</p>
+<p>slab cahes —&gt;struct kmem_cache</p>
+<p>页 —&gt; struct page</p>
+<p>slab —&gt; page</p>
+<p>obj的结构</p>
+<p>有两种主要的cache</p>
+<ol>
+<li>Dedicate（专用的）：这些缓存是给那些常用的内核中的结构的。这写结构被分配时就是初始化过的，被释放的时候还是保持被初始化的，一边下一次分配的时候会变得更快</li>
+<li>Generic（通用的）：这些都是通用的缓存，在大多数情况下，它们的大小对应于2的幂。</li>
+</ol>
+<p>dma-kmalloc-256  以上时专用缓存，dma-kmalloc-256及以下时通用缓存。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">vm_area_struct     65543  66082    208   19    1 : tunables    0    0    0 : slabdata   3478   3478      0</span><br><span class="line">mm_struct            213    225   2112   15    8 : tunables    0    0    0 : slabdata     15     15      0</span><br><span class="line">files_cache          228    230    704   23    4 : tunables    0    0    0 : slabdata     10     10      0</span><br><span class="line">signal_cache         399    448   1024   16    4 : tunables    0    0    0 : slabdata     28     28      0</span><br><span class="line">sighand_cache        414    435   2112   15    8 : tunables    0    0    0 : slabdata     29     29      0</span><br><span class="line">task_struct         1102   1125   5952    5    8 : tunables    0    0    0 : slabdata    225    225      0</span><br><span class="line">dma-kmalloc-256        0      0    256   16    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">dma-kmalloc-128        0      0    128   32    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">dma-kmalloc-64         0      0     64   64    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">dma-kmalloc-32         0      0     32  128    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">dma-kmalloc-16         0      0     16  256    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">dma-kmalloc-8          0      0      8  512    1 : tunables    0    0    0 : slabdata      0      0      0</span><br><span class="line">kmalloc-256         1801   2064    256   16    1 : tunables    0    0    0 : slabdata    129    129      0</span><br><span class="line">kmalloc-192         4410   4410    192   21    1 : tunables    0    0    0 : slabdata    210    210      0</span><br><span class="line">kmalloc-128         2689   2752    128   32    1 : tunables    0    0    0 : slabdata     86     86      0</span><br><span class="line">kmalloc-96          6952   7350     96   42    1 : tunables    0    0    0 : slabdata    175    175      0</span><br><span class="line">kmalloc-64         25933  26496     64   64    1 : tunables    0    0    0 : slabdata    414    414      0</span><br><span class="line">kmalloc-32         15150  15616     32  128    1 : tunables    0    0    0 : slabdata    122    122      0</span><br><span class="line">kmalloc-16         18432  18432     16  256    1 : tunables    0    0    0 : slabdata     72     72      0</span><br><span class="line">kmalloc-8          10149  10240      8  512    1 : tunables    0    0    0 : slabdata     20     20      0</span><br></pre></td></tr></table></figure>
+<h4 id="kmalloc"><a href="#kmalloc" class="headerlink" title="kmalloc"></a>kmalloc</h4><p><strong>kmalloc是内核通过slab allocator进行一般内存分配的接口</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// "include/linux/slab.h"</span></span><br><span class="line"><span class="keyword">static</span> __<span class="function">always_inline <span class="keyword">void</span> *<span class="title">kmalloc</span><span class="params">(<span class="keyword">size_t</span> size, <span class="keyword">gfp_t</span> flags)</span></span>;</span><br><span class="line"><span class="comment">//allocates memory through slab allocator.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> *<span class="title">kzalloc</span><span class="params">(<span class="keyword">size_t</span> size, <span class="keyword">gfp_t</span> flags)</span></span>;</span><br><span class="line"><span class="comment">//allocates memory (and zeroes it out like calloc() in libc) through the slab allocator.</span></span><br><span class="line"><span class="comment">//和libc中的calloc相似</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> * __<span class="function">must_check <span class="title">krealloc</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *, <span class="keyword">size_t</span>, <span class="keyword">gfp_t</span>)</span></span>;</span><br><span class="line"><span class="comment">//resize existing allocation.</span></span><br><span class="line"><span class="comment">//和libc中realloc相似</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">kfree</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *)</span></span>;</span><br><span class="line"><span class="comment">//frees memory previously allocated.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">kzfree</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *)</span></span>;</span><br></pre></td></tr></table></figure>
+<h4 id="专用缓存（Dedicated-Cache）的初始化"><a href="#专用缓存（Dedicated-Cache）的初始化" class="headerlink" title="专用缓存（Dedicated Cache）的初始化"></a>专用缓存（Dedicated Cache）的初始化</h4><p>以vm_area_struct的slab cache 为例子</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//"kernel/fork.c"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* slab cache for vm_area_struct structures */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">kmem_cache</span> *<span class="title">vm_area_cachep</span>;</span></span><br><span class="line"></span><br><span class="line">vm_area_cachep = KMEM_CACHE(vm_area_struct, SLAB_PANIC|SLAB_ACCOUNT);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> KMEM_CACHE() is a macro defined in "/include/linux/slab.h" which actually expands</span></span><br><span class="line"><span class="comment"> to a call to kmem_cache_create() which is the procedure to register a new slab</span></span><br><span class="line"><span class="comment"> cache and adds the new cache to the list of all slabs in the system.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">vm_area_struct</span> *<span class="title">vma</span> = <span class="title">kmem_cache_alloc</span>(<span class="title">vm_area_cachep</span>, <span class="title">GFP_KERNEL</span>);</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> kmem_cache_alloc() is the procedure to allocate the object from the dedicated</span></span><br><span class="line"><span class="comment"> cache memory. The allocation will be attempted first on a partially filled slab,</span></span><br><span class="line"><span class="comment"> then (if no partially filled slabs are available) in a free slab,</span></span><br><span class="line"><span class="comment"> and if no free slabs are found,</span></span><br><span class="line"><span class="comment"> it will try to allocate new page frames from the underlying buddy allocator.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"> kmem_cache_free(vm_area_cachep, vma);</span><br><span class="line"> <span class="comment">/*</span></span><br><span class="line"><span class="comment">  kmem_cache_free() is the procedure that frees the memory allocated to the vma object</span></span><br><span class="line"><span class="comment">  previously allocated. The (now free'd) slab,</span></span><br><span class="line"><span class="comment">  will be kept in order to be used for future allocations and the memory is NOT</span></span><br><span class="line"><span class="comment">  released immediately after this call. When all of the slabs have been free'd,</span></span><br><span class="line"><span class="comment">  kernel modules have to call kmem_cache_destroy() to release the pre allocated memory.</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<h4 id="SLAB-Cache-管理"><a href="#SLAB-Cache-管理" class="headerlink" title="SLAB Cache 管理"></a>SLAB Cache 管理</h4><p>kmem_cache中的结构</p>
+<p><code>unsigned int gfporder</code></p>
+<p>每个slab能够存放的页的数量。</p>
+<p><code>struct kmem_cache_node *node[MAN_NUMNODES]</code> </p>
+<p>用来存储不同状态的slab，主要维护三个变量，这个主要是维护这个kmem_cache_node中的slab的信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * The slab lists for all objects.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kmem_cache_node</span> &#123;</span></span><br><span class="line">	<span class="keyword">spinlock_t</span> list_lock;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SLAB</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">slabs_partial</span>;</span>	<span class="comment">/* partial list first, better asm code */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">slabs_full</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">slabs_free</span>;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> total_slabs;	<span class="comment">/* length of all slab lists */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> free_slabs;	<span class="comment">/* length of free slab list only */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> free_objects;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> free_limit;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> colour_next;	<span class="comment">/* Per-node cache coloring */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">array_cache</span> *<span class="title">shared</span>;</span>	<span class="comment">/* shared per node */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">alien_cache</span> **<span class="title">alien</span>;</span>	<span class="comment">/* on other nodes */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> next_reap;	<span class="comment">/* updated without locking */</span></span><br><span class="line">	<span class="keyword">int</span> free_touched;		<span class="comment">/* updated without locking */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SLUB</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> nr_partial;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">partial</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SLUB_DEBUG</span></span><br><span class="line">	<span class="keyword">atomic_long_t</span> nr_slabs;</span><br><span class="line">	<span class="keyword">atomic_long_t</span> total_objects;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">full</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>struct array_cache __percpu *cpu_cache</code></p>
+<p>这个结构是管理被释放的obj的块，entry中的每一项指向被释放的对象。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * struct array_cache</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Purpose:</span></span><br><span class="line"><span class="comment"> * - LIFO ordering, to hand out cache-warm objects from _alloc</span></span><br><span class="line"><span class="comment"> * - reduce the number of linked list operations</span></span><br><span class="line"><span class="comment"> * - reduce spinlock operations</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * The limit is stored in the per-cpu structure to reduce the data cache</span></span><br><span class="line"><span class="comment"> * footprint.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">array_cache</span> &#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> avail;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> limit;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> batchcount;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> touched;</span><br><span class="line">	<span class="keyword">void</span> *entry[];	<span class="comment">/*</span></span><br><span class="line"><span class="comment">			 * Must have this definition in here for the proper</span></span><br><span class="line"><span class="comment">			 * alignment of array_cache. Also simplifies accessing</span></span><br><span class="line"><span class="comment">			 * the entries.</span></span><br><span class="line"><span class="comment">			 */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>page中的void <em>s_mem指向slab中的第一个obj;void </em>freelist;指向第一个free的obj</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> &#123;</span>	<span class="comment">/* slab, slob and slub */</span></span><br><span class="line">			<span class="keyword">union</span> &#123;</span><br><span class="line">				<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">slab_list</span>;</span></span><br><span class="line">				<span class="class"><span class="keyword">struct</span> &#123;</span>	<span class="comment">/* Partial pages */</span></span><br><span class="line">					<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">next</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_64BIT</span></span><br><span class="line">					<span class="keyword">int</span> pages;	<span class="comment">/* Nr of pages left */</span></span><br><span class="line">					<span class="keyword">int</span> pobjects;	<span class="comment">/* Approximate count */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">					<span class="keyword">short</span> <span class="keyword">int</span> pages;</span><br><span class="line">					<span class="keyword">short</span> <span class="keyword">int</span> pobjects;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">				&#125;;</span><br><span class="line">			&#125;;</span><br><span class="line">			<span class="class"><span class="keyword">struct</span> <span class="title">kmem_cache</span> *<span class="title">slab_cache</span>;</span> <span class="comment">/* not slob */</span></span><br><span class="line">			<span class="comment">/* Double-word boundary */</span></span><br><span class="line">			<span class="keyword">void</span> *freelist;		<span class="comment">/* first free object */</span></span><br><span class="line">			<span class="keyword">union</span> &#123;</span><br><span class="line">				<span class="keyword">void</span> *s_mem;	<span class="comment">/* slab: first object */</span></span><br><span class="line">				<span class="keyword">unsigned</span> <span class="keyword">long</span> counters;		<span class="comment">/* SLUB */</span></span><br><span class="line">				<span class="class"><span class="keyword">struct</span> &#123;</span>			<span class="comment">/* SLUB */</span></span><br><span class="line">					<span class="keyword">unsigned</span> inuse:<span class="number">16</span>;</span><br><span class="line">					<span class="keyword">unsigned</span> objects:<span class="number">15</span>;</span><br><span class="line">					<span class="keyword">unsigned</span> frozen:<span class="number">1</span>;</span><br><span class="line">				&#125;;</span><br><span class="line">			&#125;;</span><br><span class="line">		&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="SLUB"><a href="#SLUB" class="headerlink" title="SLUB"></a>SLUB</h4><p>用来管理被释放的obj</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kmem_cache_cpu</span> &#123;</span></span><br><span class="line">	<span class="keyword">void</span> **freelist;	<span class="comment">/* Pointer to next available object */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> tid;	<span class="comment">/* Globally unique transaction id */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span>;</span>	<span class="comment">/* The slab from which we are allocating */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SLUB_CPU_PARTIAL</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">partial</span>;</span>	<span class="comment">/* Partially allocated frozen slabs */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SLUB_STATS</span></span><br><span class="line">	<span class="keyword">unsigned</span> stat[NR_SLUB_STAT_ITEMS];</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/07/roarctf-2a1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1230,7 +1458,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-11-10 14:26:02" itemprop="dateModified" datetime="2020-11-10T14:26:02+08:00">2020-11-10</time>
+                <time title="Modified: 2021-04-01 20:38:12" itemprop="dateModified" datetime="2021-04-01T20:38:12+08:00">2021-04-01</time>
               
             
           </span>
@@ -1266,7 +1494,9 @@
       
         
           
-            <h2 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h2><h2 id="init-sh中的一些命令"><a href="#init-sh中的一些命令" class="headerlink" title="init.sh中的一些命令"></a>init.sh中的一些命令</h2><p>cpio命令：用于备份Linux文件</p>
+            <h2 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h2><p>内核的漏洞类型</p>
+<p><img src="/2020/10/27/Linux-pwn/20200417101602-627016cc-8051-1.png" alt="img"></p>
+<h2 id="init-sh中的一些命令"><a href="#init-sh中的一些命令" class="headerlink" title="init.sh中的一些命令"></a>init.sh中的一些命令</h2><p>cpio命令：用于备份Linux文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cpio - copy files to and from archives</span></span><br><span class="line">cpio  &#123;-o|--create&#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[user@]host:]archive] [--file=[[user@]host:]archive] [--format=format] [--message=mes‐</span><br><span class="line">       sage] [--null] [--reset-access-time] [--verbose] [--dot] [--append] [--block-size=blocks] [--dereference] [--io-size=bytes]  [--quiet]  [--force-local]  [--rsh-command=<span class="built_in">command</span>]  [--<span class="built_in">help</span>]</span><br><span class="line">       [--version] &lt; name-list [&gt; archive]</span><br></pre></td></tr></table></figure>
 <p>mount    </p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mount - mount a filesystem</span></span><br><span class="line">mount -t <span class="built_in">type</span> device dir</span><br></pre></td></tr></table></figure>
@@ -1281,6 +1511,7 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/module/babydriver/sections/.text</span><br><span class="line"><span class="comment"># 得到0xffffffffc00000 这个就是babydriver驱动的.txt的起始地址</span></span><br></pre></td></tr></table></figure>
 <p>也可以通过以下命令输出所有的字符以及对应的地址</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/kallsyms </span><br><span class="line"><span class="comment"># /proc/kallsyms 给出内核中所有 symbol 的地址</span></span><br><span class="line"><span class="comment"># 我们需要这个信息来写可靠的 exploit，否则需要自己去泄露这个信息。</span></span><br><span class="line"><span class="comment"># 在低版本的内核中所有用户都可读取其中的内容，高版本的内核中缺少权限的用户读取时会返回 0。</span></span><br></pre></td></tr></table></figure>
+<p>在调试的过程中直接修改uid可能会造成环境出现差别，所以要在文件系统的启动脚本中<code>/etc/init.d/rsC</code>或者<code>/init</code>中添加<code>cat /proc/kallsyms &gt; /tmp/kallsyms</code>将符号信息保存下来，供之后 调试使用。</p>
 <h2 id="kernel-pwn-的目标"><a href="#kernel-pwn-的目标" class="headerlink" title="kernel pwn 的目标"></a>kernel pwn 的目标</h2><p>Kernel Pwn 就是找出内核模块中的漏洞，然后写一个 C 语言程序，放入文件系统中打包，重新运行取来，此时用户一般都是普通用户，运行程序调用此模块的功能利用漏洞，从而提升权限到 root 用户，读取 flag。</p>
 <h2 id="LKM"><a href="#LKM" class="headerlink" title="LKM"></a>LKM</h2><p>动态可加载模块Loadable Kernel Module</p>
 <p>可以往 Kernel 中接入各种 LKM，也可以卸载，常见的外设驱动就是一个 LKM</p>
@@ -1290,18 +1521,31 @@
 <h2 id="ioctl"><a href="#ioctl" class="headerlink" title="ioctl"></a>ioctl</h2><p>ioctl 是设备驱动程序中对设备的 I/O 通道进行管理的函数</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">fd 是文件标示符</span></span><br><span class="line"><span class="comment">cmd 用户对于设备的控制命令</span></span><br><span class="line"><span class="comment">... 和cmd的意义有关</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">int ioctl(int fd, ind cmd, …)；</span><br></pre></td></tr></table></figure>
 <p><strong>如果一个 LKM 中提供了 iotcl 功能，并且实现了对应指令的操作，那么在用户态中，通过这个驱动程序，我们可以调用 ioctl 来直接调用模块中的操作。</strong></p>
-<h2 id="内核态的保护模式"><a href="#内核态的保护模式" class="headerlink" title="内核态的保护模式"></a>内核态的保护模式</h2><h3 id="MMAP-MIN-ADDR"><a href="#MMAP-MIN-ADDR" class="headerlink" title="MMAP_MIN_ADDR"></a>MMAP_MIN_ADDR</h3><p>保护机制不允许程序分配低内存地址</p>
+<h2 id="内核态的保护模式"><a href="#内核态的保护模式" class="headerlink" title="内核态的保护模式"></a>内核态的保护模式</h2><p>常见的保护机制</p>
+<ul>
+<li><code>KPTI</code>：Kernel PageTable Isolation，内核页表隔离</li>
+<li><code>KASLR</code>：Kernel Address space layout randomization，内核地址空间布局随机化</li>
+<li><code>SMEP</code>：Supervisor Mode Execution Prevention，管理模式执行保护</li>
+<li><code>SMAP</code>：Supervisor Mode Access Prevention，管理模式访问保护</li>
+<li><code>Stack Protector</code>：Stack Protector又名canary，stack cookie</li>
+<li><code>kptr_restrict</code>：允许查看内核函数地址</li>
+<li><code>dmesg_restrict</code>：允许查看<code>printk</code>函数输出，用<code>dmesg</code>命令来查看</li>
+<li><code>MMAP_MIN_ADDR</code>：不允许申请<code>NULL</code>地址 <code>mmap(0,....)</code></li>
+</ul>
+<p><code>KASLR</code>、<code>Stack Protector</code>与用户态下的<code>ASLR</code>、<code>canary</code>保护机制相似。</p>
+<h3 id="KASLR"><a href="#KASLR" class="headerlink" title="KASLR"></a>KASLR</h3><p>相当于alsr开启后地址空间进行随机化布局。</p>
+<p>内核地址空间布局随机化，并不默认开启，需要在内核命令行中添加指定指令。</p>
+<p>qemu 增加启动参数 -append “kaslr” 即可开启</p>
+<h3 id="Stack-Protector"><a href="#Stack-Protector" class="headerlink" title="Stack Protector"></a>Stack Protector</h3><p>相当于开启了canary，对栈上的地址进行保护。</p>
+<h3 id="MMAP-MIN-ADDR"><a href="#MMAP-MIN-ADDR" class="headerlink" title="MMAP_MIN_ADDR"></a>MMAP_MIN_ADDR</h3><p>保护机制不允许程序分配低内存地址</p>
 <h3 id="SMEP"><a href="#SMEP" class="headerlink" title="SMEP"></a>SMEP</h3><p>管理模式执行保护，保护内核是其不允许执行用户空间代码。</p>
 <p>操作系统是通过 CR4 寄存器的第 20 位的值来判断 SMEP 是否开启，1 开启，0 关闭，检查 SMEP 是否开启，可通过 mov 指令给 CR4 寄存器赋值从而达到关闭 SMEP 的目的，相关的 mov 指令可以通过 ropper，ROPgadget 等工具查找。</p>
+<p><img src="/2020/10/27/Linux-pwn/20200417101603-6364755a-8051-1.png" alt="img"></p>
 <h3 id="SMAP"><a href="#SMAP" class="headerlink" title="SMAP"></a>SMAP</h3><p>管理模式访问保护，禁止内核访问用户空间的数据</p>
-<h3 id="KASLR"><a href="#KASLR" class="headerlink" title="KASLR"></a>KASLR</h3><p>内核地址空间布局随机化，并不默认开启，需要在内核命令行中添加指定指令。</p>
-<p>qemu 增加启动参数 -append “kaslr” 即可开启</p>
 <h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><ol>
 <li><p>内核态调用commit_creds(prepare_kernel_cred(0))，返回用户态执行shell</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commit_creds(prepare_kernel_cred(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<ol>
 <li><p>修改cred结构体</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cred</span> &#123;</span></span><br><span class="line">    <span class="keyword">atomic_t</span>    usage;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_DEBUG_CREDENTIALS</span></span><br><span class="line">    <span class="keyword">atomic_t</span>    subscribers;    <span class="comment">/* number of processes subscribed */</span></span><br><span class="line">    <span class="keyword">void</span>        *put_addr;</span><br><span class="line">    <span class="keyword">unsigned</span>    magic;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CRED_MAGIC  0x43736564</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CRED_MAGIC_DEAD 0x44656144</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">kuid_t</span>      uid;        <span class="comment">/* real UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      gid;        <span class="comment">/* real GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      suid;       <span class="comment">/* saved UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      sgid;       <span class="comment">/* saved GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      euid;       <span class="comment">/* effective UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      egid;       <span class="comment">/* effective GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      fsuid;      <span class="comment">/* UID for VFS ops */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      fsgid;      <span class="comment">/* GID for VFS ops */</span></span><br><span class="line">    <span class="keyword">unsigned</span>    securebits; <span class="comment">/* SUID-less security management */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_inheritable; <span class="comment">/* caps our children can inherit */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_permitted;  <span class="comment">/* caps we're permitted */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_effective;  <span class="comment">/* caps we can actually use */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_bset;   <span class="comment">/* capability bounding set */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_ambient;    <span class="comment">/* Ambient capability set */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_KEYS</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span>   jit_keyring;    <span class="comment">/* default keyring to attach requested</span></span><br><span class="line"><span class="comment">                     * keys to */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span> __<span class="title">rcu</span> *<span class="title">session_keyring</span>;</span> <span class="comment">/* keyring inherited over fork */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">process_keyring</span>;</span> <span class="comment">/* keyring private to this process */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">thread_keyring</span>;</span> <span class="comment">/* keyring private to this thread */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">request_key_auth</span>;</span> <span class="comment">/* assumed request_key authority */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SECURITY</span></span><br><span class="line">    <span class="keyword">void</span>        *security;  <span class="comment">/* subjective LSM security */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">user_struct</span> *<span class="title">user</span>;</span>   <span class="comment">/* real user ID subscription */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">user_namespace</span> *<span class="title">user_ns</span>;</span> <span class="comment">/* user_ns the caps and keyrings are relative to. */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">group_info</span> *<span class="title">group_info</span>;</span>  <span class="comment">/* supplementary groups for euid/fsgid */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rcu_head</span> <span class="title">rcu</span>;</span>        <span class="comment">/* RCU deletion hook */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 </li>
@@ -1894,194 +2138,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/08/joseph-ping/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xkaneiki">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/02/08/joseph-ping/" class="post-title-link" itemprop="url">约瑟夫环</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-02-08 10:02:44" itemprop="dateCreated datePublished" datetime="2020-02-08T10:02:44+08:00">2020-02-08</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-11-05 21:55:27" itemprop="dateModified" datetime="2020-11-05T21:55:27+08:00">2020-11-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Joseph-Ping-约瑟夫环"><a href="#Joseph-Ping-约瑟夫环" class="headerlink" title="Joseph Ping 约瑟夫环"></a>Joseph Ping 约瑟夫环</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>N个人坐成一个圆环（编号为1 - N），从第1个人开始报数，数到K的人出列，后面的人重新从1开始报数。问最后剩下的人的编号。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
-<li><del>直接模拟,复杂度O(n^2)</del></li>
-<li>找规律</li>
-</ol>
-<h2 id="找规律"><a href="#找规律" class="headerlink" title="找规律"></a>找规律</h2><ol>
-<li>考虑N个人，最后一个出列的人的编号是p（从1开始编号）<!-- <img src="/2020/02/08/joseph-ping/2.jpeg" title="[2]"> -->
-<img src="/2020/02/08/joseph-ping/2.jpeg" alt></li>
-<li>当有N+1个人时，第一个出列的人的编号是(K-1)%(N+1)+1<!-- <img src="/2020/02/08/joseph-ping/1.jpeg" title="[1]"> -->
-<img src="/2020/02/08/joseph-ping/1.jpeg" alt></li>
-<li>从第(K-1+1)%(N+1)+1个人开始重新编号（红色的部分）<!-- <img src="/2020/02/08/joseph-ping/3.jpeg" title="[3]"> -->
-<img src="/2020/02/08/joseph-ping/3.jpeg" alt></li>
-<li>红色的编号和黑色的编号具有这样的关系：令红色编号i对应的黑色编号为j，则j=(i-1+K)%(N+1)+1</li>
-<li>当第一个人走了以后，经过重新的编排（红色的编号）剩下的N个人满足1.的情况，根据4.的对应关系，则N+1个人时最后出列的人的编号是(p-1+K)%(N+1)+1</li>
-<li>时间复杂度为O(n)</li>
-</ol>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,k;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_1</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> k)</span><span class="comment">//递归</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> (k+find_1(n<span class="number">-1</span>,k))%n;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_2</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> k)</span><span class="comment">//非递归</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> cn=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> pos=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(cn&lt;n)</span><br><span class="line">    &#123;</span><br><span class="line">        cn++;</span><br><span class="line">        pos=(pos+k)%cn;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> pos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n&gt;&gt;k;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;find_1(n,k)+<span class="number">1</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;find_2(n,k)+<span class="number">1</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2128,7 +2184,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2258,7 +2314,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
