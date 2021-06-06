@@ -1,434 +1,33 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next muse use-motion" lang>
+<html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
-
-<link rel="stylesheet" href="/css/main.css?v=7.1.0">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '7.1.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
-    back2top: true,
-    back2top_sidebar: false,
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  <meta name="description" content="内核内核的漏洞类型  init.sh中的一些命令cpio命令：用于备份Linux文件 1234# cpio - copy files to and from archivescpio  &amp;#123;-o|--create&amp;#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[us">
-<meta name="keywords" content="CTF,kernel">
-<meta property="og:type" content="article">
-<meta property="og:title" content="kernel_pwn">
-<meta property="og:url" content="http://yoursite.com/2020/10/27/Linux-pwn/index.html">
-<meta property="og:site_name" content="xkaneiki&#39;s blog">
-<meta property="og:description" content="内核内核的漏洞类型  init.sh中的一些命令cpio命令：用于备份Linux文件 1234# cpio - copy files to and from archivescpio  &amp;#123;-o|--create&amp;#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[us">
-<meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2020/10/27/Linux-pwn/20200417101602-627016cc-8051-1.png">
-<meta property="og:image" content="http://yoursite.com/2020/10/27/Linux-pwn/20200417101603-6364755a-8051-1.png">
-<meta property="og:updated_time" content="2021-04-01T12:38:12.374Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kernel_pwn">
-<meta name="twitter:description" content="内核内核的漏洞类型  init.sh中的一些命令cpio命令：用于备份Linux文件 1234# cpio - copy files to and from archivescpio  &amp;#123;-o|--create&amp;#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[us">
-<meta name="twitter:image" content="http://yoursite.com/2020/10/27/Linux-pwn/20200417101602-627016cc-8051-1.png">
-
-
-
-
-
-  
-  
-  <link rel="canonical" href="http://yoursite.com/2020/10/27/Linux-pwn/">
-
-
-
-<script id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-
-  <title>kernel_pwn | xkaneiki's blog</title>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
-
-  .use-motion .logo,
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="google-site-verification" content="TZE0rZyIqLl10trYu3BWBWa1Vmz6HFwhb2OcNEK4u-s">
+     <link rel="shortcut icon" href="/img/favicon.ico">
+    <title>
+        xkaneiki&#39;s blog
+    </title>
+    <meta name="description" content="嘿，这是xkaneiki的博客。欢迎访问！">
+    <meta name="keywords" content="Code,CTFer,Blog">
+    <link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="default">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">xkaneiki's blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-home
+ replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            kernel_pwn
+        </p>
+        <hr>
     </div>
-    
-    
-  </div>
-
-  <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-
-
-<nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-tags">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-categories">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
-
-  </li>
-
-      
-      
-    </ul>
-  
-
-  
-    
-
-  
-
-  
-</nav>
-
-
-
-  
-
-
-
-</div>
-    </header>
-
-    
-  
-  
-
-  
-
-  <a href="https://github.com/xkaneiki" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
-
-
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/27/Linux-pwn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xkaneiki">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xkaneiki's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">kernel_pwn
-
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2020-10-27 19:42:04" itemprop="dateCreated datePublished" datetime="2020-10-27T19:42:04+08:00">2020-10-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2021-04-01 20:38:12" itemprop="dateModified" datetime="2021-04-01T20:38:12+08:00">2021-04-01</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h2 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h2><p>内核的漏洞类型</p>
+    <div class="post-content">
+        <h1 id="内核"><a href="#内核" class="headerlink" title="内核"></a>内核</h1><p>内核的漏洞类型</p>
 <p><img src="/2020/10/27/Linux-pwn/20200417101602-627016cc-8051-1.png" alt="img"></p>
 <h2 id="init-sh中的一些命令"><a href="#init-sh中的一些命令" class="headerlink" title="init.sh中的一些命令"></a>init.sh中的一些命令</h2><p>cpio命令：用于备份Linux文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cpio - copy files to and from archives</span></span><br><span class="line">cpio  &#123;-o|--create&#125; [-0acvABLV] [-C bytes] [-H format] [-M message] [-O [[user@]host:]archive] [-F [[user@]host:]archive] [--file=[[user@]host:]archive] [--format=format] [--message=mes‐</span><br><span class="line">       sage] [--null] [--reset-access-time] [--verbose] [--dot] [--append] [--block-size=blocks] [--dereference] [--io-size=bytes]  [--quiet]  [--force-local]  [--rsh-command=<span class="built_in">command</span>]  [--<span class="built_in">help</span>]</span><br><span class="line">       [--version] &lt; name-list [&gt; archive]</span><br></pre></td></tr></table></figure>
@@ -438,9 +37,32 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chown - change file owner and group</span></span><br><span class="line"><span class="comment"># chown changes the user and/or group ownership of each given file.</span></span><br><span class="line">chown [OPTION]... [OWNER][:[GROUP]] FILE...</span><br><span class="line">chown [OPTION]... --reference=RFILE FILE...</span><br></pre></td></tr></table></figure>
 <p>setsid, setuidgid</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># setsid [options] program [arguments]</span></span><br><span class="line"><span class="comment"># setsid runs a program in a new session.</span></span><br><span class="line">setsid [options] program [arguments]</span><br><span class="line"></span><br><span class="line"><span class="comment"># setgid() sets the effective group ID of the calling process.</span></span><br><span class="line"><span class="comment"># setuid()  sets  the  effective user ID of the calling process.</span></span><br></pre></td></tr></table></figure>
+<h2 id="kernel编译"><a href="#kernel编译" class="headerlink" title="kernel编译"></a>kernel编译</h2><h3 id="内核源码下载"><a href="#内核源码下载" class="headerlink" title="内核源码下载"></a>内核源码下载</h3><p>gitlab地址：<a href="https://gitlab.freedesktop.org/seanpaul/kernel/-/tags" target="_blank" rel="noopener">https://gitlab.freedesktop.org/seanpaul/kernel/-/tags</a></p>
+<p>官网地址：<a href="https://mirrors.edge.kernel.org/pub/linux/kernel/" target="_blank" rel="noopener">https://mirrors.edge.kernel.org/pub/linux/kernel/</a></p>
+<h3 id="安装需要的库"><a href="#安装需要的库" class="headerlink" title="安装需要的库"></a>安装需要的库</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install libncurses5-dev build-essential kernel-package bison flex libelf-dev</span><br></pre></td></tr></table></figure>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>下载内核后解压，进入其目录执行<code>make menuconfig</code></p>
+<p>进入 kernel hacking，勾选 </p>
+<ul>
+<li>KGDB:Kernel debugging</li>
+<li>Compile-time checks and compiler options—&gt;Compile the kernel with debug info</li>
+</ul>
+<p>开始编译，指定架构</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make ARCH=x86_64 -j4 bzImage</span><br></pre></td></tr></table></figure>
+<p>然后在<code>arch/x86_64/boot</code>下面就会生成对应的bzImage文件</p>
 <h2 id="调试的链接过程"><a href="#调试的链接过程" class="headerlink" title="调试的链接过程"></a>调试的链接过程</h2><p>bzImage是</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../linux-4.9/scripts/extract-vmlinux bzImage &gt; vmlinux</span><br></pre></td></tr></table></figure>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker容器中貌似不支持虚拟化不能用kvm，将-enable-kvm选项去掉</span></span><br><span class="line"><span class="comment"># 这个命令一般在题目中会被给出来</span></span><br><span class="line">qemu-system-x86_64 -initrd rootfs.cpio -kernel bzImage -append <span class="string">'console=ttyS0 root=/dev/ram oops=panic panic=1'</span> \</span><br><span class="line">-monitor /dev/null \</span><br><span class="line">-m 64M \</span><br><span class="line">--nographic  -smp cores=1,threads=1 -cpu kvm64,+smep \</span><br><span class="line">-gdb tcp::1234</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>-m</code>是指定RAM大小（默认384）</p>
+<p><code>-kernel</code> 是指定的内核镜像，这里是我们编译的镜像路径，也可以是下载好的镜像，如./vmlinuz-4.15.0-22-generic</p>
+<p><code>-initrd</code> 设置刚刚利用 <code>busybox</code> 创建的 <code>rootfs.img</code> ，作为内核启动的文件系统</p>
+<p><code>-append</code> 附加选项，指定no kaslr可以关闭随机偏移</p>
+<p><code>--nographic</code>和<code>console=ttyS0</code>一起使用，启动的界面就变成当前终端</p>
+<p><code>-s</code> 相当于<code>-gdb tcp::1234</code>的简写，可以直接通过主机的gdb远程连接</p>
+<p><code>-monitor</code>配置用户模式的网络#将监视器重定向到主机设备/dev/null</p>
+<p><code>-smp</code> 用于声明所有可能用到的cpus, i.e. sockets <em>cores</em> threads = maxcpus.</p>
+<p><code>-cpu</code> 设置CPU的安全选项</p>
+</blockquote>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gdb </span><br><span class="line">-&gt;<span class="built_in">set</span> architecture ...</span><br><span class="line">-&gt;target remote :1234</span><br><span class="line">-&gt;add-symbol-file ./fs/lib/modules/4.4.72/babydriver.ko 0xffffffffc00000</span><br></pre></td></tr></table></figure>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/module/babydriver/sections/.text</span><br><span class="line"><span class="comment"># 得到0xffffffffc00000 这个就是babydriver驱动的.txt的起始地址</span></span><br></pre></td></tr></table></figure>
 <p>也可以通过以下命令输出所有的字符以及对应的地址</p>
@@ -485,448 +107,57 @@
 </li>
 </ol>
 
-      
     </div>
 
     
-
+</div>
+    <div class="footer" id="footer">
+    <p></p><h4>Copyright © 2020 | Author: xkaneiki | Theme By <a class="theme-author" href="https://github.com/Xunzhuo/hexo-theme-coder" style="font-size:14px; color: #969696">Coder</a></h4>
     
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        <span id="busuanzi_container_site_pv">Page Views: <span id="busuanzi_value_site_pv"></span></span>
+        <span class="post-meta-divider">|</span>
+        <span id="busuanzi_container_site_uv">Unique Visitors: <span id="busuanzi_value_site_uv"></span></span>
     
-    
+    <label class="el-switch el-switch-blue el-switch-sm" style="vertical-align: sub;">
+        <input type="checkbox" name="switch" id="update_style">
+        <span class="el-switch-style"></span>
+    </label>
 
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/CTF/" rel="tag"># CTF</a>
-          
-            <a href="/tags/kernel/" rel="tag"># kernel</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/10/26/bytectf-gun/" rel="next" title="bytectf-gun">
-                <i class="fa fa-chevron-left"></i> bytectf-gun
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/11/05/hxb-pwn-printf/" rel="prev" title="hxb_pwn_printf">
-                hxb_pwn_printf <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name">xkaneiki</p>
-              <div class="site-description motion-element" itemprop="description"></div>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                      <a href="/categories/">
-                    
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">3</span>
-                    <span class="site-state-item-name">categories</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                      <a href="/tags/">
-                    
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">14</span>
-                    <span class="site-state-item-name">tags</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-          
-            <div class="links-of-blogroll motion-element links-of-blogroll-block">
-              <div class="links-of-blogroll-title">
-                <i class="fa  fa-fw fa-link"></i>
-                Links
-              </div>
-              <ul class="links-of-blogroll-list">
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="https://www.lyyl.online" title="https://www.lyyl.online" rel="noopener" target="_blank">LYYL</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="https://n1k0ooo.github.io/" title="https://n1k0ooo.github.io/" rel="noopener" target="_blank">N1K0_</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="https://a1ex.online" title="https://a1ex.online" rel="noopener" target="_blank">A1ex</a>
-                  </li>
-                
-              </ul>
-            </div>
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内核"><span class="nav-number">1.</span> <span class="nav-text">内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#init-sh中的一些命令"><span class="nav-number">2.</span> <span class="nav-text">init.sh中的一些命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调试的链接过程"><span class="nav-number">3.</span> <span class="nav-text">调试的链接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kernel-pwn-的目标"><span class="nav-number">4.</span> <span class="nav-text">kernel pwn 的目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LKM"><span class="nav-number">5.</span> <span class="nav-text">LKM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ioctl"><span class="nav-number">6.</span> <span class="nav-text">ioctl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内核态的保护模式"><span class="nav-number">7.</span> <span class="nav-text">内核态的保护模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#KASLR"><span class="nav-number">7.1.</span> <span class="nav-text">KASLR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stack-Protector"><span class="nav-number">7.2.</span> <span class="nav-text">Stack Protector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MMAP-MIN-ADDR"><span class="nav-number">7.3.</span> <span class="nav-text">MMAP_MIN_ADDR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMEP"><span class="nav-number">7.4.</span> <span class="nav-text">SMEP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMAP"><span class="nav-number">7.5.</span> <span class="nav-text">SMAP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提权"><span class="nav-number">8.</span> <span class="nav-text">提权</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-  
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">xkaneiki</span>
-
-  
-
-  
+    <!--         <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+    document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script> -->
+<p></p>
 </div>
 
-
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
-
-
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-    
-
-    
-  </div>
-
-  
-
-<script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-
-  
-
-
-  <script src="/js/utils.js?v=7.1.0"></script>
-
-  <script src="/js/motion.js?v=7.1.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/schemes/muse.js?v=7.1.0"></script>
-
-
-
-  
-  <script src="/js/scrollspy.js?v=7.1.0"></script>
-<script src="/js/post-details.js?v=7.1.0"></script>
-
-
-
-  
-
-
-  <script src="/js/next-boot.js?v=7.1.0"></script>
-
-
-  
-
-  
-
-  
-
-  
-
-
-  
-
-
-  
-
-
-
-
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="NOsswOncKgc8HOxqo9oxIWlX-gzGzoHsz">
+<input type="hidden" id="valine_appKey" value="z1FihjWEbS8uIfUQdmCtK7zz">
+<script src="/libs/jquery.min.js"></script>
+<script src="/libs/highlight/highlight.pack.js"></script>
+<script src="//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js"></script>
+<script src="/js/js.js"></script>
+<style type="text/css">
+.v * {
+color: #698fca;
+}
+.v .vlist .vcard .vhead .vsys {
+color: #3a3e4a;
+}
+.v .vlist .vcard .vh .vmeta .vat {
+color: #638fd5;
+}
+.v .vlist .vcard .vhead .vnick {
+color: #6ba1ff;
+}
+.v a {
+color: #8696b1;
+}
+.v .vlist .vcard .vhead .vnick:hover {
+color: #669bfc;
+}
+</style>
+    <script type="text/javascript" color="173,174,173" opacity='1' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
 </body>
 </html>
