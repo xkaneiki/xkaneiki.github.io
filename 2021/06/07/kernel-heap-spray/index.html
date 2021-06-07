@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="kernel heap spray内核堆喷射 当内核中现有的程序没有办法对UAF后的堆块进行操作的时候，可以利用以下的办法来申请释放之后的堆块，然后控制其内容。参考Linux Kernel universal heap spray这篇文章中给出的两种方法，还是特别有效的。 利用msgsnd我们可以利用msgsnd的方法来申请释放之后的堆块。但是这种方法申请的堆块的前48字节的内容是不能首我们控制的">
+<meta name="keywords" content="CTF,kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kernel_heap_spray">
+<meta property="og:url" content="http://yoursite.com/2021/06/07/kernel-heap-spray/index.html">
+<meta property="og:site_name" content="xkaneiki&#39;s blog">
+<meta property="og:description" content="kernel heap spray内核堆喷射 当内核中现有的程序没有办法对UAF后的堆块进行操作的时候，可以利用以下的办法来申请释放之后的堆块，然后控制其内容。参考Linux Kernel universal heap spray这篇文章中给出的两种方法，还是特别有效的。 利用msgsnd我们可以利用msgsnd的方法来申请释放之后的堆块。但是这种方法申请的堆块的前48字节的内容是不能首我们控制的">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2021/06/07/kernel-heap-spray/userfaultfd2.svg">
+<meta property="og:updated_time" content="2021-06-07T08:47:07.700Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kernel_heap_spray">
+<meta name="twitter:description" content="kernel heap spray内核堆喷射 当内核中现有的程序没有办法对UAF后的堆块进行操作的时候，可以利用以下的办法来申请释放之后的堆块，然后控制其内容。参考Linux Kernel universal heap spray这篇文章中给出的两种方法，还是特别有效的。 利用msgsnd我们可以利用msgsnd的方法来申请释放之后的堆块。但是这种方法申请的堆块的前48字节的内容是不能首我们控制的">
+<meta name="twitter:image" content="http://yoursite.com/2021/06/07/kernel-heap-spray/userfaultfd2.svg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2021/06/07/kernel-heap-spray/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kernel_heap_spray | xkaneiki's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xkaneiki's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+
+  
+
+  <a href="https://github.com/xkaneiki" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/07/kernel-heap-spray/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xkaneiki">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xkaneiki's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kernel_heap_spray
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-06-07 16:34:57 / Modified: 16:47:07" itemprop="dateCreated datePublished" datetime="2021-06-07T16:34:57+08:00">2021-06-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="kernel-heap-spray"><a href="#kernel-heap-spray" class="headerlink" title="kernel heap spray"></a>kernel heap spray</h1><p>内核堆喷射</p>
+<p>当内核中现有的程序没有办法对UAF后的堆块进行操作的时候，可以利用以下的办法来申请释放之后的堆块，然后控制其内容。参考Linux Kernel universal heap spray这篇文章中给出的两种方法，还是特别有效的。</p>
+<h2 id="利用msgsnd"><a href="#利用msgsnd" class="headerlink" title="利用msgsnd"></a>利用msgsnd</h2><p>我们可以利用msgsnd的方法来申请释放之后的堆块。但是这种方法申请的堆块的前48字节的内容是不能首我们控制的。msgsnd被定义在头文件<code>#include &lt;sys/msg/h&gt;</code>中，下面是msgsnd的用法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFF_SIZE 96-48</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	<span class="keyword">long</span> mtype;</span><br><span class="line">	<span class="keyword">char</span> mtext[BUFF_SIZE];</span><br><span class="line">&#125; msg;</span><br><span class="line"></span><br><span class="line"><span class="built_in">memset</span>(msg.mtext, <span class="number">0x42</span>, BUFF_SIZE<span class="number">-1</span>);</span><br><span class="line">msg.mtext[BUFF_SIZE] = <span class="number">0</span>;</span><br><span class="line">msg.mtype = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> msqid = msgget(IPC_PRIVATE, <span class="number">0644</span> | IPC_CREAT);</span><br><span class="line"></span><br><span class="line">msgsnd(msqid, &amp;msg, <span class="keyword">sizeof</span>(msg.mtext), <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>当调用msgsnd时，传入的内容被从<strong>用户空间</strong>拷贝到<strong>内核空间</strong>。在内核态下会根据传入的size大小来用kmalloc申请空间。具体的过程是msgsnd在内核态下对应的函数是do_msgsnd，在do_msgsnd中会调用load_msg，在load_msg中调用alloc_msg来为msg分配空间。</p>
+<p>do_msgsnd</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">do_msgsnd</span><span class="params">(<span class="keyword">int</span> msqid, <span class="keyword">long</span> mtype, <span class="keyword">void</span> __user *mtext,</span></span></span><br><span class="line"><span class="function"><span class="params">                <span class="keyword">size_t</span> msgsz, <span class="keyword">int</span> msgflg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">msg_queue</span> *<span class="title">msq</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">msg_msg</span> *<span class="title">msg</span>;</span></span><br><span class="line">        <span class="keyword">int</span> err;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ipc_namespace</span> *<span class="title">ns</span>;</span></span><br><span class="line"></span><br><span class="line">        ns = current-&gt;nsproxy-&gt;ipc_ns;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (msgsz &gt; ns-&gt;msg_ctlmax || (<span class="keyword">long</span>) msgsz &lt; <span class="number">0</span> || msqid &lt; <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> -EINVAL;</span><br><span class="line">        <span class="keyword">if</span> (mtype &lt; <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> -EINVAL;</span><br><span class="line"></span><br><span class="line">[<span class="number">1</span>]     msg = load_msg(mtext, msgsz);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>load_msg，通过alloc_msg为msg分配内存，然后再将消息内容拷贝进去。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">struct msg_msg *<span class="title">load_msg</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> __user *src, <span class="keyword">size_t</span> len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">msg_msg</span> *<span class="title">msg</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">msg_msgseg</span> *<span class="title">seg</span>;</span></span><br><span class="line">        <span class="keyword">int</span> err = -EFAULT;</span><br><span class="line">        <span class="keyword">size_t</span> alen;</span><br><span class="line"></span><br><span class="line">        msg = alloc_msg(len);</span><br><span class="line">        <span class="keyword">if</span> (msg == <span class="literal">NULL</span>)</span><br><span class="line">                <span class="keyword">return</span> ERR_PTR(-ENOMEM);</span><br><span class="line"></span><br><span class="line">        alen = min(len, DATALEN_MSG);</span><br><span class="line">[<span class="number">2</span>]     <span class="keyword">if</span> (copy_from_user(msg + <span class="number">1</span>, src, alen))</span><br><span class="line">                <span class="keyword">goto</span> out_err;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (seg = msg-&gt;next; seg != <span class="literal">NULL</span>; seg = seg-&gt;next) &#123;</span><br><span class="line">                len -= alen;</span><br><span class="line">                src = (<span class="keyword">char</span> __user *)src + alen;</span><br><span class="line">                alen = min(len, DATALEN_SEG);</span><br><span class="line">                <span class="keyword">if</span> (copy_from_user(seg + <span class="number">1</span>, src, alen))</span><br><span class="line">                        <span class="keyword">goto</span> out_err;</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>alloc_msg，可以看到消息的结构是由一个消息头，每个消息的长度不超过DATALEN_MSG（4048），过长的消息会被分片进行封装，最后再被连在一起。消息头是一个长度为48字节的结构体，每个消息片段都是靠着消息头中的list_head结构连在了一起。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> *<span class="title">next</span>, *<span class="title">prev</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">msg_msg</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">m_list</span>;</span></span><br><span class="line">	<span class="keyword">long</span> m_type;</span><br><span class="line">	<span class="keyword">size_t</span> m_ts;		<span class="comment">/* message text size */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">msg_msgseg</span> *<span class="title">next</span>;</span></span><br><span class="line">	<span class="keyword">void</span> *security;</span><br><span class="line">	<span class="comment">/* the actual message follows immediately */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> struct msg_msg *<span class="title">alloc_msg</span><span class="params">(<span class="keyword">size_t</span> len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">msg_msg</span> *<span class="title">msg</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">msg_msgseg</span> **<span class="title">pseg</span>;</span></span><br><span class="line">        <span class="keyword">size_t</span> alen;</span><br><span class="line"></span><br><span class="line">[<span class="number">3</span>]     alen = min(len, DATALEN_MSG);</span><br><span class="line">        msg = kmalloc(<span class="keyword">sizeof</span>(*msg) + alen, GFP_KERNEL);</span><br><span class="line">        <span class="keyword">if</span> (msg == <span class="literal">NULL</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">        msg-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        msg-&gt;security = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">        len -= alen;</span><br><span class="line">        pseg = &amp;msg-&gt;next;</span><br><span class="line">        <span class="keyword">while</span> (len &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="class"><span class="keyword">struct</span> <span class="title">msg_msgseg</span> *<span class="title">seg</span>;</span></span><br><span class="line">                alen = min(len, DATALEN_SEG);</span><br><span class="line">[<span class="number">4</span>]             seg = kmalloc(<span class="keyword">sizeof</span>(*seg) + alen, GFP_KERNEL);</span><br><span class="line">                <span class="keyword">if</span> (seg == <span class="literal">NULL</span>)</span><br><span class="line">                        <span class="keyword">goto</span> out_err;</span><br><span class="line">                *pseg = seg;</span><br><span class="line">                seg-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">                pseg = &amp;seg-&gt;next;</span><br><span class="line">                len -= alen;</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>这种方法申请的堆块也能够通过msgrcv能够取出消息队列中的消息。很明显这种方法虽然可以控制大小和写入的内容，但是前48个自己的内容是不可控的。</p>
+<h2 id="userfaultfd-setxattr"><a href="#userfaultfd-setxattr" class="headerlink" title="userfaultfd + setxattr"></a>userfaultfd + setxattr</h2><p>通用的堆喷射</p>
+<p>理想状态下通用的堆喷射应该满足三点条件：</p>
+<ol>
+<li>对象的大小是可控的（任何大小）</li>
+<li>对象的内容的可控的</li>
+<li>在利用过程中，申请之后的对象需要保持在内存中。这对于复杂的uaf和竞争情况下是尤为重要的</li>
+</ol>
+<p>msgsnd方法只满足第三个条件，它并不是很通用。</p>
+<h3 id="userfaultfd"><a href="#userfaultfd" class="headerlink" title="userfaultfd"></a>userfaultfd</h3><p>userfaultfd机制是为了。。。而设计的。当一个page fault在被userfaultfd对象注册的区域内发生的时候，发生错误的线程会被强制刮起并且产生一个能通过userfaultfd的文件描述符进行读的event。处理fault_handling的进程会从userfaultfd的文件描述符读取内容，并且通过在 ioctl_userfaultfd 注册的操作进行相应的处理。</p>
+<p>首先利用syscall申请一个userfaultfd为uffd</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Create and enable userfaultfd object. */</span></span><br><span class="line">		<span class="comment">//申请一个userfaultfd</span></span><br><span class="line">    uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);</span><br><span class="line">    <span class="keyword">if</span> (uffd == <span class="number">-1</span>)</span><br><span class="line">        errExit(<span class="string">"userfaultfd"</span>);</span><br></pre></td></tr></table></figure>
+<p>注册userfaultfd的api，指定api的版本（api）和启用那些功能（features）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">uffdio_api.api = UFFD_API;</span><br><span class="line">uffdio_api.features = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (ioctl(uffd, UFFDIO_API, &amp;uffdio_api) == <span class="number">-1</span>)</span><br><span class="line">    errExit(<span class="string">"ioctl-UFFDIO_API"</span>);</span><br></pre></td></tr></table></figure>
+<p>注册（指定）内存地址空间到userfaultfd对象上，其中uffdio_range指定了地址空间的范围<strong>，mode指定了监控的是什么样的fault</strong>，目前只有一种模式支持，即 UFFDIO_REGISTER_MODE_MISSING，当访问的地址空间并没有映射到实际的物理页时会就被触发（mmap分配时不会分配实际的物理内存）。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">uffdio_range</span> &#123;</span></span><br><span class="line"> 	__u64 start;    <span class="comment">/* Start of range */</span></span><br><span class="line">  __u64 len;      <span class="comment">/* Length of range (bytes) */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">uffdio_register</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">uffdio_range</span> <span class="title">range</span>;</span></span><br><span class="line">  __u64 mode;     <span class="comment">/* Desired mode of operation (input) */</span></span><br><span class="line">  __u64 ioctls;   <span class="comment">/* Available ioctl() operations (output) */</span></span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+<p>例子中的用法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Register the memory range of the mapping we just created for</span></span><br><span class="line"><span class="comment">          handling by the userfaultfd object. In mode, we request to track</span></span><br><span class="line"><span class="comment">          missing pages (i.e., pages that have not yet been faulted in). */</span></span><br><span class="line"></span><br><span class="line">uffdio_register.range.start = (<span class="keyword">unsigned</span> <span class="keyword">long</span>)addr;</span><br><span class="line">uffdio_register.range.len = len;</span><br><span class="line">uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;</span><br><span class="line"><span class="keyword">if</span> (ioctl(uffd, UFFDIO_REGISTER, &amp;uffdio_register) == <span class="number">-1</span>)</span><br><span class="line">    errExit(<span class="string">"ioctl-UFFDIO_REGISTER"</span>);</span><br></pre></td></tr></table></figure>
+<p>接着开启一个线程来监控并处理page_faults</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">s = pthread_create(&amp;thr, <span class="literal">NULL</span>, fault_handler_thread, (<span class="keyword">void</span> *)uffd);</span><br><span class="line">  <span class="keyword">if</span> (s != <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">      errno = s;</span><br><span class="line">      errExit(<span class="string">"pthread_create"</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>首先介绍一下poll（）函数</p>
+<h5 id="poll函数"><a href="#poll函数" class="headerlink" title="poll函数"></a>poll函数</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;poll.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">poll</span><span class="params">(struct pollfd *fds, <span class="keyword">nfds_t</span> nfds, <span class="keyword">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>用于等待若干个fd（file descriptor）是否已经准备好被读写。</p>
+<p>fds指明需要等待的fd的，用以下的结构来描述。event是一个输入参数，用于表示poll感兴趣的fd的活动。revent是一个输出参数，用于表示fd实际发生的活动。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span>   fd;         <span class="comment">/* file descriptor */</span></span><br><span class="line">  <span class="keyword">short</span> events;     <span class="comment">/* requested events */</span></span><br><span class="line">  <span class="keyword">short</span> revents;    <span class="comment">/* returned events */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这个函数返回已经准备好被读数据的fd（revent不为0）的个数。</p>
+<p>这时例子中的用法，pollfd.events = POLLIN; 表示poll关心fd是否有数据要去读</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> <span class="title">pollfd</span>;</span></span><br><span class="line"><span class="keyword">int</span> nready;</span><br><span class="line">pollfd.fd = uffd;</span><br><span class="line">pollfd.events = POLLIN; </span><br><span class="line">nready = poll(&amp;pollfd, <span class="number">1</span>, <span class="number">-1</span>);</span><br><span class="line"><span class="keyword">if</span> (nready == <span class="number">-1</span>)</span><br><span class="line">   errExit(<span class="string">"poll"</span>);</span><br></pre></td></tr></table></figure>
+<p>从uffd中读取活动，并且查看event的类型是否是UFFD_EVENT_PAGEFAULT，下面的结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">uffd_msg</span> &#123;</span></span><br><span class="line">       __u8  event;            <span class="comment">/* Type of event */</span></span><br><span class="line">       ...</span><br><span class="line">       <span class="keyword">union</span> &#123;</span><br><span class="line">           <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">               __u64 flags;    <span class="comment">/* Flags describing fault */</span></span><br><span class="line">               __u64 address;  <span class="comment">/* Faulting address */</span></span><br><span class="line">           &#125; pagefault;</span><br><span class="line">           <span class="class"><span class="keyword">struct</span> &#123;</span>            <span class="comment">/* Since Linux 4.11 */</span></span><br><span class="line">               __u32 ufd;      <span class="comment">/* Userfault file descriptor</span></span><br><span class="line"><span class="comment">                                  of the child process */</span></span><br><span class="line">           &#125; fork;</span><br><span class="line">           <span class="class"><span class="keyword">struct</span> &#123;</span>            <span class="comment">/* Since Linux 4.11 */</span></span><br><span class="line">               __u64 from;     <span class="comment">/* Old address of remapped area */</span></span><br><span class="line">               __u64 to;       <span class="comment">/* New address of remapped area */</span></span><br><span class="line">               __u64 len;      <span class="comment">/* Original mapping length */</span></span><br><span class="line">           &#125; remap;</span><br><span class="line">           <span class="class"><span class="keyword">struct</span> &#123;</span>            <span class="comment">/* Since Linux 4.11 */</span></span><br><span class="line">               __u64 start;    <span class="comment">/* Start address of removed area */</span></span><br><span class="line">               __u64 end;      <span class="comment">/* End address of removed area */</span></span><br><span class="line">           &#125; remove;</span><br><span class="line">           ...</span><br><span class="line">       &#125; arg;</span><br><span class="line">       <span class="comment">/* Padding fields omitted */</span></span><br><span class="line">&#125; __packed;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Read an event from the userfaultfd. */</span></span><br><span class="line"></span><br><span class="line">       nread = read(uffd, &amp;msg, <span class="keyword">sizeof</span>(msg));</span><br><span class="line">       <span class="keyword">if</span> (nread == <span class="number">0</span>)</span><br><span class="line">       &#123;</span><br><span class="line">           <span class="built_in">printf</span>(<span class="string">"EOF on userfaultfd!\n"</span>);</span><br><span class="line">           <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (nread == <span class="number">-1</span>)</span><br><span class="line">           errExit(<span class="string">"read"</span>);</span><br><span class="line"></span><br><span class="line">       <span class="comment">/* We expect only one kind of event; verify that assumption. */</span></span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (msg.event != UFFD_EVENT_PAGEFAULT)</span><br><span class="line">       &#123;</span><br><span class="line">           <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Unexpected event on userfaultfd\n"</span>);</span><br><span class="line">           <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>最后通过ioctl(uffd, UFFDIO_COPY, &amp;uffdio_copy)来处理page fault，其中传入的结构如下所示，其中mode被设置成0表示copy之后就会唤醒阻塞的线程，如果设置成UFFDIO_COPY_MODE_DONTWAKE就不会唤醒，需要UFFDIO_WAKE进行手动唤醒。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">uffdio_copy</span> &#123;</span></span><br><span class="line">	__u64 dst;    <span class="comment">/* Destination of copy */</span></span><br><span class="line">  __u64 src;    <span class="comment">/* Source of copy */</span></span><br><span class="line">  __u64 len;    <span class="comment">/* Number of bytes to copy */</span></span><br><span class="line">  __u64 mode;   <span class="comment">/* Flags controlling behavior of copy */</span></span><br><span class="line">  __s64 copy;   <span class="comment">/* Number of bytes copied, or negated error */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Copy the page pointed to by 'page' into the faulting</span></span><br><span class="line"><span class="comment">                  region. Vary the contents that are copied in, so that it</span></span><br><span class="line"><span class="comment">                  is more obvious that each fault is handled separately. */</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">memset</span>(page, <span class="string">'A'</span> + fault_cnt % <span class="number">20</span>, page_size);</span><br><span class="line">        fault_cnt++;</span><br><span class="line"></span><br><span class="line">        uffdio_copy.src = (<span class="keyword">unsigned</span> <span class="keyword">long</span>)page;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* We need to handle page faults in units of pages(!).</span></span><br><span class="line"><span class="comment">                  So, round faulting address down to page boundary. */</span></span><br><span class="line"></span><br><span class="line">        uffdio_copy.dst = (<span class="keyword">unsigned</span> <span class="keyword">long</span>)msg.arg.pagefault.address &amp;</span><br><span class="line">                          ~(page_size - <span class="number">1</span>);</span><br><span class="line">        uffdio_copy.len = page_size;</span><br><span class="line">        uffdio_copy.mode = <span class="number">0</span>;</span><br><span class="line">        uffdio_copy.copy = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (ioctl(uffd, UFFDIO_COPY, &amp;uffdio_copy) == <span class="number">-1</span>)</span><br><span class="line">            errExit(<span class="string">"ioctl-UFFDIO_COPY"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"        (uffdio_copy.copy returned %"</span> PRId64 <span class="string">")\n"</span>,</span><br><span class="line">               uffdio_copy.copy);</span><br></pre></td></tr></table></figure>
+<h4 id="不处理直接-UFFDIO-WAKE-会怎样"><a href="#不处理直接-UFFDIO-WAKE-会怎样" class="headerlink" title="不处理直接 UFFDIO_WAKE 会怎样"></a>不处理直接 UFFDIO_WAKE 会怎样</h4><p>第一次page fault会返回 <code>VM_FAULT_RETRY</code>, 之后就看具体内核的处理方式了。<br>有的版本内核 <code>VM_FAULT_RETRY</code> 之后会清除 <code>FAULT_FLAG_ALLOW_RETRY</code> 标志位，回到用户态之后再次触发 page fault，此时 <code>handle_userfault</code> 会返回 <code>VM_FAULT_SIGBUS</code> 导致进程收到 SIGBUS 信号终止。<br>而不巧的是我选择的目标 v5.9 版本的内核是直接在 <code>do_user_addr_fault</code> 中直接 goto 到之前的位置重新处理，但没有清除这一标志位，这就直接导致了一个死循环。</p>
+<h3 id="关于mmap"><a href="#关于mmap" class="headerlink" title="关于mmap"></a>关于mmap</h3><h4 id="mmap分配时不会分配实际的物理页"><a href="#mmap分配时不会分配实际的物理页" class="headerlink" title="mmap分配时不会分配实际的物理页"></a>mmap分配时不会分配实际的物理页</h4><p>mmap的工作原理，当你发起这个调用的时候，<strong>它只是在你的虚拟空间中分配了一段空间，连真实的物理地址都不会分配的，当你访问这段空间</strong>，CPU陷入OS内核执行异常处理，然后异常处理会在这个时间分配物理内存，并用文件的内容填充这片内存，然后才返回你进程的上下文，这时你的程序才会感知到这片内存里有数据</p>
+<h4 id="一些flag的意义"><a href="#一些flag的意义" class="headerlink" title="一些flag的意义"></a>一些flag的意义</h4><p>​    <em>MAP_PRIVATE内存的内容的改变不会被同步到fd中</em></p>
+<p>​    <em>MAP_SHARED内存的内容的改变会被同步到fd中</em></p>
+<p>​    <em>MAP_ANONYMOUS会忽略掉fd（不允许将页映射到文件上，某些时候需要fd必须时-1），申请到的页会被清空</em></p>
+<p>下面是我测试的程序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/io.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd = open(<span class="string">"./flag"</span>, O_RDWR);</span><br><span class="line">    <span class="keyword">if</span>(fd&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">"error!"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    MAP_PRIVATE内存的内容的改变不会被同步到fd中</span></span><br><span class="line"><span class="comment">    MAP_SHARED内存的内容的改变会被同步到fd中</span></span><br><span class="line"><span class="comment">    MAP_ANONYMOUS会忽略掉fd（不允许将页映射到文件上），申请到的页会被清空</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">void</span> *addr = mmap(<span class="literal">NULL</span>,<span class="number">0x1000</span> ,PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">//void *addr = mmap(NULL,0x1000 ,PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"0x%016lx\n"</span>,addr);</span><br><span class="line">    <span class="built_in">puts</span>(addr);</span><br><span class="line">    <span class="built_in">strcpy</span>(addr,<span class="string">"changed!"</span>);</span><br><span class="line">    <span class="built_in">puts</span>(addr);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用userfaultfd-setxattr进行堆喷射"><a href="#利用userfaultfd-setxattr进行堆喷射" class="headerlink" title="利用userfaultfd+setxattr进行堆喷射"></a>利用userfaultfd+setxattr进行堆喷射</h3><p>首先我们来说明一下二者在堆喷射的作用，userfaultfd用来挂起setxattr的内容使得setxattr分配的堆块驻留在内核中不被释放；setxattr用于分配之堆块并且控制堆块中的内容。下面是setxattr的代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">long</span></span><br><span class="line">setxattr(struct dentry *d, <span class="keyword">const</span> <span class="keyword">char</span> __user *name, <span class="keyword">const</span> <span class="keyword">void</span> __user *value,</span><br><span class="line">         <span class="keyword">size_t</span> size, <span class="keyword">int</span> flags)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">int</span> error;</span><br><span class="line">        <span class="keyword">void</span> *kvalue = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">void</span> *vvalue = <span class="literal">NULL</span>;    <span class="comment">/* If non-NULL, we used vmalloc() */</span></span><br><span class="line">        <span class="keyword">char</span> kname[XATTR_NAME_MAX + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (flags &amp; ~(XATTR_CREATE|XATTR_REPLACE))</span><br><span class="line">                <span class="keyword">return</span> -EINVAL;</span><br><span class="line"></span><br><span class="line">        error = strncpy_from_user(kname, name, <span class="keyword">sizeof</span>(kname));</span><br><span class="line">        <span class="keyword">if</span> (error == <span class="number">0</span> || error == <span class="keyword">sizeof</span>(kname))</span><br><span class="line">                error = -ERANGE;</span><br><span class="line">        <span class="keyword">if</span> (error &lt; <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> error;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (size) &#123;</span><br><span class="line">                <span class="keyword">if</span> (size &gt; XATTR_SIZE_MAX)</span><br><span class="line">                        <span class="keyword">return</span> -E2BIG;</span><br><span class="line">[<span class="number">5</span>]             kvalue = kmalloc(size, GFP_KERNEL | __GFP_NOWARN);</span><br><span class="line">                <span class="keyword">if</span> (!kvalue) &#123;</span><br><span class="line">                        vvalue = vmalloc(size);</span><br><span class="line">                        <span class="keyword">if</span> (!vvalue)</span><br><span class="line">                                <span class="keyword">return</span> -ENOMEM;</span><br><span class="line">                        kvalue = vvalue;</span><br><span class="line">                &#125;</span><br><span class="line">[<span class="number">6</span>]             <span class="keyword">if</span> (copy_from_user(kvalue, value, size)) &#123;</span><br><span class="line">                        error = -EFAULT;</span><br><span class="line">                        <span class="keyword">goto</span> out;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> ((<span class="built_in">strcmp</span>(kname, XATTR_NAME_POSIX_ACL_ACCESS) == <span class="number">0</span>) ||</span><br><span class="line">                    (<span class="built_in">strcmp</span>(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == <span class="number">0</span>))</span><br><span class="line">                        posix_acl_fix_xattr_from_user(kvalue, size);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error = vfs_setxattr(d, kname, kvalue, size, flags);</span><br><span class="line">out:</span><br><span class="line">        <span class="keyword">if</span> (vvalue)</span><br><span class="line">                vfree(vvalue);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">[<span class="number">7</span>]             kfree(kvalue);</span><br><span class="line">        <span class="keyword">return</span> error;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到程序在[5]处根据我们传入的size用kmalloc申请了内存，然后[6]处会将用户态的数据拷贝到申请的堆块中，此时如果触发page fault，此线程就会被挂起并根据userfaultfd的机制回到用户态进行处理。传入的value的位置可以如下图的形式：</p>
+<p><img src="/2021/06/07/kernel-heap-spray/userfaultfd2.svg" alt="Heap spray"></p>
+<p>page1是已经分配了物理页，而page2没有分配物理页（这意味着访问page2会触发page fault），用userfaultfd机制来监控page2。</p>
+<p>我们将需要拷贝的块放在page1和page2之间，将需要写入堆块的内容放在page1中，为什么要这样做呢？在setxattr中进行<code>copy_from_user(kvalue, value, size)</code>时，当访问到page1的内容时就会拷贝到内核的块中（这样我们就能控制堆块的内容），当访问的page2的地址的时候就触发page fault从而回到userfaultfd的处理线程，这个线程就会被挂起（此内核堆块就会驻留在内核中不会被释放）。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//触发userfaultfd</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tg_uaf</span><span class="params">(<span class="keyword">void</span> *p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    setxattr(<span class="string">"/exp"</span>, <span class="string">"spray"</span>, p, <span class="number">0x18</span>, XATTR_CREATE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...<span class="comment">//userfaultfd的初始化</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//开启一个线程触发触发userfaultfd</span></span><br><span class="line"><span class="comment">//拷贝的地址范围要如上图所示覆盖page1和page2</span></span><br><span class="line">pthread_create(&amp;id, <span class="literal">NULL</span>, tg_uaf, addr<span class="number">-8</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//在主线程中监控setxattr</span></span><br><span class="line">pollfd.fd = uffd;</span><br><span class="line">pollfd.events = POLLIN;</span><br><span class="line">nready = poll(&amp;pollfd, <span class="number">1</span>, <span class="number">-1</span>);</span><br><span class="line">nread = read(uffd, &amp;msg, <span class="keyword">sizeof</span>(msg));</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">"[*]we have got a page fault!"</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"[*]address:0x%lx\n"</span>, msg.arg.pagefault.address);</span><br><span class="line"></span><br><span class="line">...<span class="comment">//堆块会驻留在内存中</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">//处理page fault</span></span><br><span class="line"><span class="comment">//这里用的是UFFDIO_ZEROPAGE，将内存页清空</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">uffdio_zeropage</span> <span class="title">uffd_zero</span>;</span></span><br><span class="line">uffd_zero.range.start = msg.arg.pagefault.address;</span><br><span class="line">uffd_zero.range.len = page_size;</span><br><span class="line">uffd_zero.mode = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (ioctl(uffd, UFFDIO_ZEROPAGE, &amp;uffd_zero) == <span class="number">-1</span>)</span><br><span class="line">    errExit(<span class="string">"ioctl-UFFDIO_ZEROPAGE"</span>);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag"># CTF</a>
+          
+            <a href="/tags/kernel/" rel="tag"># kernel</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/08/红明谷2021/" rel="next" title="红明谷2021">
+                <i class="fa fa-chevron-left"></i> 红明谷2021
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xkaneiki</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.lyyl.online" title="https://www.lyyl.online" rel="noopener" target="_blank">LYYL</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://n1k0ooo.github.io/" title="https://n1k0ooo.github.io/" rel="noopener" target="_blank">N1K0_</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://a1ex.online" title="https://a1ex.online" rel="noopener" target="_blank">A1ex</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#kernel-heap-spray"><span class="nav-number">1.</span> <span class="nav-text">kernel heap spray</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用msgsnd"><span class="nav-number">1.1.</span> <span class="nav-text">利用msgsnd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#userfaultfd-setxattr"><span class="nav-number">1.2.</span> <span class="nav-text">userfaultfd + setxattr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#userfaultfd"><span class="nav-number">1.2.1.</span> <span class="nav-text">userfaultfd</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#poll函数"><span class="nav-number">1.2.1.0.1.</span> <span class="nav-text">poll函数</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不处理直接-UFFDIO-WAKE-会怎样"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">不处理直接 UFFDIO_WAKE 会怎样</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于mmap"><span class="nav-number">1.2.2.</span> <span class="nav-text">关于mmap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mmap分配时不会分配实际的物理页"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">mmap分配时不会分配实际的物理页</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些flag的意义"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">一些flag的意义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#利用userfaultfd-setxattr进行堆喷射"><span class="nav-number">1.2.3.</span> <span class="nav-text">利用userfaultfd+setxattr进行堆喷射</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xkaneiki</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
